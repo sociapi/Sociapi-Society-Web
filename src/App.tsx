@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 type Member = {
   name: string;
@@ -953,7 +954,7 @@ function Footer() {
 export default function App() {
   const route = useHashRoute();
   const Current = useMemo(() => ({ home: Home, about: About, team: () => <TeamGalaxy full />, events: EventsBlog, services: Services, partner: Partner, gallery: Gallery, shop: Shop, career: Career, contact: Contact, reviews: Reviews, faqs: FAQs }[route]), [route]);
-  return <div className="min-h-screen bg-[#070907] text-[#e8ecee]"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /></div>;
+  return <div className="min-h-screen bg-[#070907] text-[#e8ecee]"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /><SpeedInsights /></div>;
 }
 
 function SeoSchema() {
