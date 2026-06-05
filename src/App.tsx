@@ -105,13 +105,13 @@ const timeline = [
 ];
 const services = ["UI & UX Design", "Graphic Design", "WordPress Development", "Video Editing"];
 const galleryImages = [
-  "public/Image/Agentum Pic/0001.jpg",
-  "public/Image/Agentum Pic/6.jpg",
-  "public/Image/Agentum Pic/7.jpeg",
-  "public/Image/Agentum Pic/12.png",
-  "public/Image/Agentum Pic/13.png",
-  "public/Image/Agentum Pic/14.png",
-  "public/Image/Agentum Pic/15.jfif",
+  "Image/Agentum Pic/0001.jpg",
+  "Image/Agentum Pic/6.jpg",
+  "Image/Agentum Pic/7.jpeg",
+  "Image/Agentum Pic/12.png",
+  "Image/Agentum Pic/13.png",
+  "Image/Agentum Pic/14.png",
+  "Image/Agentum Pic/15.jfif",
   "public/Image/Agentum Pic/IMG_5921.png",
   "public/Image/Agentum Pic/IMG_5956.png",
   "public/Image/Agentum Pic/IMG_5998.png",
