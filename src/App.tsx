@@ -792,17 +792,72 @@ function Lightbox({ index, setIndex }: { index: number; setIndex: (value: number
 }
 
 function Shop() {
-  const products = ["Official T Shirt 1", "Official T Shirt 2"];
+  const products = [
+    { name: "Male Oversized T-Shirt",  image: "/Image/OVERSIZED Male.png",   description: "Premium oversized fit. 100% cotton. Sociapi official drop.", price: "PKR 1,499" },
+    { name: "Girls Oversized T-Shirt", image: "/Image/OVERSIZED Female.png", description: "Relaxed oversized cut for women. Soft fabric. Limited edition.",  price: "PKR 1,499" },
+  ];
   const [cart, setCart] = useState<{ name: string; size: string; qty: number }[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
+  const removeFromCart = (index: number) => setCart(cart.filter((_, i) => i !== index));
   const orderText = encodeURIComponent(cart.map((c) => `${c.qty} x ${c.name} (${c.size})`).join("\n"));
-  return <main className="section pt-32"><SectionTitle label="Shop" title="Official society wear." copy="Select size, quantity, add to cart, preview products, and checkout instantly via WhatsApp." /><div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">{products.map((p, i) => <Product key={p} name={p} image={`https://picsum.photos/seed/tshirt-${i}/900/900`} onPreview={setPreview} onAdd={(item) => setCart([...cart, item])} />)}</div><div className="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-white/10 bg-white/[.06] p-6 text-white"><h3 className="font-heading text-2xl">Cart</h3>{cart.length === 0 ? <p className="mt-3 text-white/60">Cart is empty.</p> : cart.map((c, i) => <p key={`${c.name}-${i}`} className="mt-2 text-white/70">{c.qty} x {c.name} / {c.size}</p>)}<a className="mt-5 inline-flex rounded-full bg-[#7bd355] px-6 py-3 font-bold text-[#111]" href={`https://wa.me/923329984490?text=${orderText}`} target="_blank" rel="noreferrer">Checkout via WhatsApp</a></div>{preview && <div className="fixed inset-0 z-[90] grid place-items-center bg-black/85 p-4"><button className="absolute right-5 top-5 rounded-full bg-white/15 px-4 py-2 text-white" onClick={() => setPreview(null)}>X</button><img src={preview} alt="Product preview" className="max-h-[85vh] rounded-3xl" /></div>}</main>;
+
+  return (
+    <main className="section pt-32">
+      <SectionTitle label="Shop" title="Official society wear." copy="Select size, quantity, add to cart, preview products, and checkout instantly via WhatsApp." />
+      <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">
+        {products.map((p) => (
+          <Product key={p.name} name={p.name} image={p.image} description={p.description} price={p.price} onPreview={setPreview} onAdd={(item) => setCart([...cart, item])} />
+        ))}
+      </div>
+
+      <div className="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-white/10 bg-white/[.06] p-6 text-white">
+        <h3 className="font-heading text-2xl">Cart</h3>
+        {cart.length === 0
+          ? <p className="mt-3 text-white/60">Cart is empty.</p>
+          : <div className="mt-3 space-y-2">
+              {cart.map((c, i) => (
+                <div key={`${c.name}-${i}`} className="flex items-center justify-between rounded-xl bg-white/[.05] px-4 py-3">
+                  <span className="text-sm text-white/70">{c.qty} x {c.name} / <span className="text-[#7bd355]">{c.size}</span></span>
+                  <button onClick={() => removeFromCart(i)} className="ml-4 rounded-full bg-red-500/20 px-3 py-1 text-xs text-red-400 hover:bg-red-500/40 transition">Remove</button>
+                </div>
+              ))}
+            </div>
+        }
+        <a className="mt-5 inline-flex rounded-full bg-[#7bd355] px-6 py-3 font-bold text-[#111]" href={`https://wa.me/923329984490?text=${orderText}`} target="_blank" rel="noreferrer">
+          Checkout via WhatsApp
+        </a>
+      </div>
+
+      {preview && (
+        <div className="fixed inset-0 z-[90] grid place-items-center bg-black/85 p-4">
+          <button className="absolute right-5 top-5 rounded-full bg-white/15 px-4 py-2 text-white" onClick={() => setPreview(null)}>X</button>
+          <img src={preview} alt="Product preview" className="max-h-[85vh] rounded-3xl" />
+        </div>
+      )}
+    </main>
+  );
 }
 
-function Product({ name, image, onPreview, onAdd }: { name: string; image: string; onPreview: (s: string) => void; onAdd: (item: { name: string; size: string; qty: number }) => void }) {
+function Product({ name, image, description, price, onPreview, onAdd }: { name: string; image: string; description: string; price: string; onPreview: (s: string) => void; onAdd: (item: { name: string; size: string; qty: number }) => void }) {
   const [size, setSize] = useState("M");
   const [qty, setQty] = useState(1);
-  return <div className="rounded-[2rem] border border-white/10 bg-white/[.06] p-5 backdrop-blur-xl"><button onClick={() => onPreview(image)}><img src={image} alt={name} className="aspect-square rounded-[1.5rem] object-cover" /></button><h3 className="mt-5 font-heading text-3xl text-white">{name}</h3><div className="mt-4 flex gap-2">{["S", "M", "L", "XL"].map((s) => <button key={s} onClick={() => setSize(s)} className={`rounded-full px-4 py-2 ${size === s ? "bg-[#7bd355] text-[#111]" : "bg-white/10 text-white"}`}>{s}</button>)}</div><input className="glass-input mt-4" type="number" min={1} value={qty} onChange={(e) => setQty(Number(e.target.value))} /><button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-white px-5 py-3 font-bold text-[#111]">Add to Cart</button></div>;
+  return (
+    <div className="rounded-[2rem] border border-white/10 bg-white/[.06] p-5 backdrop-blur-xl">
+      <button onClick={() => onPreview(image)} className="w-full">
+        <img src={image} alt={name} className="aspect-square w-full rounded-[1.5rem] object-cover" />
+      </button>
+      <h3 className="mt-5 font-heading text-2xl text-white">{name}</h3>
+      <p className="mt-1 text-sm leading-relaxed text-white/50">{description}</p>
+      <p className="mt-2 font-heading text-lg font-bold text-[#7bd355]">{price}</p>
+      <div className="mt-4 flex gap-2">
+        {["S", "M", "L", "XL"].map((s) => (
+          <button key={s} onClick={() => setSize(s)} className={`rounded-full px-4 py-2 text-sm font-bold transition ${size === s ? "bg-[#7bd355] text-[#111]" : "bg-white/10 text-white hover:bg-white/20"}`}>{s}</button>
+        ))}
+      </div>
+      <input className="glass-input mt-4" type="number" min={1} value={qty} onChange={(e) => setQty(Number(e.target.value))} />
+      <button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-white px-5 py-3 font-bold text-[#111] hover:bg-[#7bd355] transition">Add to Cart</button>
+    </div>
+  );
 }
 
 function Career() {
@@ -878,11 +933,11 @@ function Footer() {
         <p className="mt-4 max-w-md leading-relaxed text-white/55">The official digital headquarters for AI, Data Science, Robotics, and student innovation at Islamia University Peshawar.</p>
         <div className="mt-5 flex items-center gap-3">
           {[
-            { icon: "𝕏", label: "Twitter / X", href: "#" },
-            { icon: "in", label: "LinkedIn", href: "https://linkedin.com/" },
-            { icon: "ig", label: "Instagram", href: "https://instagram.com/" },
-            { icon: "fb", label: "Facebook", href: "#" },
-            { icon: "yt", label: "YouTube", href: "#" },
+            { icon: "𝕏", label: "Twitter / X", href: "https://x.com/sociapisociety" },
+            { icon: "in", label: "LinkedIn", href: "https://www.linkedin.com/company/sociapisociety/" },
+            { icon: "ig", label: "Instagram", href: "https://www.instagram.com/sociapi/" },
+            { icon: "fb", label: "Facebook", href: "https://www.facebook.com/sociapi/" },
+            { icon: "TK", label: "TikTok", href: "https://www.tiktok.com/@sociapi" },
           ].map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className="social-pill group flex h-10 w-10 items-center justify-center rounded-xl border border-white/12 bg-white/6 text-xs font-bold text-white/65 transition hover:-translate-y-0.5 hover:border-[#7bd355]/40 hover:bg-[#7bd355] hover:text-black hover:shadow-lg hover:shadow-[#7bd355]/25">{s.icon}</a>
           ))}
@@ -891,7 +946,7 @@ function Footer() {
       <div><h3 className="mb-4 font-heading text-sm tracking-[.25em] text-[#7bd355]">CONTACT</h3><p className="leading-8 text-white/50">sociapisociety@gmail.com</p><p className="text-white/50">+92 3329984490</p><p className="mt-3 text-sm text-white/45">Islamia University<br />Peshawar, Pakistan</p></div>
       <div><h3 className="mb-4 font-heading text-sm tracking-[.25em] text-[#7bd355]">QUICK LINKS</h3><ul className="space-y-2.5 text-white/55"><li><a href="#about" className="transition hover:text-[#7bd355]">About Us</a></li><li><a href="#team-galaxy" className="transition hover:text-[#7bd355]">Our Team</a></li><li><a href="#events" className="transition hover:text-[#7bd355]">Events & Blog</a></li><li><a href="#services" className="transition hover:text-[#7bd355]">Services</a></li><li><a href="#partner" className="transition hover:text-[#7bd355]">Partner With Us</a></li><li><a href="#contact" className="transition hover:text-[#7bd355]">Contact</a></li></ul></div>
     </div>
-    <p className="mx-auto mt-12 max-w-7xl border-t border-white/8 pt-6 text-center text-xs text-white/30">&copy; {new Date().getFullYear()} Sociapi Society. All rights reserved. Built with AI passion.</p>
+    <p className="mx-auto mt-12 max-w-7xl border-t border-white/8 pt-6 text-center text-xs text-white/30">&copy; {new Date().getFullYear()} Sociapi Society. All rights reserved. Built By Zuhair Zeb.</p>
   </footer>;
 }
 
@@ -902,6 +957,6 @@ export default function App() {
 }
 
 function SeoSchema() {
-  const schema = { "@context": "https://schema.org", "@type": "Organization", name: "Sociapi Society", url: "https://sociapisociety.org", email: "sociapisociety@gmail.com", telephone: "+92 3329984490", address: "Islamia University Peshawar, Pakistan" };
+  const schema = { "@context": "https://schema.org", "@type": "Organization", name: "Sociapi Society", url: "https://linktr.ee/sociapisociety", email: "sociapisociety@gmail.com", telephone: "+92 3329984490", address: "Islamia University Peshawar, Pakistan" };
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
 }
