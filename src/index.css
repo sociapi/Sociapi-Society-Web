@@ -311,3 +311,65 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* ====== Chapters Page Specific Styles ====== */
+
+.hero-grid-chapters {
+  background-image:
+    linear-gradient(rgba(123, 211, 85, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(123, 211, 85, 0.12) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(800px) rotateX(58deg) scale(2.2) translateY(15%);
+  transform-origin: bottom;
+}
+
+.glass-input-chapters {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.85rem 1rem;
+  color: white;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.glass-input-chapters::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.glass-input-chapters:focus {
+  border-color: rgba(123, 211, 85, 0.6);
+  box-shadow: 0 0 0 3px rgba(123, 211, 85, 0.14);
+}
+
+.glass-input-chapters option {
+  color: #111;
+  background: #1a1a1a;
+}
+
+select.glass-input-chapters {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+/* Mobile optimizations for chapters page */
+@media (max-width: 767px) {
+  .hero-grid-chapters {
+    background-size: 40px 40px;
+    opacity: 0.4;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-grid-chapters,
+  .animate-spin-slow {
+    animation: none !important;
+  }
+}

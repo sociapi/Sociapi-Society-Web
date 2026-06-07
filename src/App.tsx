@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import ChaptersPage from "./Chapters";
 
 type Member = {
   name: string;
@@ -23,11 +24,13 @@ type PageKey =
   | "career"
   | "contact"
   | "reviews"
-  | "faqs";
+  | "faqs"
+  | "chapters";
 
 const pages: { key: PageKey; label: string }[] = [
   { key: "home", label: "Home" },
   { key: "about", label: "About" },
+  { key: "chapters", label: "Chapters" },
   { key: "team", label: "Team" },
   { key: "events", label: "Events & Blog" },
   { key: "services", label: "Services" },
@@ -248,7 +251,7 @@ function Hero() {
           {!isMobile && (
             <svg className="absolute inset-[11%] animate-spin-slow" viewBox="0 0 500 500" aria-hidden="true">
               {Array.from({ length: 12 }).map((_, i) => <circle key={i} cx="250" cy="250" r={70 + i * 12} fill="none" stroke="rgba(123,211,85,.16)" strokeWidth="1" />)}
-              {Array.from({ length: 18 }).map((_, i) => <line key={i} x1="250" y1="250" x2={250 + Math.cos(i) * 220} y2={250 + Math.sin(i * 1.7) * 220} stroke="rgba(232,236,238,.18)" />)}
+              {Array.from({ length: 18 }).map((_, i) => <line key={i} x1="250" y1="250" x2={250 + Math.cos(i) * 220} y2={250 + Math.sin(i * 1.7) * 220} stroke="rgba(232,236,238,.18" />)}
             </svg>
           )}
           {!isMobile && Array.from({ length: 20 }).map((_, i) => <span key={i} className="node" style={{ left: `${50 + Math.cos(i * 1.7) * (24 + (i % 4) * 5)}%`, top: `${50 + Math.sin(i * 1.2) * (24 + (i % 5) * 4)}%`, animationDelay: `${i * 0.12}s` }} />)}
@@ -826,7 +829,24 @@ function Footer() {
 
 export default function App() {
   const route = useHashRoute();
-  const Current = useMemo(() => ({ home: Home, about: About, team: () => <TeamGalaxy full />, events: EventsBlog, services: Services, partner: Partner, gallery: Gallery, shop: Shop, career: Career, contact: Contact, reviews: Reviews, faqs: FAQs }[route]), [route]);
+  const Current = useMemo(() => {
+    const pages: Record<string, () => React.ReactElement> = {
+      home: Home,
+      about: About,
+      team: () => <TeamGalaxy full />,
+      events: EventsBlog,
+      services: Services,
+      partner: Partner,
+      gallery: Gallery,
+      shop: Shop,
+      career: Career,
+      contact: Contact,
+      reviews: Reviews,
+      faqs: FAQs,
+      chapters: ChaptersPage,
+    };
+    return pages[route] || Home;
+  }, [route]);
   return <div className="min-h-screen bg-[#070907] text-[#e8ecee] overflow-x-hidden"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /></div>;
 }
 
