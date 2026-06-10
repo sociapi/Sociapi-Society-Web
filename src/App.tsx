@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import ChaptersPage from "./Chapters";
 
 type Member = {
@@ -127,7 +128,6 @@ const faqs = [
   ["Shop", "How does checkout work?", "Products are added to cart and checkout opens WhatsApp with your order details."],
 ];
 
-// Hook: detect mobile (used to swap heavy layouts)
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < breakpoint : false
@@ -332,7 +332,7 @@ function TeamGalaxy({ full = false }: { full?: boolean }) {
   const [rot, setRot] = useState(0);
 
   useEffect(() => {
-    if (isMobile) return; // skip animation on mobile to prevent hang
+    if (isMobile) return;
     let raf = 0;
     let start = performance.now();
     const tick = (t: number) => {
@@ -354,10 +354,8 @@ function TeamGalaxy({ full = false }: { full?: boolean }) {
       <select value={department} onChange={(e) => setDepartment(e.target.value)} className="glass-input">{departments.map((d) => <option key={d}>{d}</option>)}</select>
     </div>}
 
-    {/* MOBILE: responsive grid (no orbital chaos). DESKTOP: galaxy */}
     {isMobile ? (
       <div className="mx-auto max-w-md px-1">
-        {/* Founder featured card */}
         <button
           onClick={() => setSelected(visible[0] ?? teamMembers[0])}
           className="mx-auto mb-6 flex w-full flex-col items-center rounded-[1.75rem] border border-[#7bd355]/40 bg-gradient-to-b from-[#7bd355]/10 to-transparent p-5 backdrop-blur-xl shadow-[0_0_40px_rgba(123,211,85,.18)]"
@@ -847,7 +845,7 @@ export default function App() {
     };
     return pages[route] || Home;
   }, [route]);
-  return <div className="min-h-screen bg-[#070907] text-[#e8ecee] overflow-x-hidden"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /></div>;
+  return <div className="min-h-screen bg-[#070907] text-[#e8ecee] overflow-x-hidden"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /><SpeedInsights /></div>;
 }
 
 function SeoSchema() {
