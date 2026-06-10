@@ -1,5 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import ChaptersPage from "./Chapters";
+
 
 type Member = {
   name: string;
@@ -829,7 +831,7 @@ function Footer() {
 
 export default function App() {
   const route = useHashRoute();
-  const Current = useMemo(() => {
+const Current = useMemo(() => {
     const pages: Record<string, () => React.ReactElement> = {
       home: Home,
       about: About,
@@ -847,7 +849,7 @@ export default function App() {
     };
     return pages[route] || Home;
   }, [route]);
-  return <div className="min-h-screen bg-[#070907] text-[#e8ecee] overflow-x-hidden"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /></div>;
+  return <div className="min-h-screen bg-[#070907] text-[#e8ecee] overflow-x-hidden"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /><SpeedInsights /></div>;
 }
 
 function SeoSchema() {
