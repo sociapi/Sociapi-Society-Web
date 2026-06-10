@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import ChaptersPage from "./Chapters";
 
 type Member = {
@@ -847,7 +848,7 @@ export default function App() {
     };
     return pages[route] || Home;
   }, [route]);
-  return <div className="min-h-screen bg-[#070907] text-[#e8ecee] overflow-x-hidden"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /></div>;
+  return <div className="min-h-screen bg-[#070907] text-[#e8ecee] overflow-x-hidden"><SeoSchema /><FloatingUtilities /><Nav route={route} /><Current /><Footer /><Analytics /></div>;
 }
 
 function SeoSchema() {
