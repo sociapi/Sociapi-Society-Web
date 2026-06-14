@@ -1384,7 +1384,7 @@ function Reviews() {
               <Reveal delay={i * 0.1}>
                 <figure className="rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] p-7">
                   <blockquote>
-                    <p className="text-lg leading-relaxed text-[#e8ecee] before:content-['"'] after:content-['"']">
+                    <p className="text-lg leading-relaxed text-[#e8ecee] before:content-['\"'] after:content-['\"']">
                       {review}
                     </p>
                   </blockquote>
