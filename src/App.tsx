@@ -1,7 +1,8 @@
-import React, { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import ChaptersPage from "./Chapters";
 
+/* ---------------- Types ---------------- */
 type Member = {
   name: string;
   role: string;
@@ -17,7 +18,10 @@ type PageKey =
   | "home" | "about" | "team" | "events" | "services" | "partner"
   | "gallery" | "shop" | "career" | "contact" | "reviews" | "faqs" | "chapters";
 
-const JOIN_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd3PzG3RGp_kfdqJSGcCKeIIGtJ6QbIJZJ_K8QF4vnk613q-A/viewform";
+/* ---------------- Constants ---------------- */
+const JOIN_COMMUNITY_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd3PzG3RGp_kfdqJSGcCKeIIGtJ6QbIJZJ_K8QF4vnk613q-A/viewform";
+const SITE_URL = "https://sociapis.vercel.app";
+const SITE_NAME = "Sociapi Society";
 
 const pages: { key: PageKey; label: string }[] = [
   { key: "home", label: "Home" },
@@ -163,6 +167,238 @@ function useScrolled(threshold = 40) {
   return scrolled;
 }
 
+/* ---------------- SEO Head Component (NEW - Complete SEO) ---------------- */
+function SeoHead() {
+  const route = useHashRoute();
+  
+  const seoData: Record<string, { title: string; description: string; keywords: string }> = {
+    home: {
+      title: `${SITE_NAME} | From Ideas to Intelligence - AI Society Pakistan`,
+      description: "Pakistan's most ambitious student-led AI society. Learn AI, ML, Data Science, Robotics, and Computer Vision through real projects at Islamia College University Peshawar.",
+      keywords: "AI society Pakistan, student AI community, ICU Peshawar, machine learning, data science, robotics, computer vision, AI agents"
+    },
+    about: {
+      title: `About Us | ${SITE_NAME} - AI Society ICU Peshawar`,
+      description: "Learn about Sociapi Society's mission to transform students into AI engineers, data scientists, and innovators at Islamia College University Peshawar.",
+      keywords: "about Sociapi Society, AI society mission, ICU Peshawar student community"
+    },
+    chapters: {
+      title: `Chapters | ${SITE_NAME} - AI Learning Tracks`,
+      description: "Explore Sociapi Society's chapters covering AI, Machine Learning, Deep Learning, Generative AI, Robotics, Computer Vision, BI, and Web Development.",
+      keywords: "AI chapters, learning tracks, machine learning, deep learning, generative AI, robotics, computer vision"
+    },
+    team: {
+      title: `Our Team | ${SITE_NAME} - 20+ AI Leaders`,
+      description: "Meet the team behind Sociapi Society. Founders, department leads, designers, event managers, and tech experts building Pakistan's AI future.",
+      keywords: "Sociapi Society team, AI leaders, student leaders Pakistan, ICU Peshawar team"
+    },
+    events: {
+      title: `Events & Blog | Mehfil AI 2026, Agentum 2026 - ${SITE_NAME}`,
+      description: "Discover Sociapi Society's flagship events - Mehfil AI 2026, Agentum 2026 Seminar. Read AI insights, event recaps, and student stories.",
+      keywords: "Mehfil AI 2026, Agentum 2026, AI events Pakistan, AI seminar, AI blog, student events"
+    },
+    services: {
+      title: `Services | UI/UX, Graphic Design, WordPress, Video Editing`,
+      description: "Sociapi Society offers premium student-led services: UI/UX design, graphic design, WordPress development, and video editing for brands and businesses.",
+      keywords: "UI UX design Pakistan, graphic design, WordPress development, video editing, student services"
+    },
+    partner: {
+      title: `Partner With Us | ${SITE_NAME} - Event, Learning & Community Partners`,
+      description: "Partner with Sociapi Society as an Event, Learning, or Community Partner. Get brand visibility, student access, and co-branded programs.",
+      keywords: "partnership, event partner, learning partner, community partner, AI society collaboration"
+    },
+    gallery: {
+      title: `Gallery | ${SITE_NAME} Events & Moments`,
+      description: "View photos from Sociapi Society's flagship events, seminars, workshops, and community gatherings at Islamia College University Peshawar.",
+      keywords: "Sociapi Society gallery, event photos, AI event gallery, ICU Peshawar events"
+    },
+    shop: {
+      title: `Shop | Official ${SITE_NAME} Wear`,
+      description: "Buy official Sociapi Society oversized t-shirts for men and women. Premium quality, limited edition student merchandise.",
+      keywords: "Sociapi Society shop, official merchandise, oversized t-shirt, student wear"
+    },
+    career: {
+      title: `Career | Join ${SITE_NAME} Team`,
+      description: "Apply for internships, volunteer positions, and leadership tracks at Sociapi Society. Build your AI career with Pakistan's top student community.",
+      keywords: "AI internships Pakistan, student volunteer, AI career, Sociapi Society career"
+    },
+    contact: {
+      title: `Contact Us | ${SITE_NAME} - ICU Peshawar`,
+      description: "Get in touch with Sociapi Society at Islamia College University Peshawar. Email, WhatsApp, or visit us for partnerships, memberships, and inquiries.",
+      keywords: "contact Sociapi Society, ICU Peshawar contact, AI society contact Pakistan"
+    },
+    reviews: {
+      title: `Reviews | What Students Say - ${SITE_NAME}`,
+      description: "Read genuine reviews from Sociapi Society students, partners, and event participants. Discover why students love learning AI with us.",
+      keywords: "Sociapi Society reviews, student testimonials, AI society reviews"
+    },
+    faqs: {
+      title: `FAQs | ${SITE_NAME} - Frequently Asked Questions`,
+      description: "Find answers about Sociapi Society membership, programs, events, partnerships, internships, and shop. Everything you need to know in one place.",
+      keywords: "Sociapi Society FAQ, membership questions, AI society help"
+    },
+  };
+
+  const current = seoData[route] || seoData.home;
+  const url = `${SITE_URL}/#${route}`;
+  const ogImage = `${SITE_URL}/og-image.png`;
+
+  // Organization Schema
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": SITE_NAME,
+    "alternateName": "Sociapi",
+    "url": SITE_URL,
+    "logo": `${SITE_URL}/logo.png`,
+    "description": "Pakistan's most ambitious student-led AI society at Islamia College University Peshawar",
+    "foundingDate": "2025-12",
+    "founder": {
+      "@type": "Person",
+      "name": "Muhammad Zuhair Zeb"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Islamia College University",
+      "addressLocality": "Peshawar",
+      "addressRegion": "Khyber Pakhtunkhwa",
+      "addressCountry": "PK"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+92-332-9984490",
+      "contactType": "customer service",
+      "email": "sociapisociety@gmail.com",
+      "availableLanguage": ["English", "Urdu"]
+    },
+    "sameAs": [
+      "https://www.instagram.com/sociapi/",
+      "https://www.facebook.com/sociapi/",
+      "https://www.linkedin.com/company/sociapisociety/",
+      "https://x.com/sociapisociety",
+      "https://www.tiktok.com/@sociapi",
+      "https://www.youtube.com/@sociapi"
+    ]
+  };
+
+  // Website Schema
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": SITE_NAME,
+    "url": SITE_URL,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${SITE_URL}/#faqs?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  // Breadcrumb Schema
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": SITE_URL
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": route.charAt(0).toUpperCase() + route.slice(1),
+        "item": url
+      }
+    ]
+  };
+
+  // Event Schema
+  const eventSchema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Mehfil AI 2026",
+    "description": "Pakistan's flagship student-led AI gathering celebrating artificial intelligence learning, practical projects, and student showcases.",
+    "startDate": "2026-05-15",
+    "endDate": "2026-05-15",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": "Islamia College University Peshawar",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Islamia College University",
+        "addressLocality": "Peshawar",
+        "addressCountry": "PK"
+      }
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": SITE_NAME,
+      "url": SITE_URL
+    }
+  };
+
+  // Course/Educational Organization Schema
+  const educationalSchema = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": SITE_NAME,
+    "url": SITE_URL,
+    "description": "Student-led AI society providing education in AI, Machine Learning, Data Science, Robotics, and Computer Vision",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Peshawar",
+      "addressCountry": "PK"
+    },
+    "alumni": [
+      {
+        "@type": "Person",
+        "name": "Muhammad Zuhair Zeb",
+        "jobTitle": "Founder & President"
+      }
+    ]
+  };
+
+  return (
+    <>
+      <title>{current.title}</title>
+      <meta name="title" content={current.title} />
+      <meta name="description" content={current.description} />
+      <meta name="keywords" content={current.keywords} />
+      <meta name="author" content={SITE_NAME} />
+      <meta name="robots" content="index, follow" />
+      <link rel="canonical" href={url} />
+
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={url} />
+      <meta property="og:title" content={current.title} />
+      <meta property="og:description" content={current.description} />
+      <meta property="og:image" content={ogImage} />
+      <meta property="og:site_name" content={SITE_NAME} />
+      <meta property="og:locale" content="en_US" />
+
+      {/* Twitter */}
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:url" content={url} />
+      <meta property="twitter:title" content={current.title} />
+      <meta property="twitter:description" content={current.description} />
+      <meta property="twitter:image" content={ogImage} />
+      <meta property="twitter:creator" content="@sociapisociety" />
+
+      {/* Structured Data - Multiple Schemas */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalSchema) }} />
+    </>
+  );
+}
+
 /* ---------------- Shared ---------------- */
 function Reveal({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   return (
@@ -188,7 +424,7 @@ function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
 }
 
 function Logo({ className = "h-9 w-9" }: { className?: string }) {
-  return <img src="logo.png" alt="Sociapi Society" className={`rounded-xl object-contain ${className}`} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />;
+  return <img src="logo.png" alt="Sociapi Society Logo - Student AI Community Pakistan" className={`rounded-xl object-contain ${className}`} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />;
 }
 
 function Avatar({ src, name, className = "" }: { src?: string; name: string; className?: string }) {
@@ -197,7 +433,7 @@ function Avatar({ src, name, className = "" }: { src?: string; name: string; cla
   if (err || !src) {
     return <div className={`grid place-items-center bg-gradient-to-br from-[#517642] via-[#333333] to-[#0c140a] font-heading font-black tracking-wide text-[#7bd355] ${className}`}><span className="text-[1.6em]">{initials}</span></div>;
   }
-  return <img src={src} alt={name} onError={() => setErr(true)} loading="lazy" className={className} />;
+  return <img src={src} alt={`${name} - ${teamMembers.find(m => m.name === name)?.role || 'Team Member'} at Sociapi Society`} onError={() => setErr(true)} loading="lazy" className={className} />;
 }
 
 function SectionTitle({ label, title, copy }: { label?: string; title: string; copy?: string }) {
@@ -226,7 +462,7 @@ function PartnerLogo({ name, mark, tagline, image }: { name: string; mark?: stri
     <div className="logo-card">
       <span className="logo-mark relative overflow-hidden">
         {image && !imgErr ? (
-          <img src={image} alt={name} className="h-full w-full rounded-xl object-contain" onError={() => setImgErr(true)} />
+          <img src={image} alt={`${name} - ${tagline} of Sociapi Society`} className="h-full w-full rounded-xl object-contain" onError={() => setImgErr(true)} />
         ) : (
           <span className="font-heading text-xl font-black text-[#7bd355]">{mark || initials}</span>
         )}
@@ -241,11 +477,11 @@ function PartnerLogo({ name, mark, tagline, image }: { name: string; mark?: stri
 
 /* ---------------- Program SVG icons ---------------- */
 const programIcons = [
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="6" width="12" height="12" rx="2" /><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2" /><circle cx="12" cy="12" r="2" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4 2.6-2.6Z" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" /></svg>,
+  <svg key="1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>,
+  <svg key="2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>,
+  <svg key="3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="6" width="12" height="12" rx="2" /><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2" /><circle cx="12" cy="12" r="2" /></svg>,
+  <svg key="4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4 2.6-2.6Z" /></svg>,
+  <svg key="5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" /></svg>,
 ];
 
 /* ---------------- Navigation (FIXED) ---------------- */
@@ -253,8 +489,14 @@ function Nav({ route }: { route: PageKey }) {
   const [open, setOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const scrolled = useScrolled(20);
-  const moreTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // ✅ FIX 1: Route change pe menu close
+  useEffect(() => {
+    setOpen(false);
+    setMoreOpen(false);
+  }, [route]);
+
+  // ✅ FIX 2: hashchange listener
   useEffect(() => {
     const closeAll = () => {
       setOpen(false);
@@ -264,31 +506,45 @@ function Nav({ route }: { route: PageKey }) {
     return () => removeEventListener("hashchange", closeAll);
   }, []);
 
-  // Close "More" dropdown when clicking anywhere outside
+  // ✅ FIX 3: Body scroll lock
   useEffect(() => {
-    if (!moreOpen) return;
-    const closeOnClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest("[data-more-dropdown]")) {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // ✅ FIX 4: Resize par mobile menu close
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 1024) {
+        setOpen(false);
         setMoreOpen(false);
       }
     };
-    document.addEventListener("click", closeOnClickOutside);
-    return () => document.removeEventListener("click", closeOnClickOutside);
-  }, [moreOpen]);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
-  const handleMoreEnter = () => {
-    if (moreTimeoutRef.current) {
-      clearTimeout(moreTimeoutRef.current);
-      moreTimeoutRef.current = null;
-    }
-    setMoreOpen(true);
+  // ✅ FIX 5: Navigation handler
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, key: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(false);
+    setMoreOpen(false);
+    window.location.hash = key;
   };
 
-  const handleMoreLeave = () => {
-    moreTimeoutRef.current = setTimeout(() => {
-      setMoreOpen(false);
-    }, 200);
+  // ✅ FIX 6: Join Community → Google Form
+  const handleJoinCommunity = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setOpen(false);
+    setMoreOpen(false);
+    window.open(JOIN_COMMUNITY_FORM_URL, "_blank", "noopener,noreferrer");
   };
 
   const linkCls = (key: string) =>
@@ -296,87 +552,50 @@ function Nav({ route }: { route: PageKey }) {
 
   return (
     <header className="sticky top-0 z-40 px-4 pt-4">
-      <nav
-        className={`mx-auto flex max-w-7xl items-center justify-between rounded-2xl border px-4 py-3 shadow-xl shadow-black/20 backdrop-blur-2xl transition-all duration-300 sm:px-6 sm:py-3.5 ${
-          scrolled
-            ? "border-[#e8ecee]/[0.14] bg-[#333333]/70"
-            : "border-[#e8ecee]/[0.11] bg-[#333333]/45"
-        }`}
-      >
-        {/* Logo */}
-        <a href="#home" className="flex shrink-0 items-center gap-2.5 transition hover:opacity-90">
+      <nav className={`mx-auto flex max-w-7xl items-center justify-between rounded-2xl border px-4 py-3 shadow-xl shadow-black/20 backdrop-blur-2xl transition-all duration-300 sm:px-6 sm:py-3.5 ${scrolled ? "border-[#e8ecee]/[0.14] bg-[#333333]/70" : "border-[#e8ecee]/[0.11] bg-[#333333]/45"}`}>
+        <a
+          href="#home"
+          onClick={(e) => handleNavClick(e, "home")}
+          className="flex shrink-0 items-center gap-2.5 transition hover:opacity-90"
+        >
           <Logo className="h-9 w-9 text-lg" />
-          <span className="hidden font-heading text-base font-bold tracking-[0.28em] text-[#e8ecee] sm:block">
-            SOCIAPI
-          </span>
+          <span className="hidden font-heading text-base font-bold tracking-[0.28em] text-[#e8ecee] sm:block">SOCIAPI</span>
         </a>
 
-        {/* Desktop nav links */}
         <div className="hidden items-center gap-0.5 lg:flex">
           {pages.slice(0, 8).map((page) => (
-            <a key={page.key} className={linkCls(page.key)} href={`#${page.key}`}>
+            <a
+              key={page.key}
+              className={linkCls(page.key)}
+              href={`#${page.key}`}
+              onClick={(e) => handleNavClick(e, page.key)}
+            >
               {page.label}
             </a>
           ))}
-
-          {/* ===== FIXED "More" dropdown ===== */}
-          <div
-            className="relative"
-            data-more-dropdown
-            onMouseEnter={handleMoreEnter}
-            onMouseLeave={handleMoreLeave}
-          >
-            <button
-              className={`${linkCls("")} flex items-center gap-1`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setMoreOpen((prev) => !prev);
-              }}
-            >
-              More
-              <span className="mt-px text-[10px]">▼</span>
-            </button>
-
-            {/* Invisible bridge — covers gap between button and dropdown */}
-            {moreOpen && (
-              <div className="absolute left-0 right-0 top-full h-3" />
-            )}
-
-            <div
-              className={`absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl border border-[#e8ecee]/12 bg-[#333333]/96 p-2 shadow-2xl backdrop-blur-xl transition-all duration-200 ${
-                moreOpen
-                  ? "visible scale-100 opacity-100"
-                  : "invisible scale-95 opacity-0 pointer-events-none"
-              }`}
-              onMouseEnter={handleMoreEnter}
-              onMouseLeave={handleMoreLeave}
-            >
+          <div className="relative" onMouseEnter={() => setMoreOpen(true)} onMouseLeave={() => setMoreOpen(false)}>
+            <button className={`${linkCls("")} flex items-center gap-1`}>More<span className="mt-px text-[10px]">▼</span></button>
+            <div className={`absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl border border-[#e8ecee]/12 bg-[#333333]/96 p-2 shadow-2xl backdrop-blur-xl transition-all duration-200 ${moreOpen ? "visible scale-100 opacity-100" : "invisible scale-95 opacity-0 pointer-events-none"}`}>
               {pages.slice(8).map((page) => (
                 <a
                   key={page.key}
                   href={`#${page.key}`}
-                  onClick={() => setMoreOpen(false)}
-                  className={`block rounded-xl px-4 py-2.5 text-sm font-medium transition ${
-                    route === page.key
-                      ? "bg-[#7bd355]/15 text-[#7bd355]"
-                      : "text-[#e8ecee]/70 hover:bg-[#e8ecee]/[.08] hover:text-[#e8ecee]"
-                  }`}
+                  onClick={(e) => handleNavClick(e, page.key)}
+                  className={`block rounded-xl px-4 py-2.5 text-sm font-medium transition ${route === page.key ? "bg-[#7bd355]/15 text-[#7bd355]" : "text-[#e8ecee]/70 hover:bg-[#e8ecee]/[.08] hover:text-[#e8ecee]"}`}
                 >
                   {page.label}
                 </a>
               ))}
             </div>
           </div>
-          {/* ===== END "More" dropdown ===== */}
         </div>
 
-        {/* Right side */}
         <div className="flex items-center gap-2">
-          {/* Join Community → Google Form */}
           <a
-            href={JOIN_FORM_URL}
+            href={JOIN_COMMUNITY_FORM_URL}
+            onClick={handleJoinCommunity}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="magnetic hidden rounded-full bg-[#7bd355] px-6 py-2.5 text-sm font-bold text-[#0c140a] lg:inline-block"
           >
             Join Community
@@ -384,7 +603,7 @@ function Nav({ route }: { route: PageKey }) {
           <button
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e8ecee]/10 bg-[#e8ecee]/6 text-[#e8ecee] lg:hidden"
             onClick={() => setOpen(!open)}
-            aria-label="Toggle navigation"
+            aria-label="Toggle navigation menu"
             aria-expanded={open}
           >
             <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
@@ -396,31 +615,29 @@ function Nav({ route }: { route: PageKey }) {
         </div>
       </nav>
 
-      {/* Mobile menu */}
       {open && (
         <>
-          <div className="fixed inset-0 z-[-1] bg-black/50" onClick={() => setOpen(false)} />
-          <div className="mx-auto mt-3 grid max-w-7xl animate-slide-up gap-1 overflow-hidden rounded-2xl border border-[#e8ecee]/10 bg-[#333333]/95 p-3 backdrop-blur-xl lg:hidden">
+          <div
+            className="fixed inset-0 z-[-1] bg-black/60 backdrop-blur-sm"
+            onClick={() => setOpen(false)}
+          />
+          <div className="mx-auto mt-3 grid max-h-[calc(100vh-120px)] max-w-7xl animate-slide-up gap-1 overflow-y-auto rounded-2xl border border-[#e8ecee]/10 bg-[#333333]/95 p-3 backdrop-blur-xl lg:hidden">
             {pages.map((page) => (
               <a
                 key={page.key}
                 href={`#${page.key}`}
-                onClick={() => setOpen(false)}
-                className={`flex items-center justify-between rounded-xl px-4 py-3.5 transition ${
-                  route === page.key
-                    ? "bg-[#7bd355]/15 text-[#7bd355] font-bold"
-                    : "text-[#e8ecee]/75 hover:bg-[#e8ecee]/[.08] hover:text-[#e8ecee]"
-                }`}
+                onClick={(e) => handleNavClick(e, page.key)}
+                className={`flex items-center justify-between rounded-xl px-4 py-3.5 transition ${route === page.key ? "bg-[#7bd355]/15 text-[#7bd355] font-bold" : "text-[#e8ecee]/75 hover:bg-[#e8ecee]/[.08] hover:text-[#e8ecee]"}`}
               >
                 {page.label}
                 <span className="text-[10px] opacity-50">→</span>
               </a>
             ))}
             <a
-              href={JOIN_FORM_URL}
+              href={JOIN_COMMUNITY_FORM_URL}
+              onClick={handleJoinCommunity}
               target="_blank"
-              rel="noreferrer"
-              onClick={() => setOpen(false)}
+              rel="noopener noreferrer"
               className="mt-2 block rounded-2xl bg-[#7bd355] py-3.5 text-center text-sm font-bold text-[#0c140a]"
             >
               Join Community
@@ -434,7 +651,7 @@ function Nav({ route }: { route: PageKey }) {
 
 /* ---------------- ULTRA PREMIUM HERO ---------------- */
 function ParticleField() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -463,14 +680,8 @@ function ParticleField() {
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
     };
-    const onLeave = () => {
-      mouse.x = -9999;
-      mouse.y = -9999;
-    };
-    const onResize = () => {
-      w = canvas.width = canvas.offsetWidth;
-      h = canvas.height = canvas.offsetHeight;
-    };
+    const onLeave = () => { mouse.x = -9999; mouse.y = -9999; };
+    const onResize = () => { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; };
     canvas.parentElement?.addEventListener("mousemove", onMove);
     canvas.parentElement?.addEventListener("mouseleave", onLeave);
     window.addEventListener("resize", onResize);
@@ -584,9 +795,7 @@ function Hero() {
       <section className="relative -mt-[88px] flex min-h-screen flex-col overflow-hidden bg-[#050705] text-[#e8ecee]" onMouseMove={onMove}>
         <div className="hero-aurora" />
         <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-          <div className="hero-beam" />
-          <div className="hero-beam" />
-          <div className="hero-beam" />
+          <div className="hero-beam" /><div className="hero-beam" /><div className="hero-beam" />
         </div>
         <div className="hero-floor" />
         <div className="hero-spotlight" style={{ "--sx": `${spot.x}%`, "--sy": `${spot.y}%` } as React.CSSProperties} />
@@ -603,13 +812,11 @@ function Hero() {
           </div>
         )}
 
-        {!isMobile &&
-          heroChips.map((c) => (
-            <motion.div key={c.text} initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.4 + Math.random() * 0.6, duration: 0.6 }} className="float-chip z-10" style={c.style as React.CSSProperties}>
-              <i className="text-[#7bd355]">{c.icon}</i>
-              {c.text}
-            </motion.div>
-          ))}
+        {!isMobile && heroChips.map((c) => (
+          <motion.div key={c.text} initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.4 + Math.random() * 0.6, duration: 0.6 }} className="float-chip z-10" style={c.style as React.CSSProperties}>
+            <i className="text-[#7bd355]">{c.icon}</i>{c.text}
+          </motion.div>
+        ))}
 
         <div className="noise-overlay" />
 
@@ -625,9 +832,7 @@ function Hero() {
             <KineticWord word="TO" baseDelay={0.55} />
             <KineticWord word="INTELLIGENCE" baseDelay={0.55} />
             <br />
-            <span className="shine-text">
-              <KineticWord word="TO INTELLIGENCE" baseDelay={0.85} />
-            </span>
+            <span className="shine-text"><KineticWord word="TO INTELLIGENCE" baseDelay={0.85} /></span>
           </h1>
 
           <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 1.7, ease: [0.22, 1, 0.36, 1] }} className="mt-7 h-px w-44 origin-center bg-gradient-to-r from-transparent via-[#7bd355] to-transparent sm:w-72" />
@@ -637,19 +842,20 @@ function Hero() {
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 2.05 }} className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a href={JOIN_FORM_URL} target="_blank" rel="noreferrer" className="cta-premium text-base">
-              <span>
-                Join the Society
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
+            <a
+              href={JOIN_COMMUNITY_FORM_URL}
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(JOIN_COMMUNITY_FORM_URL, "_blank", "noopener,noreferrer");
+              }}
+              className="cta-premium text-base"
+            >
+              <span>Join the Society
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </span>
             </a>
-            <a href="#chapters" className="cta-ghost text-base">
-              <svg className="h-4 w-4 text-[#7bd355]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M2 12h20M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20z" />
-              </svg>
+            <a href="#chapters" onClick={(e) => { e.preventDefault(); window.location.hash = "chapters"; }} className="cta-ghost text-base">
+              <svg className="h-4 w-4 text-[#7bd355]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20z" /></svg>
               Explore Chapters
             </a>
           </motion.div>
@@ -665,18 +871,14 @@ function Hero() {
                   e.currentTarget.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
                 }}
               >
-                <strong>
-                  <CountUp value={value} suffix={suffix} />
-                </strong>
+                <strong><CountUp value={value} suffix={suffix} /></strong>
                 <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#939596] sm:text-[13px]">{label}</p>
               </div>
             ))}
           </motion.div>
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3, duration: 1 }} className="mt-12 flex flex-col items-center gap-2.5">
-            <div className="scroll-cue">
-              <span />
-            </div>
+            <div className="scroll-cue"><span /></div>
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#939596]">Scroll</p>
           </motion.div>
         </div>
@@ -687,12 +889,7 @@ function Hero() {
       <div className="marquee-strip relative z-10" aria-hidden="true">
         {[0, 1].map((k) => (
           <div key={k} className="marquee-inner">
-            {panels.map((p) => (
-              <React.Fragment key={`${k}-${p}`}>
-                <span>{p}</span>
-                <i>✦</i>
-              </React.Fragment>
-            ))}
+            {panels.map((p) => <React.Fragment key={`${k}-${p}`}><span>{p}</span><i>✦</i></React.Fragment>)}
           </div>
         ))}
       </div>
@@ -712,16 +909,8 @@ function FounderShowcase() {
           <p className="text-base text-[#7bd355]">Founder & President</p>
           <h3 className="mt-2 font-heading text-3xl font-black text-[#e8ecee] sm:text-5xl">{founder.name}</h3>
           <p className="mt-5 text-lg leading-8 text-[#939596]">{founder.bio}</p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {founder.skills.map((s) => (
-              <span key={s} className="rounded-full border border-[#7bd355]/25 bg-[#7bd355]/10 px-4 py-2 text-sm text-[#d9ffd0]">
-                {s}
-              </span>
-            ))}
-          </div>
-          <a className="mt-8 inline-flex rounded-full bg-[#e8ecee] px-6 py-3 text-base font-bold text-[#0c140a]" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">
-            LinkedIn Profile
-          </a>
+          <div className="mt-6 flex flex-wrap gap-2">{founder.skills.map((s) => <span key={s} className="rounded-full border border-[#7bd355]/25 bg-[#7bd355]/10 px-4 py-2 text-sm text-[#d9ffd0]">{s}</span>)}</div>
+          <a className="mt-8 inline-flex rounded-full bg-[#e8ecee] px-6 py-3 text-base font-bold text-[#0c140a]" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn Profile</a>
         </div>
       </Reveal>
     </section>
@@ -761,13 +950,7 @@ function Organogram() {
         <div className="mx-auto max-w-md rounded-[2rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] p-6">
           <div className="mx-auto mb-6 grid h-28 w-28 place-items-center rounded-full border-2 border-[#7bd355]/40 bg-gradient-to-br from-[#7bd355]/20 to-transparent font-heading text-xl font-black text-[#7bd355] shadow-[0_0_36px_rgba(123,211,85,.3)]">Founder</div>
           <div className="mx-auto mb-6 h-8 w-px bg-gradient-to-b from-[#7bd355] to-transparent" />
-          <div className="grid grid-cols-2 gap-3">
-            {nodes.map((n) => (
-              <div key={n} className="rounded-2xl border border-[#7bd355]/20 bg-[#333333]/70 px-3 py-3 text-center text-sm font-medium text-[#e8ecee]/85">
-                {n}
-              </div>
-            ))}
-          </div>
+          <div className="grid grid-cols-2 gap-3">{nodes.map((n) => <div key={n} className="rounded-2xl border border-[#7bd355]/20 bg-[#333333]/70 px-3 py-3 text-center text-sm font-medium text-[#e8ecee]/85">{n}</div>)}</div>
         </div>
       </section>
     );
@@ -775,14 +958,7 @@ function Organogram() {
   return (
     <section className="section">
       <SectionTitle label="Organogram" title="A living organization map." copy="Connected departments orbit the mission instead of sitting in a static chart." />
-      <div className="org-map mx-auto max-w-6xl">
-        <div className="org-core">Founder</div>
-        {nodes.map((n, i) => (
-          <div key={n} className="org-node" style={{ "--a": `${i * 30}deg` } as React.CSSProperties}>
-            {n}
-          </div>
-        ))}
-      </div>
+      <div className="org-map mx-auto max-w-6xl"><div className="org-core">Founder</div>{nodes.map((n, i) => <div key={n} className="org-node" style={{ "--a": `${i * 30}deg` } as React.CSSProperties}>{n}</div>)}</div>
     </section>
   );
 }
@@ -817,11 +993,7 @@ function TeamGalaxy({ full = false }: { full?: boolean }) {
       {full && (
         <div className="mx-auto mb-8 flex max-w-5xl flex-col gap-3 px-1 sm:flex-row">
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search team members..." className="glass-input flex-1" />
-          <select value={department} onChange={(e) => setDepartment(e.target.value)} className="glass-input sm:max-w-xs">
-            {departments.map((d) => (
-              <option key={d}>{d}</option>
-            ))}
-          </select>
+          <select value={department} onChange={(e) => setDepartment(e.target.value)} className="glass-input sm:max-w-xs">{departments.map((d) => <option key={d}>{d}</option>)}</select>
         </div>
       )}
 
@@ -833,31 +1005,20 @@ function TeamGalaxy({ full = false }: { full?: boolean }) {
             <p className="mt-1 text-center text-base font-bold text-[#e8ecee]">{teamMembers[0].name}</p>
           </button>
           <div className="grid grid-cols-2 gap-3 xs:grid-cols-3">
-            {visible
-              .filter((m) => m.orbit !== 0)
-              .map((m) => (
-                <button key={m.name} onClick={() => setSelected(m)} className="group flex flex-col items-center rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.05] p-3 transition active:scale-95 hover:border-[#7bd355]/40">
-                  <Avatar src={m.image} name={m.name} className="h-16 w-16 rounded-full object-cover ring-1 ring-[#e8ecee]/10 transition group-hover:ring-[#7bd355]/50" />
-                  <p className="mt-2 line-clamp-1 w-full text-center text-[10px] font-bold text-[#e8ecee]/90">{m.name.split(" ").slice(0, 2).join(" ")}</p>
-                  <p className="mt-0.5 line-clamp-1 w-full text-center text-[9px] text-[#7bd355]/80">{m.role}</p>
-                </button>
-              ))}
+            {visible.filter((m) => m.orbit !== 0).map((m) => (
+              <button key={m.name} onClick={() => setSelected(m)} className="group flex flex-col items-center rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.05] p-3 transition active:scale-95 hover:border-[#7bd355]/40">
+                <Avatar src={m.image} name={m.name} className="h-16 w-16 rounded-full object-cover ring-1 ring-[#e8ecee]/10 transition group-hover:ring-[#7bd355]/50" />
+                <p className="mt-2 line-clamp-1 w-full text-center text-[10px] font-bold text-[#e8ecee]/90">{m.name.split(" ").slice(0, 2).join(" ")}</p>
+                <p className="mt-0.5 line-clamp-1 w-full text-center text-[9px] text-[#7bd355]/80">{m.role}</p>
+              </button>
+            ))}
           </div>
         </div>
       ) : (
         <div className="team-galaxy mx-auto" style={{ "--galaxy-deg": `${rot}deg` } as React.CSSProperties}>
           <div className="galaxy-rings" />
           {visible.map((m) => (
-            <button
-              key={m.name}
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelected(m);
-              }}
-              className={`member-orb ${m.orbit === 0 ? "founder-orb" : ""}`}
-              style={{ "--angle": `${m.angle}deg`, "--radius": `${m.orbit === 0 ? 0 : 50 + m.orbit * 130}px` } as React.CSSProperties}
-              aria-label={`View profile of ${m.name}, ${m.role}`}
-            >
+            <button key={m.name} onClick={(e) => { e.stopPropagation(); setSelected(m); }} className={`member-orb ${m.orbit === 0 ? "founder-orb" : ""}`} style={{ "--angle": `${m.angle}deg`, "--radius": `${m.orbit === 0 ? 0 : 50 + m.orbit * 130}px` } as React.CSSProperties} aria-label={`View profile of ${m.name}, ${m.role}`}>
               <Avatar src={m.image} name={m.name} className="h-full w-full rounded-full object-cover" />
               <span>{m.role}</span>
             </button>
@@ -867,19 +1028,11 @@ function TeamGalaxy({ full = false }: { full?: boolean }) {
 
       {full && (
         <div className="mx-auto mt-10 grid max-w-5xl grid-cols-2 gap-3 px-1 sm:gap-4 md:grid-cols-4">
-          {["20+ Team Members", "11 Departments", "300+ Audience", "2 Major Events"].map((s) => (
-            <div className="rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-4 text-center text-base text-[#e8ecee] transition hover:border-[#7bd355]/30 sm:rounded-3xl sm:p-5" key={s}>
-              {s}
-            </div>
-          ))}
+          {["20+ Team Members", "11 Departments", "300+ Audience", "2 Major Events"].map((s) => <div className="rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-4 text-center text-base text-[#e8ecee] transition hover:border-[#7bd355]/30 sm:rounded-3xl sm:p-5" key={s}>{s}</div>)}
         </div>
       )}
       {!full && (
-        <div className="mt-10 text-center">
-          <a href="#team" className="magnetic inline-flex rounded-full border border-[#e8ecee]/15 bg-[#e8ecee]/8 px-7 py-3.5 text-base font-bold text-[#e8ecee]">
-            View Full Team →
-          </a>
-        </div>
+        <div className="mt-10 text-center"><a href="#team" className="magnetic inline-flex rounded-full border border-[#e8ecee]/15 bg-[#e8ecee]/8 px-7 py-3.5 text-base font-bold text-[#e8ecee]">View Full Team →</a></div>
       )}
       {selected && <ProfileModal member={selected} onClose={() => setSelected(null)} />}
     </section>
@@ -895,9 +1048,7 @@ function ProfileModal({ member, onClose }: { member: Member; onClose: () => void
   return (
     <div className="fixed inset-0 z-[80] grid place-items-center overflow-y-auto bg-black/80 p-4 backdrop-blur-lg" role="dialog" aria-modal="true" onClick={onClose}>
       <motion.div initial={{ opacity: 0, scale: 0.94, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} className="relative my-auto w-full max-w-3xl rounded-[1.75rem] border border-[#e8ecee]/15 bg-[#333333]/95 p-5 text-[#e8ecee] shadow-2xl shadow-[#7bd355]/20 sm:rounded-[2rem] sm:p-6 md:p-8" onClick={(e) => e.stopPropagation()}>
-        <button className="absolute right-3 top-3 rounded-full bg-[#e8ecee]/10 px-3 py-1 transition hover:bg-[#e8ecee]/20 sm:right-4 sm:top-4" onClick={onClose} aria-label="Close profile">
-          ✕
-        </button>
+        <button className="absolute right-3 top-3 rounded-full bg-[#e8ecee]/10 px-3 py-1 transition hover:bg-[#e8ecee]/20 sm:right-4 sm:top-4" onClick={onClose} aria-label="Close profile">✕</button>
         <div className="grid gap-5 sm:gap-6 md:grid-cols-[220px_1fr]">
           <Avatar src={member.image} name={member.name} className="h-56 w-full rounded-2xl object-cover sm:h-64 sm:rounded-3xl" />
           <div>
@@ -905,20 +1056,10 @@ function ProfileModal({ member, onClose }: { member: Member; onClose: () => void
             <h3 className="font-heading text-2xl font-black sm:text-4xl">{member.name}</h3>
             <p className="mt-1 text-lg text-[#939596]">{member.role}</p>
             <p className="mt-5 text-base leading-relaxed text-[#e8ecee]/80">{member.bio}</p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {member.skills.map((s) => (
-                <span key={s} className="rounded-full bg-[#e8ecee]/10 px-3 py-1 text-sm">
-                  {s}
-                </span>
-              ))}
-            </div>
+            <div className="mt-5 flex flex-wrap gap-2">{member.skills.map((s) => <span key={s} className="rounded-full bg-[#e8ecee]/10 px-3 py-1 text-sm">{s}</span>)}</div>
             <div className="mt-6 flex gap-3">
-              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="rounded-full bg-[#7bd355] px-4 py-2 text-sm font-bold text-[#0c140a]">
-                LinkedIn
-              </a>
-              <a href="https://instagram.com/" target="_blank" rel="noreferrer" className="rounded-full border border-[#e8ecee]/15 px-4 py-2 text-sm">
-                Instagram
-              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="rounded-full bg-[#7bd355] px-4 py-2 text-sm font-bold text-[#0c140a]">LinkedIn</a>
+              <a href="https://instagram.com/" target="_blank" rel="noreferrer" className="rounded-full border border-[#e8ecee]/15 px-4 py-2 text-sm">Instagram</a>
             </div>
           </div>
         </div>
@@ -936,9 +1077,7 @@ function FeatureSections() {
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:gap-5 md:grid-cols-5">
         {features.map((f, i) => (
           <Reveal key={f} delay={i * 0.08} className="group relative h-full overflow-hidden rounded-[1.5rem] border border-[#e8ecee]/10 bg-gradient-to-b from-[#e8ecee]/[.09] to-transparent p-5 text-center backdrop-blur-2xl transition-all duration-500 hover:-translate-y-2.5 hover:border-[#7bd355]/40 sm:rounded-[2rem] sm:p-7">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#7bd355]/15 text-[#7bd355] shadow-inner transition group-hover:bg-[#7bd355] group-hover:text-[#0c140a] sm:h-16 sm:w-16 sm:rounded-2xl [&_svg]:h-6 [&_svg]:w-6 sm:[&_svg]:h-8 sm:[&_svg]:w-8">
-              {programIcons[i]}
-            </div>
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#7bd355]/15 text-[#7bd355] shadow-inner transition group-hover:bg-[#7bd355] group-hover:text-[#0c140a] sm:h-16 sm:w-16 sm:rounded-2xl [&_svg]:h-6 [&_svg]:w-6 sm:[&_svg]:h-8 sm:[&_svg]:w-8">{programIcons[i]}</div>
             <p className="mt-3 font-heading text-xs tracking-[.25em] text-[#7bd355] sm:mt-4">0{i + 1}</p>
             <h3 className="mt-2 font-heading text-base font-bold leading-tight text-[#e8ecee] sm:text-xl">{f}</h3>
           </Reveal>
@@ -1002,60 +1141,41 @@ function Testimonials() {
   return (
     <section className="section">
       <SectionTitle label="Reviews" title="Voices from the community." copy="Real words from students, partners, and event participants." />
-      <div className="testimonial-track">
-        {[...reviews, ...reviews].map((r, i) => (
-          <blockquote key={`${r}-${i}`} className="testimonial-card">
-            "{r}"
-            <footer>Student Member</footer>
-          </blockquote>
-        ))}
-      </div>
+      <div className="testimonial-track">{[...reviews, ...reviews].map((r, i) => <blockquote key={`${r}-${i}`} className="testimonial-card">"{r}"<footer>Student Member</footer></blockquote>)}</div>
     </section>
   );
 }
 
-/* ---------------- Event Partners ---------------- */
 function FeaturedIn() {
   return (
     <section className="section section-tight">
       <Reveal className="mx-auto max-w-6xl rounded-[2rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] p-6 backdrop-blur-xl sm:rounded-[2.5rem] sm:p-8">
         <p className="text-center text-xs uppercase tracking-[.3em] text-[#939596] sm:tracking-[.4em]">Event Partners &amp; Sponsors</p>
-        <div className="mt-7 grid gap-4 sm:grid-cols-3">
-          {eventPartners.map((p) => (
-            <PartnerLogo key={p.name} {...p} />
-          ))}
-        </div>
+        <div className="mt-7 grid gap-4 sm:grid-cols-3">{eventPartners.map((p) => <PartnerLogo key={p.name} {...p} />)}</div>
       </Reveal>
     </section>
   );
 }
 
-/* ---------------- Community Partners ---------------- */
 function CommunityPartners() {
   return (
     <section className="section">
       <SectionTitle label="Community Partners" title="A partner-ready AI society." copy="We collaborate with communities, labs, and student networks to expand opportunities and impact." />
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {communityPartners.map((p, i) => (
-          <Reveal key={p.name} delay={(i % 3) * 0.08}>
-            <PartnerLogo {...p} />
-          </Reveal>
-        ))}
+        {communityPartners.map((p, i) => <Reveal key={p.name} delay={(i % 3) * 0.08}><PartnerLogo {...p} /></Reveal>)}
       </div>
-      <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-        {stats.map(([v, l, s]) => (
-          <div className="stat-card" key={l}>
-            <strong>
-              <CountUp value={v} suffix={s} />
-            </strong>
-            <p>{l}</p>
-          </div>
-        ))}
-      </div>
+      <div className="mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">{stats.map(([v, l, s]) => <div className="stat-card" key={l}><strong><CountUp value={v} suffix={s} /></strong><p>{l}</p></div>)}</div>
       <Reveal className="mx-auto mt-12 max-w-6xl rounded-[2rem] border border-[#7bd355]/20 bg-[#7bd355]/10 p-6 text-center sm:rounded-[2.5rem] sm:p-8">
         <h3 className="font-heading text-2xl font-black text-[#e8ecee] sm:text-4xl">Join Sociapi Society Today.</h3>
         <p className="mx-auto mt-3 max-w-2xl text-lg text-[#939596]">Enter the community building future AI engineers, data scientists, and innovators.</p>
-        <a href={JOIN_FORM_URL} target="_blank" rel="noreferrer" className="magnetic mt-6 inline-flex rounded-full bg-[#7bd355] px-8 py-4 text-base font-bold text-[#0c140a]">
+        <a
+          href={JOIN_COMMUNITY_FORM_URL}
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(JOIN_COMMUNITY_FORM_URL, "_blank", "noopener,noreferrer");
+          }}
+          className="magnetic mt-6 inline-flex rounded-full bg-[#7bd355] px-8 py-4 text-base font-bold text-[#0c140a]"
+        >
           Start Membership
         </a>
       </Reveal>
@@ -1073,13 +1193,7 @@ function NewsletterCta() {
           <h3 className="mt-3 font-heading text-2xl font-black text-[#e8ecee] sm:text-4xl md:text-5xl">Get the weekly AI signal.</h3>
           <p className="mt-4 max-w-md text-lg text-[#939596]">Curated learning resources, project ideas, event invites, and Sociapi Society updates. Once a week. No noise.</p>
         </div>
-        <form
-          className="flex flex-col gap-3 self-center"
-          onSubmit={(e: FormEvent) => {
-            e.preventDefault();
-            setDone(true);
-          }}
-        >
+        <form className="flex flex-col gap-3 self-center" onSubmit={(e: FormEvent) => { e.preventDefault(); setDone(true); }}>
           <input required type="email" className="glass-input" placeholder="you@university.edu" />
           <button className="rounded-full bg-[#7bd355] px-6 py-4 font-bold text-[#0c140a]">{done ? "Subscribed ✓" : "Subscribe"}</button>
           <p className="text-sm text-[#939596]">We respect your inbox. Unsubscribe anytime.</p>
@@ -1090,22 +1204,7 @@ function NewsletterCta() {
 }
 
 function Home() {
-  return (
-    <>
-      <Hero />
-      <FeaturedIn />
-      <FounderShowcase />
-      <FeatureSections />
-      <TechTracks />
-      <HowItWorks />
-      <TimelineSection />
-      <Organogram />
-      <TeamGalaxy />
-      <Testimonials />
-      <CommunityPartners />
-      <NewsletterCta />
-    </>
-  );
+  return <><Hero /><FeaturedIn /><FounderShowcase /><FeatureSections /><TechTracks /><HowItWorks /><TimelineSection /><Organogram /><TeamGalaxy /><Testimonials /><CommunityPartners /><NewsletterCta /></>;
 }
 
 /* ---------------- About ---------------- */
@@ -1123,13 +1222,7 @@ function About() {
               <p className="text-sm font-bold uppercase tracking-[.25em] text-[#7bd355] sm:tracking-[.3em]">{roles[i]}</p>
               <h3 className="mt-2 font-heading text-2xl font-black text-[#e8ecee] sm:text-3xl">{m.name}</h3>
               <p className="mt-3 text-base leading-relaxed text-[#939596]">{m.bio}</p>
-              <div className="mt-5 flex flex-wrap justify-center gap-2">
-                {m.skills.map((s) => (
-                  <span key={s} className="rounded-full border border-[#7bd355]/20 bg-[#7bd355]/10 px-3 py-1 text-xs font-medium text-[#d9ffd0]">
-                    {s}
-                  </span>
-                ))}
-              </div>
+              <div className="mt-5 flex flex-wrap justify-center gap-2">{m.skills.map((s) => <span key={s} className="rounded-full border border-[#7bd355]/20 bg-[#7bd355]/10 px-3 py-1 text-xs font-medium text-[#d9ffd0]">{s}</span>)}</div>
             </Reveal>
           ))}
         </div>
@@ -1139,28 +1232,19 @@ function About() {
   );
 }
 
+function GlassBlock({ title, copy }: { title: string; copy: string }) {
+  return (
+    <div className="h-full rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.055] p-6 backdrop-blur-xl sm:rounded-[2rem]">
+      <h3 className="font-heading text-xl font-bold text-[#e8ecee] sm:text-2xl">{title}</h3>
+      <p className="mt-4 text-base leading-relaxed text-[#939596]">{copy}</p>
+    </div>
+  );
+}
+
 /* ---------------- Events & Blog ---------------- */
 const blogPosts = [
-  {
-    id: "mehfil-ai-2026",
-    title: "Mehfil AI 2026",
-    category: "Flagship Event",
-    read: "6 min read",
-    image: "Image/1.png?auto=format&fit=crop&w=1200&q=80",
-    date: "May 15, 2026",
-    excerpt: "Mehfil AI is Sociapi Society's flagship gathering celebrating artificial intelligence learning, practical projects, student showcases, mentorship, and future-ready innovation.",
-    content: `Mehfil AI 2026 marks a new era of student-led AI gatherings at Islamia College University Peshawar. This flagship event is designed to showcase what happens when textbook concepts meet real-world execution.\n\nArtificial Intelligence is rapidly changing the future of education, careers, startups, and businesses around the world. To help students understand and explore this fast-growing field, Sociapi Society organized Mehfil AI 2026.\n\nEvent Overview\n\nMehfil AI 2026 was organized with the goal of spreading awareness about Artificial Intelligence and helping students learn practical skills that can support their future careers.\n\nConclusion\n\nMehfil AI 2026 was much more than a technology event. It became a platform for inspiration, learning, networking, and innovation.`,
-  },
-  {
-    id: "agentum-2026",
-    title: "Agentum 2026 Seminar",
-    category: "AI Agents & Automation",
-    read: "5 min read",
-    image: "Image/Agentum Pic/13.png?auto=format&fit=crop&w=1200&q=80",
-    date: "February 17, 2026",
-    excerpt: "AGENTUM 2026 brought together 150+ students to explore AI agents, automation, and robotics through three expert-led sessions at Islamia College University Peshawar.",
-    content: `The AGENTUM 2026 Seminar was successfully held on 17 February 2026, bringing together students, tech enthusiasts, and future innovators to learn about the latest developments in Artificial Intelligence and modern technology.\n\nThe seminar focused on three important topics related to the future of AI, automation, and robotics. Each session was delivered by experienced speakers who shared practical insights and real-world knowledge with the audience.\n\nConclusion\n\nThe AGENTUM 2026 Seminar was a successful and impactful event that helped students understand the importance of Artificial Intelligence, automation, and robotics in the modern world.`,
-  },
+  { id: "mehfil-ai-2026", title: "Mehfil AI 2026", category: "Flagship Event", read: "6 min read", image: "Image/1.png?auto=format&fit=crop&w=1200&q=80", date: "May 15, 2026", excerpt: "Mehfil AI is Sociapi Society's flagship gathering celebrating artificial intelligence learning, practical projects, student showcases, mentorship, and future-ready innovation.", content: `Mehfil AI 2026 marks a new era of student-led AI gatherings at Islamia College University Peshawar. This flagship event is designed to showcase what happens when textbook concepts meet real-world execution.\n\nArtificial Intelligence is rapidly changing the future of education, careers, startups, and businesses around the world. To help students understand and explore this fast-growing field, Sociapi Society organized Mehfil AI 2026.\n\nEvent Overview\n\nMehfil AI 2026 was organized with the goal of spreading awareness about Artificial Intelligence and helping students learn practical skills that can support their future careers.\n\nConclusion\n\nMehfil AI 2026 was much more than a technology event. It became a platform for inspiration, learning, networking, and innovation.` },
+  { id: "agentum-2026", title: "Agentum 2026 Seminar", category: "AI Agents & Automation", read: "5 min read", image: "Image/Agentum Pic/13.png?auto=format&fit=crop&w=1200&q=80", date: "February 17, 2026", excerpt: "AGENTUM 2026 brought together 150+ students to explore AI agents, automation, and robotics through three expert-led sessions at Islamia College University Peshawar.", content: `The AGENTUM 2026 Seminar was successfully held on 17 February 2026, bringing together students, tech enthusiasts, and future innovators to learn about the latest developments in Artificial Intelligence and modern technology.\n\nThe seminar focused on three important topics related to the future of AI, automation, and robotics. Each session was delivered by experienced speakers who shared practical insights and real-world knowledge with the audience.\n\nConclusion\n\nThe AGENTUM 2026 Seminar was a successful and impactful event that helped students understand the importance of Artificial Intelligence, automation, and robotics in the modern world.` },
 ];
 
 function BlogPostView({ postId, onClose }: { postId: string; onClose: () => void }) {
@@ -1168,11 +1252,9 @@ function BlogPostView({ postId, onClose }: { postId: string; onClose: () => void
   if (!post) return null;
   return (
     <div className="fixed inset-0 z-[90] overflow-y-auto bg-[#070907] pb-20">
-      <button onClick={onClose} className="fixed right-5 top-5 z-[95] flex h-11 w-11 items-center justify-center rounded-full border border-[#e8ecee]/20 bg-black/80 text-lg text-[#e8ecee] backdrop-blur-xl transition hover:bg-[#7bd355] hover:text-black" aria-label="Close article">
-        ✕
-      </button>
+      <button onClick={onClose} className="fixed right-5 top-5 z-[95] flex h-11 w-11 items-center justify-center rounded-full border border-[#e8ecee]/20 bg-black/80 text-lg text-[#e8ecee] backdrop-blur-xl transition hover:bg-[#7bd355] hover:text-black" aria-label="Close article">✕</button>
       <div className="relative h-[50vh] w-full overflow-hidden sm:h-[70vh]">
-        <img src={post.image} alt={post.title} className="absolute inset-0 h-full w-full object-cover" style={{ filter: "brightness(0.45)" }} />
+        <img src={post.image} alt={`${post.title} - ${post.category} at Sociapi Society`} className="absolute inset-0 h-full w-full object-cover" style={{ filter: "brightness(0.45)" }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#070907] via-[#070907]/40 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-5 pb-8 sm:px-16 sm:pb-10">
           <div className="mb-4 flex flex-wrap items-center gap-2 sm:gap-3">
@@ -1184,13 +1266,7 @@ function BlogPostView({ postId, onClose }: { postId: string; onClose: () => void
         </div>
       </div>
       <article className="mx-auto max-w-3xl px-5 pt-10 sm:px-10 sm:pt-14">
-        <div className="whitespace-pre-line text-lg leading-[1.85] text-[#e8ecee]/80">
-          {post.content.split("\n\n").map((para, i) => (
-            <p key={i} className="mb-5">
-              {para}
-            </p>
-          ))}
-        </div>
+        <div className="whitespace-pre-line text-lg leading-[1.85] text-[#e8ecee]/80">{post.content.split("\n\n").map((para, i) => <p key={i} className="mb-5">{para}</p>)}</div>
       </article>
     </div>
   );
@@ -1208,11 +1284,7 @@ function EventsBlog() {
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-2 font-mono text-xs uppercase tracking-[0.35em] text-[#7bd355] sm:tracking-[0.45em]">Events &amp; Blog</p>
-            <h2 className="font-heading text-4xl font-black leading-[0.9] tracking-[-0.05em] text-[#e8ecee] sm:text-7xl md:text-8xl">
-              The AI
-              <br />
-              <span className="text-[#939596]/60">Chronicle.</span>
-            </h2>
+            <h2 className="font-heading text-4xl font-black leading-[0.9] tracking-[-0.05em] text-[#e8ecee] sm:text-7xl md:text-8xl">The AI<br /><span className="text-[#939596]/60">Chronicle.</span></h2>
           </div>
           <input className="glass-input md:max-w-xs" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search articles..." />
         </div>
@@ -1222,20 +1294,14 @@ function EventsBlog() {
           <article onClick={() => setViewId(featured.id)} className="group relative cursor-pointer overflow-hidden rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] backdrop-blur-xl transition hover:border-[#7bd355]/30 sm:rounded-[2rem]">
             <div className="grid md:grid-cols-[1.1fr_0.9fr]">
               <div className="relative min-h-[280px] overflow-hidden sm:min-h-[420px]">
-                <img src={featured.image} alt={featured.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" style={{ filter: "brightness(0.75)" }} />
-                <div className="absolute left-4 top-4 sm:left-5 sm:top-5">
-                  <span className="inline-flex items-center gap-2 rounded-sm bg-[#7bd355] px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#0c140a] sm:px-3 sm:py-1.5">★ Featured</span>
-                </div>
+                <img src={featured.image} alt={`${featured.title} - Featured Event at Sociapi Society`} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" style={{ filter: "brightness(0.75)" }} />
+                <div className="absolute left-4 top-4 sm:left-5 sm:top-5"><span className="inline-flex items-center gap-2 rounded-sm bg-[#7bd355] px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#0c140a] sm:px-3 sm:py-1.5">★ Featured</span></div>
               </div>
               <div className="flex flex-col justify-center p-6 sm:p-10">
                 <span className="mb-4 border-l-2 border-[#7bd355] pl-3 font-mono text-xs uppercase tracking-[0.35em] text-[#7bd355]">{featured.category}</span>
                 <h2 className="font-heading text-2xl font-black leading-[0.95] tracking-[-0.04em] text-[#e8ecee] transition group-hover:text-[#7bd355] sm:text-4xl">{featured.title}</h2>
                 <p className="mt-5 text-base leading-relaxed text-[#939596]">{featured.excerpt}</p>
-                <div className="mt-6 flex flex-wrap items-center gap-2 text-sm text-[#939596] sm:gap-3">
-                  <span>{featured.date}</span>
-                  <span>·</span>
-                  <span>{featured.read}</span>
-                </div>
+                <div className="mt-6 flex flex-wrap items-center gap-2 text-sm text-[#939596] sm:gap-3"><span>{featured.date}</span><span>·</span><span>{featured.read}</span></div>
                 <span className="mt-8 inline-flex items-center gap-2 font-heading text-base font-bold text-[#7bd355] transition-all group-hover:gap-4">Read Full Article →</span>
               </div>
             </div>
@@ -1247,20 +1313,14 @@ function EventsBlog() {
               <article key={p.id} onClick={() => setViewId(p.id)} className="group relative cursor-pointer overflow-hidden rounded-[1.5rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] backdrop-blur-xl transition hover:-translate-y-1 hover:border-[#7bd355]/30 sm:rounded-[1.75rem]">
                 <div className="flex flex-col gap-0 sm:flex-row">
                   <div className="relative min-h-[160px] w-full shrink-0 overflow-hidden sm:min-h-[200px] sm:w-44">
-                    <img src={p.image} alt={p.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" style={{ filter: "brightness(0.7)" }} />
-                    <div className="absolute bottom-3 left-3">
-                      <span className="font-heading text-4xl font-black text-[#e8ecee]/15">0{i + 2}</span>
-                    </div>
+                    <img src={p.image} alt={`${p.title} - Sociapi Society Blog Post`} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" style={{ filter: "brightness(0.7)" }} />
+                    <div className="absolute bottom-3 left-3"><span className="font-heading text-4xl font-black text-[#e8ecee]/15">0{i + 2}</span></div>
                   </div>
                   <div className="flex flex-col justify-center p-5 sm:p-6">
                     <span className="mb-2 font-mono text-[10px] uppercase tracking-[0.35em] text-[#7bd355]">{p.category}</span>
                     <h3 className="font-heading text-lg font-black leading-[1] tracking-[-0.03em] text-[#e8ecee] transition group-hover:text-[#7bd355] sm:text-xl">{p.title}</h3>
                     <p className="mt-3 text-sm leading-relaxed text-[#939596]">{p.excerpt}</p>
-                    <div className="mt-4 flex items-center gap-3 font-mono text-xs text-[#939596]">
-                      <span>{p.date}</span>
-                      <span>·</span>
-                      <span>{p.read}</span>
-                    </div>
+                    <div className="mt-4 flex items-center gap-3 font-mono text-xs text-[#939596]"><span>{p.date}</span><span>·</span><span>{p.read}</span></div>
                   </div>
                 </div>
               </article>
@@ -1277,15 +1337,7 @@ function Services() {
     <main className="section pt-28 sm:pt-32">
       <SectionTitle label="Services" title="Creative and technical services." copy="Premium student-led execution for digital products, brands, websites, and cinematic content." />
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-4">
-        {services.map((s, i) => (
-          <Reveal key={s} delay={i * 0.08}>
-            <div className="service-card">
-              <span>0{i + 1}</span>
-              <h3>{s}</h3>
-              <p>Strategy, execution, iteration, and delivery with a premium technology aesthetic.</p>
-            </div>
-          </Reveal>
-        ))}
+        {services.map((s, i) => <Reveal key={s} delay={i * 0.08}><div className="service-card"><span>0{i + 1}</span><h3>{s}</h3><p>Strategy, execution, iteration, and delivery with a premium technology aesthetic.</p></div></Reveal>)}
       </div>
     </main>
   );
@@ -1301,13 +1353,7 @@ function EmailForm({ kind }: { kind: "Partnership" | "Career" | "Contact" }) {
         <input required type="email" name="email" className="glass-input" placeholder="Email" />
         <input name="phone" className="glass-input" placeholder="Phone" />
       </div>
-      <select name="type" className="glass-input">
-        <option>{kind === "Partnership" ? "Event Partner" : kind === "Career" ? "Internship Opportunity" : "General Inquiry"}</option>
-        <option>Learning Partner</option>
-        <option>Community Partner</option>
-        <option>Volunteer Position</option>
-        <option>Membership Application</option>
-      </select>
+      <select name="type" className="glass-input"><option>{kind === "Partnership" ? "Event Partner" : kind === "Career" ? "Internship Opportunity" : "General Inquiry"}</option><option>Learning Partner</option><option>Community Partner</option><option>Volunteer Position</option><option>Membership Application</option></select>
       <textarea required name="message" className="glass-input min-h-32" placeholder="Message" />
       <button className="rounded-full bg-[#7bd355] px-7 py-4 font-bold text-[#0c140a]">Submit and Notify by Email</button>
     </form>
@@ -1340,13 +1386,7 @@ function Gallery() {
   return (
     <main className="section pt-28 sm:pt-32">
       <SectionTitle label="Gallery" title="Moments in motion." copy="Highlights from Sociapi Society events, seminars, and community gatherings." />
-      <div className="masonry mx-auto max-w-7xl">
-        {galleryImages.map((src, i) => (
-          <button key={src + i} onClick={() => setIndex(i)} className="mb-4 block overflow-hidden rounded-[1.25rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.05] p-2 sm:rounded-[1.5rem]">
-            <img src={src} alt={`Sociapi gallery ${i + 1}`} loading="lazy" className="w-full rounded-[1rem] object-cover transition duration-500 hover:scale-105 sm:rounded-[1.1rem]" />
-          </button>
-        ))}
-      </div>
+      <div className="masonry mx-auto max-w-7xl">{galleryImages.map((src, i) => <button key={src + i} onClick={() => setIndex(i)} className="mb-4 block overflow-hidden rounded-[1.25rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.05] p-2 sm:rounded-[1.5rem]"><img src={src} alt={`Sociapi Society event photo ${i + 1} - Gallery`} loading="lazy" className="w-full rounded-[1rem] object-cover transition duration-500 hover:scale-105 sm:rounded-[1.1rem]" /></button>)}</div>
       {index !== null && <Lightbox index={index} setIndex={setIndex} total={galleryImages.length} />}
     </main>
   );
@@ -1355,16 +1395,10 @@ function Gallery() {
 function Lightbox({ index, setIndex, total }: { index: number; setIndex: (value: number | null) => void; total: number }) {
   return (
     <div className="fixed inset-0 z-[90] grid place-items-center bg-black/90 p-4">
-      <button onClick={() => setIndex(null)} className="absolute right-5 top-5 z-10 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]">
-        ✕
-      </button>
-      <button onClick={() => setIndex((index + total - 1) % total)} className="absolute left-3 z-10 rounded-full bg-[#e8ecee]/15 px-3 py-2 text-[#e8ecee] sm:left-5 sm:px-4">
-        Prev
-      </button>
-      <img src={galleryImages[index]} alt="Gallery preview" className="max-h-[85vh] max-w-[85vw] rounded-2xl object-contain sm:rounded-3xl" />
-      <button onClick={() => setIndex((index + 1) % total)} className="absolute right-3 z-10 rounded-full bg-[#e8ecee]/15 px-3 py-2 text-[#e8ecee] sm:right-5 sm:px-4">
-        Next
-      </button>
+      <button onClick={() => setIndex(null)} className="absolute right-5 top-5 z-10 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]">✕</button>
+      <button onClick={() => setIndex((index + total - 1) % total)} className="absolute left-3 z-10 rounded-full bg-[#e8ecee]/15 px-3 py-2 text-[#e8ecee] sm:left-5 sm:px-4">Prev</button>
+      <img src={galleryImages[index]} alt="Sociapi Society event photo preview" className="max-h-[85vh] max-w-[85vw] rounded-2xl object-contain sm:rounded-3xl" />
+      <button onClick={() => setIndex((index + 1) % total)} className="absolute right-3 z-10 rounded-full bg-[#e8ecee]/15 px-3 py-2 text-[#e8ecee] sm:right-5 sm:px-4">Next</button>
     </div>
   );
 }
@@ -1382,38 +1416,24 @@ function Shop() {
     <main className="section pt-28 sm:pt-32">
       <SectionTitle label="Shop" title="Official society wear." copy="Select size, quantity, add to cart, preview products, and checkout instantly via WhatsApp." />
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
-        {products.map((p) => (
-          <Product key={p.name} name={p.name} image={p.image} description={p.description} price={p.price} onPreview={setPreview} onAdd={(item) => setCart([...cart, item])} />
-        ))}
+        {products.map((p) => <Product key={p.name} name={p.name} image={p.image} description={p.description} price={p.price} onPreview={setPreview} onAdd={(item) => setCart([...cart, item])} />)}
       </div>
       <div className="mx-auto mt-10 max-w-3xl rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-5 text-[#e8ecee] sm:rounded-[2rem] sm:p-6">
         <h3 className="font-heading text-xl sm:text-2xl">Cart</h3>
-        {cart.length === 0 ? (
-          <p className="mt-3 text-base text-[#939596]">Cart is empty.</p>
-        ) : (
-          <div className="mt-3 space-y-2">
-            {cart.map((c, i) => (
-              <div key={`${c.name}-${i}`} className="flex items-center justify-between rounded-xl bg-[#e8ecee]/[.05] px-3 py-3 sm:px-4">
-                <span className="text-sm text-[#e8ecee]/75">
-                  {c.qty} x {c.name} / <span className="text-[#7bd355]">{c.size}</span>
-                </span>
-                <button onClick={() => removeFromCart(i)} className="ml-3 rounded-full bg-red-500/20 px-3 py-1 text-xs text-red-400">
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
+        {cart.length === 0 ? <p className="mt-3 text-base text-[#939596]">Cart is empty.</p> : (
+          <div className="mt-3 space-y-2">{cart.map((c, i) => (
+            <div key={`${c.name}-${i}`} className="flex items-center justify-between rounded-xl bg-[#e8ecee]/[.05] px-3 py-3 sm:px-4">
+              <span className="text-sm text-[#e8ecee]/75">{c.qty} x {c.name} / <span className="text-[#7bd355]">{c.size}</span></span>
+              <button onClick={() => removeFromCart(i)} className="ml-3 rounded-full bg-red-500/20 px-3 py-1 text-xs text-red-400">Remove</button>
+            </div>
+          ))}</div>
         )}
-        <a className="mt-5 inline-flex rounded-full bg-[#7bd355] px-6 py-3 text-base font-bold text-[#0c140a]" href={`https://wa.me/923329984490?text=${orderText}`} target="_blank" rel="noreferrer">
-          Checkout via WhatsApp
-        </a>
+        <a className="mt-5 inline-flex rounded-full bg-[#7bd355] px-6 py-3 text-base font-bold text-[#0c140a]" href={`https://wa.me/923329984490?text=${orderText}`} target="_blank" rel="noreferrer">Checkout via WhatsApp</a>
       </div>
       {preview && (
         <div className="fixed inset-0 z-[90] grid place-items-center bg-black/85 p-4">
-          <button className="absolute right-5 top-5 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]" onClick={() => setPreview(null)}>
-            ✕
-          </button>
-          <img src={preview} alt="Product preview" className="max-h-[85vh] rounded-2xl sm:rounded-3xl" />
+          <button className="absolute right-5 top-5 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]" onClick={() => setPreview(null)}>✕</button>
+          <img src={preview} alt="Sociapi Society official merchandise preview" className="max-h-[85vh] rounded-2xl sm:rounded-3xl" />
         </div>
       )}
     </main>
@@ -1425,23 +1445,13 @@ function Product({ name, image, description, price, onPreview, onAdd }: { name: 
   const [qty, setQty] = useState(1);
   return (
     <div className="rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
-      <button onClick={() => onPreview(image)} className="w-full">
-        <Avatar src={image} name={name} className="aspect-square w-full rounded-[1.25rem] object-cover sm:rounded-[1.5rem]" />
-      </button>
+      <button onClick={() => onPreview(image)} className="w-full"><Avatar src={image} name={`${name} - Sociapi Society Official Merchandise`} className="aspect-square w-full rounded-[1.25rem] object-cover sm:rounded-[1.5rem]" /></button>
       <h3 className="mt-5 font-heading text-xl text-[#e8ecee] sm:text-2xl">{name}</h3>
       <p className="mt-1 text-base leading-relaxed text-[#939596]">{description}</p>
       <p className="mt-2 font-heading text-lg font-bold text-[#7bd355]">{price}</p>
-      <div className="mt-4 flex gap-2">
-        {["S", "M", "L", "XL"].map((s) => (
-          <button key={s} onClick={() => setSize(s)} className={`rounded-full px-3 py-2 text-sm font-bold transition sm:px-4 ${size === s ? "bg-[#7bd355] text-[#0c140a]" : "bg-[#e8ecee]/10 text-[#e8ecee] hover:bg-[#e8ecee]/20"}`}>
-            {s}
-          </button>
-        ))}
-      </div>
+      <div className="mt-4 flex gap-2">{["S", "M", "L", "XL"].map((s) => <button key={s} onClick={() => setSize(s)} className={`rounded-full px-3 py-2 text-sm font-bold transition sm:px-4 ${size === s ? "bg-[#7bd355] text-[#0c140a]" : "bg-[#e8ecee]/10 text-[#e8ecee] hover:bg-[#e8ecee]/20"}`}>{s}</button>)}</div>
       <input className="glass-input mt-4" type="number" min={1} value={qty} onChange={(e) => setQty(Number(e.target.value))} />
-      <button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-[#e8ecee] px-5 py-3 font-bold text-[#0c140a] transition hover:bg-[#7bd355]">
-        Add to Cart
-      </button>
+      <button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-[#e8ecee] px-5 py-3 font-bold text-[#0c140a] transition hover:bg-[#7bd355]">Add to Cart</button>
     </div>
   );
 }
@@ -1473,12 +1483,8 @@ function Contact() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2">
         <EmailForm kind="Contact" />
         <div className="overflow-hidden rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-3 sm:rounded-[2rem] sm:p-4">
-          <iframe title="Islamia College University Peshawar map" className="h-full min-h-[320px] w-full rounded-[1.25rem] grayscale invert sm:min-h-[420px] sm:rounded-[1.5rem]" loading="lazy" src="https://www.google.com/maps?q=Islamia%20College%20University%20Peshawar%20Pakistan&output=embed" />
-          <div className="mt-4 flex gap-4 px-2 text-base text-[#e8ecee]">
-            <a className="hover:text-[#7bd355]" href="mailto:sociapisociety@gmail.com">Email</a>
-            <a className="hover:text-[#7bd355]" href="tel:+923329984490">Call</a>
-            <a className="hover:text-[#7bd355]" href="https://wa.me/923329984490" target="_blank" rel="noreferrer">WhatsApp</a>
-          </div>
+          <iframe title="Islamia College University Peshawar location map" className="h-full min-h-[320px] w-full rounded-[1.25rem] grayscale invert sm:min-h-[420px] sm:rounded-[1.5rem]" loading="lazy" src="https://www.google.com/maps?q=Islamia%20College%20University%20Peshawar%20Pakistan&output=embed" />
+          <div className="mt-4 flex gap-4 px-2 text-base text-[#e8ecee]"><a className="hover:text-[#7bd355]" href="mailto:sociapisociety@gmail.com">Email</a><a className="hover:text-[#7bd355]" href="tel:+923329984490">Call</a><a className="hover:text-[#7bd355]" href="https://wa.me/923329984490" target="_blank" rel="noreferrer">WhatsApp</a></div>
         </div>
       </div>
     </main>
@@ -1490,14 +1496,7 @@ function Reviews() {
     <main className="section pt-28 sm:pt-32">
       <SectionTitle label="Reviews" title="Premium testimonial system." copy="Carousel movement, responsive grid, and conversion-ready social proof." />
       <Testimonials />
-      <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-4">
-        {reviews.map((r) => (
-          <blockquote key={r} className="testimonial-card !min-w-0 !animate-none">
-            "{r}"
-            <footer>Community Review</footer>
-          </blockquote>
-        ))}
-      </div>
+      <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-4">{reviews.map((r) => <blockquote key={r} className="testimonial-card !min-w-0 !animate-none">"{r}"<footer>Community Review</footer></blockquote>)}</div>
     </main>
   );
 }
@@ -1511,25 +1510,13 @@ function FAQs() {
   return (
     <main className="section pt-28 sm:pt-32">
       <SectionTitle label="FAQs" title="Search the knowledge base." copy="Filter by category and open answers for membership, programs, events, shop, and partnerships." />
-      <div className="mx-auto mb-8 flex max-w-3xl flex-col gap-3 sm:flex-row">
-        <input className="glass-input flex-1" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search FAQs" />
-        <select className="glass-input sm:max-w-xs" value={cat} onChange={(e) => setCat(e.target.value)}>
-          {cats.map((c) => (
-            <option key={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-      <div className="mx-auto max-w-3xl space-y-3">
-        {filtered.map((f, i) => (
-          <div key={f[1]} className="rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-5 text-[#e8ecee] sm:rounded-3xl">
-            <button className="flex w-full justify-between gap-3 text-left font-heading text-lg sm:text-xl" onClick={() => setOpen(open === i ? -1 : i)}>
-              <span>{f[1]}</span>
-              <span className="shrink-0">{open === i ? "−" : "+"}</span>
-            </button>
-            {open === i && <p className="mt-4 text-base leading-relaxed text-[#939596]">{f[2]}</p>}
-          </div>
-        ))}
-      </div>
+      <div className="mx-auto mb-8 flex max-w-3xl flex-col gap-3 sm:flex-row"><input className="glass-input flex-1" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search FAQs" /><select className="glass-input sm:max-w-xs" value={cat} onChange={(e) => setCat(e.target.value)}>{cats.map((c) => <option key={c}>{c}</option>)}</select></div>
+      <div className="mx-auto max-w-3xl space-y-3">{filtered.map((f, i) => (
+        <div key={f[1]} className="rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-5 text-[#e8ecee] sm:rounded-3xl">
+          <button className="flex w-full justify-between gap-3 text-left font-heading text-lg sm:text-xl" onClick={() => setOpen(open === i ? -1 : i)}><span>{f[1]}</span><span className="shrink-0">{open === i ? "−" : "+"}</span></button>
+          {open === i && <p className="mt-4 text-base leading-relaxed text-[#939596]">{f[2]}</p>}
+        </div>
+      ))}</div>
     </main>
   );
 }
@@ -1540,7 +1527,14 @@ function StickyJoin({ route }: { route: PageKey }) {
   if (route === "contact") return null;
   return (
     <div className={`fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-4 transition-all duration-300 lg:hidden ${scrolled ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"}`}>
-      <a href={JOIN_FORM_URL} target="_blank" rel="noreferrer" className="pointer-events-auto flex items-center gap-2 rounded-full bg-[#7bd355] px-7 py-3.5 text-base font-bold text-[#0c140a] shadow-2xl shadow-[#7bd355]/40 ring-1 ring-black/10">
+      <a
+        href={JOIN_COMMUNITY_FORM_URL}
+        onClick={(e) => {
+          e.preventDefault();
+          window.open(JOIN_COMMUNITY_FORM_URL, "_blank", "noopener,noreferrer");
+        }}
+        className="pointer-events-auto flex items-center gap-2 rounded-full bg-[#7bd355] px-7 py-3.5 text-base font-bold text-[#0c140a] shadow-2xl shadow-[#7bd355]/40 ring-1 ring-black/10"
+      >
         Join Community →
       </a>
     </div>
@@ -1553,9 +1547,7 @@ function WhatsAppWidget() {
   return (
     <>
       <button onClick={() => setOpen((o) => !o)} id="wa-circle" className="group fixed bottom-5 right-4 z-50 flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-[#25D366]/40 transition hover:scale-110 sm:bottom-6 sm:right-5 sm:h-[62px] sm:w-[62px]" aria-label="Open WhatsApp chat">
-        <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 sm:h-7 sm:w-7">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 sm:h-7 sm:w-7"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
       </button>
       {open && (
         <>
@@ -1563,29 +1555,12 @@ function WhatsAppWidget() {
           <div className="fixed bottom-[80px] right-4 z-[55] w-[calc(100vw-2rem)] max-w-xs animate-slide-up overflow-hidden rounded-3xl border border-[#e8ecee]/15 bg-[#333333]/95 p-5 text-[#e8ecee] shadow-2xl backdrop-blur-2xl sm:bottom-[92px] sm:right-5">
             <div className="flex items-start gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-full bg-[#7bd355] font-black text-[#0c140a] ring-2 ring-[#25D366]/60">S</div>
-              <div>
-                <p className="text-sm font-bold">Sociapi Society</p>
-                <p className="mt-0.5 text-xs text-green-400">● Online</p>
-              </div>
-              <button onClick={() => setOpen(false)} className="ml-auto self-start rounded-lg bg-[#e8ecee]/10 px-2.5 py-1 text-xs">
-                ✕
-              </button>
+              <div><p className="text-sm font-bold">Sociapi Society</p><p className="mt-0.5 text-xs text-green-400">● Online</p></div>
+              <button onClick={() => setOpen(false)} className="ml-auto self-start rounded-lg bg-[#e8ecee]/10 px-2.5 py-1 text-xs">✕</button>
             </div>
-            <div className="mt-4 text-sm leading-relaxed text-[#939596]">
-              Hi! 👋 Welcome to Sociapi Society.
-              <br />
-              How can we help you?
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {["Join Community", "Events Info", "Partnership", "Other"].map((b) => (
-                <button key={b} onClick={() => window.open(`https://wa.me/923329984490?text=Hi! I am interested in: ${b}`, "_blank")} className="rounded-xl border border-[#e8ecee]/10 bg-[#e8ecee]/8 px-3 py-2.5 text-xs font-medium text-[#e8ecee]/80 transition hover:bg-[#e8ecee]/15 hover:text-[#25D366]">
-                  {b}
-                </button>
-              ))}
-            </div>
-            <a href="https://wa.me/923329984490?text=Hello Sociapi Society!" target="_blank" rel="noreferrer" className="mt-4 block rounded-2xl bg-[#25D366] py-3 text-center text-sm font-bold text-black shadow-lg shadow-[#25D366]/30">
-              Start Chat →
-            </a>
+            <div className="mt-4 text-sm leading-relaxed text-[#939596]">Hi! 👋 Welcome to Sociapi Society.<br />How can we help you?</div>
+            <div className="mt-4 grid grid-cols-2 gap-2">{["Join Community", "Events Info", "Partnership", "Other"].map((b) => <button key={b} onClick={() => window.open(`https://wa.me/923329984490?text=Hi! I am interested in: ${b}`, "_blank")} className="rounded-xl border border-[#e8ecee]/10 bg-[#e8ecee]/8 px-3 py-2.5 text-xs font-medium text-[#e8ecee]/80 transition hover:bg-[#e8ecee]/15 hover:text-[#25D366]">{b}</button>)}</div>
+            <a href="https://wa.me/923329984490?text=Hello Sociapi Society!" target="_blank" rel="noreferrer" className="mt-4 block rounded-2xl bg-[#25D366] py-3 text-center text-sm font-bold text-black shadow-lg shadow-[#25D366]/30">Start Chat →</a>
           </div>
         </>
       )}
@@ -1602,94 +1577,33 @@ function FloatingUtilities() {
     const timer = setTimeout(() => setLoading(false), 900);
     const onScroll = () => setProgress((scrollY / (document.body.scrollHeight - innerHeight)) * 100);
     addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      clearTimeout(timer);
-      removeEventListener("scroll", onScroll);
-    };
+    return () => { clearTimeout(timer); removeEventListener("scroll", onScroll); };
   }, []);
-  useEffect(() => {
-    document.documentElement.classList.toggle("light-mode", !dark);
-  }, [dark]);
+  useEffect(() => { document.documentElement.classList.toggle("light-mode", !dark); }, [dark]);
   return (
     <>
       <div className="fixed left-0 top-0 z-[100] h-1 bg-[#7bd355] transition-[width]" style={{ width: `${progress}%` }} />
       {loading && (
         <div className="fixed inset-0 z-[120] grid place-items-center bg-black text-center text-[#e8ecee]">
-          <div>
-            <Logo className="mx-auto mb-5 h-16 w-16 animate-pulse text-3xl" />
-            <div className="loader mx-auto" />
-            <p className="mt-5 font-heading text-sm tracking-[.4em]">SOCIAPI SOCIETY</p>
-          </div>
+          <div><Logo className="mx-auto mb-5 h-16 w-16 animate-pulse text-3xl" /><div className="loader mx-auto" /><p className="mt-5 font-heading text-sm tracking-[.4em]">SOCIAPI SOCIETY</p></div>
         </div>
       )}
       {!isMobile && <div className="cursor-glow" />}
-      <button onClick={() => setDark(!dark)} className="fixed bottom-[88px] right-4 z-50 rounded-full border border-[#e8ecee]/15 bg-[#e8ecee]/10 px-4 py-2.5 text-sm text-[#e8ecee] backdrop-blur-xl transition hover:bg-[#e8ecee]/18 sm:bottom-24 sm:right-5">
-        {dark ? "Light" : "Dark"}
-      </button>
+      <button onClick={() => setDark(!dark)} className="fixed bottom-[88px] right-4 z-50 rounded-full border border-[#e8ecee]/15 bg-[#e8ecee]/10 px-4 py-2.5 text-sm text-[#e8ecee] backdrop-blur-xl transition hover:bg-[#e8ecee]/18 sm:bottom-24 sm:right-5">{dark ? "Light" : "Dark"}</button>
       <WhatsAppWidget />
-      <button onClick={() => scrollTo({ top: 0, behavior: "smooth" })} className="fixed bottom-5 left-4 z-50 flex h-[44px] w-[44px] items-center justify-center rounded-full border border-[#e8ecee]/15 bg-[#e8ecee]/10 text-[#e8ecee] backdrop-blur-xl sm:bottom-6 sm:left-5 sm:h-[46px] sm:w-[46px]" aria-label="Scroll to top">
-        ↑
-      </button>
+      <button onClick={() => scrollTo({ top: 0, behavior: "smooth" })} className="fixed bottom-5 left-4 z-50 flex h-[44px] w-[44px] items-center justify-center rounded-full border border-[#e8ecee]/15 bg-[#e8ecee]/10 text-[#e8ecee] backdrop-blur-xl sm:bottom-6 sm:left-5 sm:h-[46px] sm:w-[46px]" aria-label="Scroll to top">↑</button>
     </>
   );
 }
 
 /* ---------------- Footer ---------------- */
 const socials = [
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/sociapi/",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-        <path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.21 15.58 2.2 15.2 2.2 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2zm0 1.8c-3.15 0-3.5.01-4.74.07-.9.04-1.38.19-1.71.32-.43.17-.74.37-1.06.69-.32.32-.52.63-.69 1.06-.13.33-.28.81-.32 1.71C3.21 8.5 3.2 8.85 3.2 12s.01 3.5.07 4.74c.04.9.19 1.38.32 1.71.17.43.37.74.69 1.06.32.32.63.52 1.06.69.33.13.81.28 1.71.32 1.24.06 1.59.07 4.74.07s3.5-.01 4.74-.07c.9-.04 1.38-.19 1.71-.32.43-.17.74-.37 1.06-.69.32-.32.52-.63.69-1.06.13-.33.28-.81.32-1.71.06-1.24.07-1.59.07-4.74s-.01-3.5-.07-4.74c-.04-.9-.19-1.38-.32-1.71a2.85 2.85 0 00-.69-1.06 2.85 2.85 0 00-1.06-.69c-.33-.13-.81-.28-1.71-.32C15.5 4.01 15.15 4 12 4zm0 3.06A4.94 4.94 0 1112 17a4.94 4.94 0 010-9.88zm0 1.8a3.14 3.14 0 100 6.28 3.14 3.14 0 000-6.28zm5.14-2.16a1.15 1.15 0 110 2.3 1.15 1.15 0 010-2.3z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Facebook",
-    href: "https://www.facebook.com/sociapi/",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-        <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.52 1.5-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.44 2.9h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z" />
-      </svg>
-    ),
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/company/sociapisociety/",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Twitter / X",
-    href: "https://x.com/sociapisociety",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-        <path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.22-6.82-5.97 6.82H1.66l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23zm-1.16 17.52h1.83L7.01 4.13H5.04l12.04 15.64z" />
-      </svg>
-    ),
-  },
-  {
-    label: "TikTok",
-    href: "https://www.tiktok.com/@sociapi",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-        <path d="M16.6 5.82a4.28 4.28 0 01-1.01-2.82h-3.1v12.3a2.45 2.45 0 01-2.45 2.42 2.45 2.45 0 01-2.46-2.44 2.45 2.45 0 013.04-2.37V7.3a5.56 5.56 0 00-.58-.03A5.56 5.56 0 004.5 12.8a5.56 5.56 0 005.55 5.55 5.56 5.56 0 005.56-5.55V8.9a7.34 7.34 0 004.29 1.37V7.16a4.28 4.28 0 01-3.3-1.34z" />
-      </svg>
-    ),
-  },
-  {
-    label: "YouTube",
-    href: "https://www.youtube.com/@sociapi",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-        <path d="M23.5 6.2a3.02 3.02 0 00-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 00.5 6.2 31.5 31.5 0 000 12a31.5 31.5 0 00.5 5.8 3.02 3.02 0 002.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 002.12-2.14A31.5 31.5 0 0024 12a31.5 31.5 0 00-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z" />
-      </svg>
-    ),
-  },
+  { label: "Instagram", href: "https://www.instagram.com/sociapi/", icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.21 15.58 2.2 15.2 2.2 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2zm0 1.8c-3.15 0-3.5.01-4.74.07-.9.04-1.38.19-1.71.32-.43.17-.74.37-1.06.69-.32.32-.52.63-.69 1.06-.13.33-.28.81-.32 1.71C3.21 8.5 3.2 8.85 3.2 12s.01 3.5.07 4.74c.04.9.19 1.38.32 1.71.17.43.37.74.69 1.06.32.32.63.52 1.06.69.33.13.81.28 1.71.32 1.24.06 1.59.07 4.74.07s3.5-.01 4.74-.07c.9-.04 1.38-.19 1.71-.32.43-.17.74-.37 1.06-.69.32-.32.52-.63.69-1.06.13-.33.28-.81.32-1.71.06-1.24.07-1.59.07-4.74s-.01-3.5-.07-4.74c-.04-.9-.19-1.38-.32-1.71a2.85 2.85 0 00-.69-1.06 2.85 2.85 0 00-1.06-.69c-.33-.13-.81-.28-1.71-.32C15.5 4.01 15.15 4 12 4zm0 3.06A4.94 4.94 0 1112 17a4.94 4.94 0 010-9.88zm0 1.8a3.14 3.14 0 100 6.28 3.14 3.14 0 000-6.28zm5.14-2.16a1.15 1.15 0 110 2.3 1.15 1.15 0 010-2.3z" /></svg> },
+  { label: "Facebook", href: "https://www.facebook.com/sociapi/", icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.52 1.5-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.44 2.9h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z" /></svg> },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/sociapisociety/", icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" /></svg> },
+  { label: "Twitter / X", href: "https://x.com/sociapisociety", icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.22-6.82-5.97 6.82H1.66l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23zm-1.16 17.52h1.83L7.01 4.13H5.04l12.04 15.64z" /></svg> },
+  { label: "TikTok", href: "https://www.tiktok.com/@sociapi", icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M16.6 5.82a4.28 4.28 0 01-1.01-2.82h-3.1v12.3a2.45 2.45 0 01-2.45 2.42 2.45 2.45 0 01-2.46-2.44 2.45 2.45 0 013.04-2.37V7.3a5.56 5.56 0 00-.58-.03A5.56 5.56 0 004.5 12.8a5.56 5.56 0 005.55 5.55 5.56 5.56 0 005.56-5.55V8.9a7.34 7.34 0 004.29 1.37V7.16a4.28 4.28 0 01-3.3-1.34z" /></svg> },
+  { label: "YouTube", href: "https://www.youtube.com/@sociapi", icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M23.5 6.2a3.02 3.02 0 00-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 00.5 6.2 31.5 31.5 0 000 12a31.5 31.5 0 00.5 5.8 3.02 3.02 0 002.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 002.12-2.14A31.5 31.5 0 0024 12a31.5 31.5 0 00-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z" /></svg> },
 ];
 
 function Footer() {
@@ -1701,55 +1615,39 @@ function Footer() {
             <h3 className="font-heading text-2xl font-black sm:text-3xl">Ready to turn ideas into intelligence?</h3>
             <p className="mt-2 text-lg text-[#939596]">Join 20+ builders shaping the future of AI at Islamia College University.</p>
           </div>
-          <a href={JOIN_FORM_URL} target="_blank" rel="noreferrer" className="magnetic shrink-0 rounded-full bg-[#7bd355] px-8 py-4 text-base font-bold text-[#0c140a]">
+          <a
+            href={JOIN_COMMUNITY_FORM_URL}
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(JOIN_COMMUNITY_FORM_URL, "_blank", "noopener,noreferrer");
+            }}
+            className="magnetic shrink-0 rounded-full bg-[#7bd355] px-8 py-4 text-base font-bold text-[#0c140a]"
+          >
             Join Community →
           </a>
         </div>
       </Reveal>
       <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.4fr_.8fr_.8fr_.9fr]">
         <div>
-          <div className="flex items-center gap-3">
-            <Logo className="h-11 w-11 text-xl" />
-            <h2 className="font-heading text-2xl font-black sm:text-3xl">SOCIAPI SOCIETY</h2>
-          </div>
+          <div className="flex items-center gap-3"><Logo className="h-11 w-11 text-xl" /><h2 className="font-heading text-2xl font-black sm:text-3xl">SOCIAPI SOCIETY</h2></div>
           <p className="mt-4 max-w-md text-base leading-relaxed text-[#939596]">The official digital headquarters for AI, Data Science, Robotics, and student innovation at Islamia College University Peshawar.</p>
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            {socials.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label} className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#e8ecee]/12 bg-[#e8ecee]/6 text-[#e8ecee]/75 transition hover:-translate-y-0.5 hover:border-[#7bd355]/40 hover:bg-[#7bd355] hover:text-[#0c140a]">
-                {s.icon}
-              </a>
-            ))}
+            {socials.map((s) => <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={`${s.label} - Sociapi Society Social Media`} className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#e8ecee]/12 bg-[#e8ecee]/6 text-[#e8ecee]/75 transition hover:-translate-y-0.5 hover:border-[#7bd355]/40 hover:bg-[#7bd355] hover:text-[#0c140a]">{s.icon}</a>)}
           </div>
         </div>
         <div>
           <h3 className="mb-4 font-heading text-sm tracking-[.25em] text-[#7bd355]">EXPLORE</h3>
-          <ul className="space-y-2.5 text-base text-[#939596]">
-            <li><a href="#about" className="hover:text-[#7bd355]">About Us</a></li>
-            <li><a href="#team" className="hover:text-[#7bd355]">Our Team</a></li>
-            <li><a href="#chapters" className="hover:text-[#7bd355]">Chapters</a></li>
-            <li><a href="#events" className="hover:text-[#7bd355]">Events &amp; Blog</a></li>
-            <li><a href="#gallery" className="hover:text-[#7bd355]">Gallery</a></li>
-          </ul>
+          <ul className="space-y-2.5 text-base text-[#939596]"><li><a href="#about" className="hover:text-[#7bd355]">About Us</a></li><li><a href="#team" className="hover:text-[#7bd355]">Our Team</a></li><li><a href="#chapters" className="hover:text-[#7bd355]">Chapters</a></li><li><a href="#events" className="hover:text-[#7bd355]">Events &amp; Blog</a></li><li><a href="#gallery" className="hover:text-[#7bd355]">Gallery</a></li></ul>
         </div>
         <div>
           <h3 className="mb-4 font-heading text-sm tracking-[.25em] text-[#7bd355]">ENGAGE</h3>
-          <ul className="space-y-2.5 text-base text-[#939596]">
-            <li><a href="#services" className="hover:text-[#7bd355]">Services</a></li>
-            <li><a href="#partner" className="hover:text-[#7bd355]">Partner</a></li>
-            <li><a href="#career" className="hover:text-[#7bd355]">Career</a></li>
-            <li><a href="#shop" className="hover:text-[#7bd355]">Shop</a></li>
-            <li><a href="#faqs" className="hover:text-[#7bd355]">FAQs</a></li>
-          </ul>
+          <ul className="space-y-2.5 text-base text-[#939596]"><li><a href="#services" className="hover:text-[#7bd355]">Services</a></li><li><a href="#partner" className="hover:text-[#7bd355]">Partner</a></li><li><a href="#career" className="hover:text-[#7bd355]">Career</a></li><li><a href="#shop" className="hover:text-[#7bd355]">Shop</a></li><li><a href="#faqs" className="hover:text-[#7bd355]">FAQs</a></li></ul>
         </div>
         <div>
           <h3 className="mb-4 font-heading text-sm tracking-[.25em] text-[#7bd355]">CONTACT</h3>
           <p className="break-all text-base leading-7 text-[#939596]">sociapisociety@gmail.com</p>
           <p className="text-base text-[#939596]">+92 332 9984490</p>
-          <p className="mt-3 text-base text-[#939596]">
-            Islamia College University
-            <br />
-            Peshawar, Pakistan
-          </p>
+          <p className="mt-3 text-base text-[#939596]">Islamia College University<br />Peshawar, Pakistan</p>
         </div>
       </div>
       <p className="mx-auto mt-12 max-w-7xl border-t border-[#e8ecee]/8 pt-6 text-center text-sm text-[#939596]">&copy; {new Date().getFullYear()} Sociapi Society. All rights reserved. Built by Zuhair Zeb.</p>
@@ -1757,19 +1655,7 @@ function Footer() {
   );
 }
 
-function SeoSchema() {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Sociapi Society",
-    url: "https://linktr.ee/sociapisociety",
-    email: "sociapisociety@gmail.com",
-    telephone: "+92 332 9984490",
-    address: "Islamia College University Peshawar, Pakistan",
-  };
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
-}
-
+/* ---------------- Main App ---------------- */
 export default function App() {
   const route = useHashRoute();
   const Current = useMemo(() => {
@@ -1790,9 +1676,10 @@ export default function App() {
     };
     return map[route] || Home;
   }, [route]);
+  
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#070907] text-[#e8ecee]">
-      <SeoSchema />
+      <SeoHead />
       <FloatingUtilities />
       <Nav route={route} />
       <Current />
