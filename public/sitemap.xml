@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.2">
-  <url><loc>https://sociapis.vercel.app/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://sociapis.vercel.app/#about</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sociapis.vercel.app/#chapters</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sociapis.vercel.app/#team</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sociapis.vercel.app/#events</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://sociapis.vercel.app/#services</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sociapis.vercel.app/#partner</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sociapis.vercel.app/#gallery</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://sociapis.vercel.app/#contact</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url>
+    <loc>https://sociapis.vercel.app/</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-06-15</lastmod>
+  </url>
 </urlset>
