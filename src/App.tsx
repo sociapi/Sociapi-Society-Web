@@ -497,9 +497,63 @@ function ParticleField() {
     let raf = 0;
     const tick = () => {
       ctx.clearRect(0, 0, w, h);
-      for (const p of pts) { p.x += p.vx; p.y += p.vy; const dx = mouse.x - p.x, dy = mouse.y - p.y, d2 = dx * dx + dy * dy; if (d2 < 32000 && d2 > 60) { p.x += (dx / Math.sqrt(d2)) * 0.55; p.y += (dy / Math.sqrt(d2)) * 0.55; } if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1; }
-      for (let i = 0; i < pts.length; i++) { for (let j = i + 1; j < pts.length; j++) { const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, dist = Math.hypot(dx, dy); if (dist < LINK) { ctx.strokeStyle = `rgba(123,211,85,${(1 - dist / LINK) * 0.5})`; ctx.lineWidth = 0.7; ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke(); } } const mdx = pts[i].x - mouse.x, mdy = pts[i].y - mouse.y, md = Math.hypot(mdx, mdy); if (md < LINK * 1.4) { ctx.strokeStyle = `rgba(232,236,238,${(1 - md / (LINK * 1.4)) * 0.5})`; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke(); } } }
-      for (const p of pts) { ctx.fillStyle = "rgba(123,211,85,.9)"; ctx.shadowColor = "#7bd355"; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0; }
+
+      for (const p of pts) {
+        p.x += p.vx;
+        p.y += p.vy;
+        const dx = mouse.x - p.x;
+        const dy = mouse.y - p.y;
+        const d2 = dx * dx + dy * dy;
+
+        if (d2 < 32000 && d2 > 60) {
+          p.x += (dx / Math.sqrt(d2)) * 0.55;
+          p.y += (dy / Math.sqrt(d2)) * 0.55;
+        }
+
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+      }
+
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const dist = Math.hypot(dx, dy);
+
+          if (dist < LINK) {
+            ctx.strokeStyle = `rgba(123,211,85,${(1 - dist / LINK) * 0.5})`;
+            ctx.lineWidth = 0.7;
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
+          }
+        }
+
+        const mdx = pts[i].x - mouse.x;
+        const mdy = pts[i].y - mouse.y;
+        const md = Math.hypot(mdx, mdy);
+
+        if (md < LINK * 1.4) {
+          ctx.strokeStyle = `rgba(232,236,238,${(1 - md / (LINK * 1.4)) * 0.5})`;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+
+      for (const p of pts) {
+        ctx.fillStyle = "rgba(123,211,85,.9)";
+        ctx.shadowColor = "#7bd355";
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
