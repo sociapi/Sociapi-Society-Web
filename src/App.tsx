@@ -778,7 +778,7 @@ const products: ShopProduct[] = [
   },
   {
     name: "SOCIAPI Laptop Back Skin",
-    image: "/Image/Laptop Skin.png",
+    image: "/Image/laptop back skin.png",
     features: [
       "Premium vinyl skin",
       "Easy peel and stick application",
