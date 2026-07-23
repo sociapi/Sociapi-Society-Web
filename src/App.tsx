@@ -2,6 +2,7 @@ import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import ChaptersPage from "./Chapters";
+import { orderService, type CreateOrderInput } from "./services/orders";
 
 /* ---------------- Types ---------------- */
 type Member = {
@@ -738,167 +739,590 @@ function GalleryPage() { const [index, setIndex] = useState<number | null>(null)
 
 function Lightbox({ index, setIndex, total }: { index: number; setIndex: (v: number | null) => void; total: number }) { return <div className="fixed inset-0 z-[90] grid place-items-center bg-black/90 p-4"><button onClick={() => setIndex(null)} className="absolute right-5 top-5 z-10 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]">✕</button><button onClick={() => setIndex((index + total - 1) % total)} className="absolute left-3 z-10 rounded-full bg-[#e8ecee]/15 px-3 py-2 text-[#e8ecee] sm:left-5">Prev</button><img src={galleryImages[index]} alt="Gallery preview" className="max-h-[85vh] max-w-[85vw] rounded-2xl object-contain" /><button onClick={() => setIndex((index + 1) % total)} className="absolute right-3 z-10 rounded-full bg-[#e8ecee]/15 px-3 py-2 text-[#e8ecee] sm:right-5">Next</button></div>; }
 
-/* ---------------- Shop (rebuilt cards) ---------------- */
+/* ---------------- Shop (premium storefront) ---------------- */
 type ShopProduct = {
+  id: string;
+  category: "Official Society Wear" | "Accessories";
+  gender: string;
   name: string;
   image: string;
+  description: string;
   features: string[];
-  note: string;
+  badge: string;
   delivery: string;
-  price: string;
+  price: number;
   sizes: string[];
 };
 
-const products: ShopProduct[] = [
+const shopCollections: { title: string; subtitle: string; items: ShopProduct[]; futureDrops: string[] }[] = [
   {
-    name: "SOCIAPI Society Premium Baggy T Shirt",
-    image: "/Image/OVERSIZED Male.png",
-    features: [
-      "Premium quality cotton fabric",
-      "Oversized baggy fit",
-      "Black color",
-      "High-quality front logo print",
-      "Soft, breathable, and comfortable",
+    title: "Official Society Wear",
+    subtitle: "Premium apparel built for the SOCIAPI community.",
+    futureDrops: ["Hoodie", "Cap", "Sticker Pack"],
+    items: [
+      {
+        id: "mens-shirt",
+        category: "Official Society Wear",
+        gender: "Male",
+        name: "Men's Premium Baggy T Shirt",
+        image: "/Image/OVERSIZED Male.png",
+        description: "Premium cotton blend with an oversized silhouette and front logo print.",
+        features: ["Premium Cotton Blend", "Oversized Baggy Fit", "Front Logo Print", "Breathable Fabric", "Made on Demand"],
+        badge: "Best Seller",
+        delivery: "PKR 200",
+        price: 1499,
+        sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+      },
+      {
+        id: "womens-shirt",
+        category: "Official Society Wear",
+        gender: "Female",
+        name: "Women's Oversized T Shirt",
+        image: "/Image/OVERSIZED Female.png",
+        description: "A relaxed oversized silhouette engineered for confidence, comfort, and daily wear.",
+        features: ["Premium Cotton Blend", "Relaxed Oversized Fit", "Front Logo Print", "Breathable Fabric", "Made on Demand"],
+        badge: "Women Drop",
+        delivery: "PKR 200",
+        price: 1499,
+        sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+      },
     ],
-    note: "Made-on-demand · Advance payment required",
-    delivery: "PKR 200",
-    price: "Rs. 1,499",
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
   },
   {
-    name: "Girls Oversized T-Shirt",
-    image: "/Image/OVERSIZED Female.png",
-    features: [
-      "Relaxed oversized cut for women",
-      "Soft, breathable cotton blend",
-      "Black color",
-      "Front logo print",
+    title: "Accessories",
+    subtitle: "Clean, premium essentials for every setup.",
+    futureDrops: ["Bottle", "Notebook"],
+    items: [
+      {
+        id: "laptop-skin",
+        category: "Accessories",
+        gender: "N/A",
+        name: "Laptop Back Skin",
+        image: "Image/laptop back skin.png",
+        description: "Matte vinyl protection with a bubble-free finish for a clean, elevated look.",
+        features: ["Premium Matte Vinyl", "Bubble Free Application", "Easy Peel", "Scratch Resistant", "Fits 13–16 inch laptops"],
+        badge: "New",
+        delivery: "PKR 150",
+        price: 1000,
+        sizes: ["One Size"],
+      },
     ],
-    note: "Made-on-demand · Advance payment required",
-    delivery: "PKR 200",
-    price: "Rs. 1,499",
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
-  },
-  {
-    name: "SOCIAPI Laptop Back Skin",
-    image: "/Image/Laptop Skin.png",
-    features: [
-      "Premium vinyl skin",
-      "Easy peel and stick application",
-      "No sticky residue on removal",
-      "Fits 13 to 16 inch laptops",
-      "Scratch resistant matte finish",
-    ],
-    note: "One size fits most",
-    delivery: "PKR 150",
-    price: "Rs. 1,000",
-    sizes: [],
   },
 ];
 
-function ProductCard({ name, image, features, note, delivery, price, sizes, onPreview, onAdd }: {
-  name: string;
-  image: string;
-  features: string[];
-  note: string;
-  delivery: string;
-  price: string;
-  sizes: string[];
-  onPreview: (s: string) => void;
-  onAdd: (item: { name: string; size: string; qty: number }) => void;
+function ProductCard({
+  product,
+  onPreview,
+  onAdd,
+}: {
+  product: ShopProduct;
+  onPreview: (src: string) => void;
+  onAdd: (item: { id: string; name: string; size: string; qty: number; price: number; image: string; gender: string }) => void;
 }) {
-  const [size, setSize] = useState(sizes[0] || "One Size");
+  const [size, setSize] = useState(product.sizes[0] || "One Size");
   const [qty, setQty] = useState(1);
+
   return (
-    <div className="flex h-full flex-col rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
-      <button onClick={() => onPreview(image)} className="group w-full overflow-hidden rounded-[1.25rem]">
-        <Avatar src={image} name={name} className="aspect-[4/5] w-full scale-[1.12] object-cover shadow-lg transition-all duration-500 ease-out group-hover:scale-[1.22] group-hover:shadow-2xl group-hover:shadow-[#7bd355]/20" />
-      </button>
-
-      <h3 className="mt-5 font-heading text-xl text-[#e8ecee] sm:text-2xl">{name}</h3>
-
-      <ul className="mt-3 space-y-1.5">
-        {features.map((f) => (
-          <li key={f} className="flex items-start gap-2 text-sm leading-relaxed text-[#c7ccc9]">
-            <span className="mt-0.5 shrink-0 text-[#7bd355]">✓</span>
-            <span>{f}</span>
-          </li>
-        ))}
-      </ul>
-
-      {note && <p className="mt-3 text-xs leading-relaxed text-[#7d8280]">{note}</p>}
-
-      <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#7bd355]/20 bg-[#7bd355]/10 px-3 py-1.5 text-xs font-semibold text-[#d9ffd0]">
-          🚚 Nationwide Delivery · {delivery}
-        </span>
-      </div>
-
-      <p className="mt-3 font-heading text-2xl font-black text-[#7bd355]">{price}</p>
-
-      <div className="mt-auto pt-4">
-        {sizes.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {sizes.map((s) => (
-              <button
-                key={s}
-                onClick={() => setSize(s)}
-                className={`rounded-full px-3 py-2 text-sm font-bold transition sm:px-3.5 ${size === s ? "bg-[#7bd355] text-[#0c140a]" : "bg-[#e8ecee]/10 text-[#e8ecee] hover:bg-[#e8ecee]/20"}`}
-              >
-                {s}
-              </button>
-            ))}
+    <div className="group flex h-full flex-col rounded-[1.75rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(23,26,24,0.98),rgba(14,16,15,0.94))] p-4 backdrop-blur-xl shadow-[0_20px_80px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#7bd355]/50 hover:shadow-[0_0_0_1px_rgba(123,211,85,0.15),0_24px_90px_rgba(25,90,18,0.35)] sm:rounded-[2rem] sm:p-5">
+      <div className="flex flex-col">
+        <button onClick={() => onPreview(product.image)} className="group/image relative w-full overflow-hidden rounded-[1.5rem] border border-[#e8ecee]/8 bg-[#0f130f] p-3">
+          <div className="flex h-[360px] aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-[1.2rem] bg-[radial-gradient(circle_at_top,rgba(123,211,85,0.14),transparent_70%)]">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="h-full w-full object-contain transition duration-500 group-hover/image:scale-[1.03]"
+              loading="lazy"
+            />
           </div>
-        )}
+        </button>
 
-        <div className="mt-4 flex items-center justify-center gap-4 rounded-full border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-2.5">
-          <button onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Decrease quantity" className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-bold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]">−</button>
-          <span className="w-6 text-center font-heading text-base font-bold text-[#e8ecee]">{qty}</span>
-          <button onClick={() => setQty(qty + 1)} aria-label="Increase quantity" className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-bold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]">+</button>
+        <div className="mt-4 flex items-center justify-between gap-3">
+          <span className="inline-flex items-center rounded-full border border-[#7bd355]/25 bg-[#7bd355]/12 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.28em] text-[#bfeeb0]">
+            {product.badge}
+          </span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#939596]">{product.category}</span>
         </div>
 
-        <button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-[#7bd355] px-5 py-3 font-bold text-[#0c140a] shadow-lg shadow-[#7bd355]/20 transition hover:bg-[#8fe06a] hover:shadow-[#7bd355]/40">Add to Cart</button>
+        <h3 className="mt-4 min-h-[72px] font-heading text-[1.45rem] font-black leading-tight text-[#e8ecee] sm:text-[1.7rem]">{product.name}</h3>
+        <p className="mt-2 min-h-[56px] text-[0.98rem] leading-relaxed text-[#939596]">{product.description}</p>
+
+        <div className="mt-4 min-h-[130px]">
+          <ul className="space-y-2 text-sm text-[#c7ccc9]">
+            {product.features.map((feature) => (
+              <li key={feature} className="flex items-start gap-2">
+                <span className="mt-0.5 text-[#7bd355]">✓</span>
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#7bd355]/20 bg-[#7bd355]/10 px-3 py-1.5 text-[11px] font-semibold text-[#d9ffd0]">
+            <span>🚚</span>
+            {product.delivery}
+          </span>
+        </div>
+
+        <div className="mt-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.25em] text-[#939596]">Price</p>
+            <p className="font-heading text-[1.8rem] font-black text-[#7bd355]">Rs. {product.price.toLocaleString("en-US")}</p>
+          </div>
+
+          <div className="flex flex-col items-end gap-2">
+            {product.sizes.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {product.sizes.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSize(s)}
+                    className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${size === s ? "bg-[#7bd355] text-[#0c140a]" : "bg-[#e8ecee]/10 text-[#e8ecee] hover:bg-[#e8ecee]/20"}`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center gap-3 rounded-full border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] px-3 py-2">
+              <button
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                aria-label="Decrease quantity"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-semibold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]"
+              >
+                −
+              </button>
+              <span className="min-w-[24px] text-center font-heading text-base font-bold text-[#e8ecee]">{qty}</span>
+              <button
+                onClick={() => setQty((q) => q + 1)}
+                aria-label="Increase quantity"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-semibold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => onAdd({ id: product.id, name: product.name, size, qty, price: product.price, image: product.image, gender: product.gender })}
+          className="group/btn relative mt-5 inline-flex w-full items-center justify-center overflow-hidden rounded-full bg-[#7bd355] px-5 py-3.5 text-sm font-black uppercase tracking-[0.2em] text-[#0c140a] shadow-[0_16px_30px_rgba(123,211,85,0.25)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_18px_35px_rgba(123,211,85,0.45)]"
+        >
+          <span className="relative z-10">Add to Cart</span>
+          <span className="absolute inset-0 -translate-x-full bg-white/15 transition-transform duration-300 group-hover/btn:translate-x-0" />
+        </button>
       </div>
     </div>
   );
 }
 
 function ShopPage() {
-  const [cart, setCart] = useState<{ name: string; size: string; qty: number }[]>([]);
+  const [cart, setCart] = useState<{ id: string; name: string; size: string; qty: number; price: number; image: string; gender: string }[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
-  const removeFromCart = (i: number) => setCart(cart.filter((_, idx) => idx !== i));
-  const orderText = encodeURIComponent(cart.map((c) => `${c.qty}x ${c.name} (${c.size})`).join("\n"));
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  const subtotal = useMemo(() => cart.reduce((sum, item) => sum + item.price * item.qty, 0), [cart]);
+  const deliveryFee = subtotal > 0 ? 200 : 0;
+  const total = subtotal + deliveryFee;
+
+  const addToCart = (item: { id: string; name: string; size: string; qty: number; price: number; image: string; gender: string }) => {
+    setCart((current) => {
+      const existingIndex = current.findIndex((entry) => entry.id === item.id && entry.size === item.size);
+      if (existingIndex >= 0) {
+        const next = [...current];
+        next[existingIndex] = { ...next[existingIndex], qty: next[existingIndex].qty + item.qty };
+        return next;
+      }
+      return [...current, item];
+    });
+  };
+
+  const removeFromCart = (id: string, size: string) => {
+    setCart((current) => current.filter((item) => !(item.id === id && item.size === size)));
+  };
+
   return (
     <main className="section pt-28 sm:pt-32">
-      <SectionTitle label="Shop" title="Official society wear." />
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
-        {products.map((p) => (
-          <ProductCard key={p.name} {...p} onPreview={setPreview} onAdd={(item) => setCart([...cart, item])} />
-        ))}
-      </div>
-      <div className="mx-auto mt-10 max-w-3xl rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-5 text-[#e8ecee] sm:rounded-[2rem] sm:p-6">
-        <h3 className="font-heading text-xl sm:text-2xl">Cart</h3>
-        {cart.length === 0 ? (
-          <p className="mt-3 text-base text-[#939596]">Empty.</p>
-        ) : (
-          <div className="mt-3 space-y-2">
-            {cart.map((c, i) => (
-              <div key={`${c.name}-${i}`} className="flex items-center justify-between rounded-xl bg-[#e8ecee]/[.05] px-3 py-3">
-                <span className="text-sm text-[#e8ecee]/75">{c.qty}x {c.name} / <span className="text-[#7bd355]">{c.size}</span></span>
-                <button onClick={() => removeFromCart(i)} className="ml-3 rounded-full bg-red-500/20 px-3 py-1 text-xs text-red-400">Remove</button>
-              </div>
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mb-8 text-center">
+          <span className="inline-flex items-center rounded-full border border-[#7bd355]/25 bg-[#7bd355]/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.38em] text-[#7bd355]">
+            Shop
+          </span>
+          <h1 className="mt-4 font-heading text-4xl font-black tracking-[-0.04em] text-[#e8ecee] sm:text-5xl md:text-7xl">
+            Official Society Wear
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#939596] sm:text-lg">
+            Premium apparel and accessories for the SOCIAPI community.
+          </p>
+        </div>
+
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="space-y-8">
+            {shopCollections.map((section) => (
+              <section key={section.title} className="rounded-[2rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(19,21,20,0.88),rgba(10,12,11,0.94))] p-5 sm:p-6">
+                <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <h2 className="font-heading text-2xl font-black text-[#e8ecee] sm:text-3xl">{section.title}</h2>
+                    <p className="mt-2 text-sm text-[#939596]">{section.subtitle}</p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {section.futureDrops.map((item) => (
+                      <span key={item} className="rounded-full border border-[#7bd355]/20 bg-[#7bd355]/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#7bd355]">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-5 h-px bg-gradient-to-r from-[#7bd355]/35 via-[#7bd355]/10 to-transparent" />
+
+                <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))" }}>
+                  {section.items.map((product) => (
+                    <ProductCard key={product.id} product={product} onPreview={setPreview} onAdd={addToCart} />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
-        )}
-        <a className="mt-5 inline-flex rounded-full bg-[#7bd355] px-6 py-3 text-base font-bold text-[#0c140a]" href={`https://wa.me/923329984490?text=${orderText}`} target="_blank" rel="noreferrer">Checkout via WhatsApp</a>
+
+          <aside className="xl:sticky xl:top-24 xl:self-start">
+            <div className="rounded-[2rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(22,24,22,0.98),rgba(12,14,13,0.95))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="font-heading text-2xl font-black text-[#e8ecee]">Cart</h2>
+                <span className="rounded-full border border-[#7bd355]/25 bg-[#7bd355]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.28em] text-[#7bd355]">
+                  {cart.reduce((count, item) => count + item.qty, 0)} items
+                </span>
+              </div>
+
+              <div className="mt-5 space-y-3">
+                {cart.length === 0 ? (
+                  <div className="rounded-[1.25rem] border border-dashed border-[#e8ecee]/15 bg-[#e8ecee]/[.04] px-4 py-6 text-sm text-[#939596]">
+                    Your cart is empty. Add a premium SOCIAPI piece to begin.
+                  </div>
+                ) : (
+                  cart.map((item, index) => (
+                    <div key={`${item.id}-${item.size}-${index}`} className="flex items-center gap-3 rounded-[1.25rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.05] p-2.5">
+                      <img src={item.image} alt={item.name} className="h-20 w-16 rounded-xl object-contain" />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-bold text-[#e8ecee]">{item.name}</p>
+                        <p className="mt-1 text-xs text-[#939596]">Size: {item.size}</p>
+                        <p className="mt-1 text-xs text-[#939596]">Qty: {item.qty}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-[#7bd355]">Rs. {(item.price * item.qty).toLocaleString("en-US")}</p>
+                        <button onClick={() => removeFromCart(item.id, item.size)} className="mt-2 text-xs font-bold text-red-400 transition hover:text-red-300">
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="mt-6 space-y-3 rounded-[1.25rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] p-4 text-sm">
+                <div className="flex items-center justify-between text-[#c7ccc9]">
+                  <span>Subtotal</span>
+                  <span>Rs. {subtotal.toLocaleString("en-US")}</span>
+                </div>
+                <div className="flex items-center justify-between text-[#c7ccc9]">
+                  <span>Delivery</span>
+                  <span>Rs. {deliveryFee.toLocaleString("en-US")}</span>
+                </div>
+                <div className="h-px bg-[#e8ecee]/10" />
+                <div className="flex items-center justify-between font-heading text-lg font-black text-[#e8ecee]">
+                  <span>Total</span>
+                  <span className="text-[#7bd355]">Rs. {total.toLocaleString("en-US")}</span>
+                </div>
+              </div>
+
+              <button
+                disabled={cart.length === 0}
+                onClick={() => setCheckoutOpen(true)}
+                className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-[#7bd355] px-5 py-3.5 text-sm font-black uppercase tracking-[0.2em] text-[#0c140a] shadow-[0_16px_30px_rgba(123,211,85,0.3)] transition hover:scale-[1.02] hover:shadow-[0_18px_35px_rgba(123,211,85,0.45)] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Checkout
+              </button>
+            </div>
+          </aside>
+        </div>
       </div>
+
+      <CheckoutModal
+        open={checkoutOpen}
+        cart={cart}
+        subtotal={subtotal}
+        delivery={deliveryFee}
+        total={total}
+        onClose={() => setCheckoutOpen(false)}
+      />
+
       {preview && (
         <div className="fixed inset-0 z-[90] grid place-items-center bg-black/85 p-4">
-          <button className="absolute right-5 top-5 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]" onClick={() => setPreview(null)}>✕</button>
-          <img src={preview} alt="Product preview" className="max-h-[85vh] rounded-2xl" />
+          <button className="absolute right-5 top-5 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]" onClick={() => setPreview(null)}>
+            ✕
+          </button>
+          <img src={preview} alt="Product preview" className="max-h-[85vh] max-w-[85vw] rounded-[1.5rem] object-contain" />
         </div>
       )}
     </main>
+  );
+}
+
+function CheckoutModal({
+  open,
+  cart,
+  subtotal,
+  delivery,
+  total,
+  onClose,
+}: {
+  open: boolean;
+  cart: { id: string; name: string; size: string; qty: number; price: number; image: string; gender: string }[];
+  subtotal: number;
+  delivery: number;
+  total: number;
+  onClose: () => void;
+}) {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    country: "Pakistan",
+    province: "",
+    city: "",
+    address: "",
+    postalCode: "",
+    landmark: "",
+    notes: "",
+  });
+  const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      setErrors({});
+      setSaveError(null);
+      setSuccessMessage(null);
+      setSubmitting(false);
+    }
+  }, [open]);
+
+  const updateField = (field: keyof typeof formData, value: string) => {
+    setFormData((current) => ({ ...current, [field]: value }));
+    setErrors((current) => ({ ...current, [field]: undefined }));
+  };
+
+  const validate = () => {
+    const nextErrors: Partial<Record<keyof typeof formData, string>> = {};
+    if (!formData.name.trim()) nextErrors.name = "Full name is required.";
+    if (!formData.phone.trim()) nextErrors.phone = "Phone number is required.";
+    if (!formData.city.trim()) nextErrors.city = "City is required.";
+    if (!formData.address.trim()) nextErrors.address = "Complete address is required.";
+    return nextErrors;
+  };
+
+  const handleContinue = async (event: FormEvent) => {
+    event.preventDefault();
+    const nextErrors = validate();
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    setSubmitting(true);
+    setSaveError(null);
+    setSuccessMessage(null);
+
+    try {
+      const orderPayload: CreateOrderInput = {
+        customer_name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email.trim() || null,
+        country: formData.country,
+        province: formData.province.trim(),
+        city: formData.city.trim(),
+        address: formData.address.trim(),
+        postal_code: formData.postalCode.trim(),
+        landmark: formData.landmark.trim() || null,
+        cart_items: cart.map((item) => ({
+          name: item.name,
+          gender: item.gender,
+          size: item.size,
+          quantity: item.qty,
+          unit_price: item.price,
+        })),
+        subtotal,
+        delivery,
+        total,
+      };
+
+      const orderResult = await orderService.createOrder(orderPayload);
+      setSuccessMessage(`Order ${orderResult.order_number} saved successfully. Redirecting to WhatsApp...`);
+
+      await new Promise((resolve) => window.setTimeout(resolve, 600));
+
+      const lines = [
+        "Hello SOCIAPI Society,",
+        "",
+        "I would like to place an order.",
+        "",
+        "━━━━━━━━━━━━━━━━━━",
+        "",
+        "🛍 ORDER DETAILS",
+        "",
+        `Order Number: ${orderResult.order_number}`,
+        ...cart.flatMap((item) => [
+          `Product: ${item.name}`,
+          `Gender: ${item.gender}`,
+          `Size: ${item.size}`,
+          `Quantity: ${item.qty}`,
+          `Unit Price: Rs. ${item.price.toLocaleString("en-US")}`,
+        ]),
+        `Subtotal: Rs. ${subtotal.toLocaleString("en-US")}`,
+        `Delivery: Rs. ${delivery.toLocaleString("en-US")}`,
+        `Total: Rs. ${total.toLocaleString("en-US")}`,
+        "",
+        "━━━━━━━━━━━━━━━━━━",
+        "",
+        "👤 CUSTOMER DETAILS",
+        `Name: ${formData.name.trim()}`,
+        `Phone: ${formData.phone.trim()}`,
+        `Email: ${formData.email.trim() || "N/A"}`,
+        `Country: ${formData.country}`,
+        `Province: ${formData.province.trim() || "N/A"}`,
+        `City: ${formData.city.trim()}`,
+        `Address: ${formData.address.trim()}`,
+        `Postal Code: ${formData.postalCode.trim() || "N/A"}`,
+        `Landmark: ${formData.landmark.trim() || "N/A"}`,
+        `Order Notes: ${formData.notes.trim() || "N/A"}`,
+        "",
+        "━━━━━━━━━━━━━━━━━━",
+        "",
+        "Please confirm my order.",
+        "Thank you.",
+      ];
+
+      const message = lines.join("\n");
+      window.open(`https://wa.me/923329984490?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+      onClose();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Order could not be saved. Please try again.";
+      setSaveError(message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-3 sm:p-6">
+      <div className="max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-[2rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(20,22,21,0.98),rgba(10,12,11,0.96))] p-4 shadow-[0_24px_100px_rgba(0,0,0,0.55)] backdrop-blur-2xl sm:p-6">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.38em] text-[#7bd355]">Checkout</p>
+            <h2 className="mt-1 font-heading text-3xl font-black text-[#e8ecee] sm:text-4xl">Complete your order</h2>
+          </div>
+          <button onClick={onClose} className="rounded-full border border-[#e8ecee]/10 bg-[#e8ecee]/8 px-4 py-2 text-sm text-[#e8ecee]">Close</button>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <form onSubmit={handleContinue} className="space-y-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Full Name *</label>
+                <input value={formData.name} onChange={(e) => updateField("name", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="Ali Khan" />
+                {errors.name && <p className="mt-2 text-sm text-red-400">{errors.name}</p>}
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Phone Number *</label>
+                <input value={formData.phone} onChange={(e) => updateField("phone", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="03XXXXXXXXX" />
+                {errors.phone && <p className="mt-2 text-sm text-red-400">{errors.phone}</p>}
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Email (Optional)</label>
+                <input value={formData.email} onChange={(e) => updateField("email", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="example@gmail.com" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Country</label>
+                <input value={formData.country} onChange={(e) => updateField("country", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Province</label>
+                <input value={formData.province} onChange={(e) => updateField("province", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="KPK" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">City *</label>
+                <input value={formData.city} onChange={(e) => updateField("city", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="Peshawar" />
+                {errors.city && <p className="mt-2 text-sm text-red-400">{errors.city}</p>}
+              </div>
+              <div className="sm:col-span-2">
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Complete Address *</label>
+                <textarea value={formData.address} onChange={(e) => updateField("address", e.target.value)} className="min-h-[110px] w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="House 25 University Road" />
+                {errors.address && <p className="mt-2 text-sm text-red-400">{errors.address}</p>}
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Postal Code</label>
+                <input value={formData.postalCode} onChange={(e) => updateField("postalCode", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="25000" />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Landmark (Optional)</label>
+                <input value={formData.landmark} onChange={(e) => updateField("landmark", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="Near Islamia College" />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Order Notes (Optional)</label>
+                <textarea value={formData.notes} onChange={(e) => updateField("notes", e.target.value)} className="min-h-[100px] w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="Leave at security gate\nCall before delivery" />
+              </div>
+            </div>
+
+            {saveError && <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">{saveError}</div>}
+            {successMessage && <div className="rounded-2xl border border-[#7bd355]/30 bg-[#7bd355]/10 px-4 py-3 text-sm text-[#d9ffd0]">{successMessage}</div>}
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <button type="button" onClick={onClose} className="rounded-full border border-[#e8ecee]/10 px-5 py-3 text-sm font-bold text-[#e8ecee]">Back to Shop</button>
+              <button type="submit" disabled={submitting || cart.length === 0} className="inline-flex items-center justify-center rounded-full bg-[#7bd355] px-7 py-3.5 text-sm font-black uppercase tracking-[0.2em] text-[#0c140a] shadow-[0_16px_35px_rgba(123,211,85,0.35)] transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60">
+                {submitting ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-[#0c140a]/30 border-t-[#0c140a]" />
+                    Saving order...
+                  </span>
+                ) : (
+                  "Continue to WhatsApp"
+                )}
+              </button>
+            </div>
+          </form>
+
+          <div className="rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] p-4 sm:p-5 lg:sticky lg:top-6">
+            <h3 className="font-heading text-2xl font-black text-[#e8ecee]">Order Summary</h3>
+            <div className="mt-4 space-y-3">
+              {cart.map((item, index) => (
+                <div key={`${item.id}-${item.size}-${index}`} className="flex gap-3 rounded-[1.25rem] border border-[#e8ecee]/10 bg-[#0f110f] p-3">
+                  <img src={item.image} alt={item.name} className="h-20 w-16 rounded-xl object-contain" />
+                  <div className="min-w-0 flex-1 text-sm text-[#c7ccc9]">
+                    <p className="font-bold text-[#e8ecee]">{item.name}</p>
+                    <p className="mt-1">Size: {item.size}</p>
+                    <p>Qty: {item.qty}</p>
+                    <p>Unit Price: Rs. {item.price.toLocaleString("en-US")}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-5 space-y-3 rounded-[1.25rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] p-4 text-sm text-[#c7ccc9]">
+              <div className="flex items-center justify-between"><span>Subtotal</span><span>Rs. {subtotal.toLocaleString("en-US")}</span></div>
+              <div className="flex items-center justify-between"><span>Delivery</span><span>Rs. {delivery.toLocaleString("en-US")}</span></div>
+              <div className="h-px bg-[#e8ecee]/10" />
+              <div className="flex items-center justify-between font-heading text-lg font-black text-[#e8ecee]"><span>Total</span><span className="text-[#7bd355]">Rs. {total.toLocaleString("en-US")}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
