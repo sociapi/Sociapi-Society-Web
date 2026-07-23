@@ -65,18 +65,16 @@ export class OrderService {
       created_at: new Date().toISOString(),
     };
 
-    const { data, error } = await client
+    const { error } = await client
       .from("orders")
-      .insert(insertPayload)
-      .select("id")
-      .single();
+      .insert(insertPayload);
 
     if (error) {
       throw new Error(`Failed to save order: ${error.message}`);
     }
 
     return {
-      id: data.id,
+      id: orderNumber,
       order_number: orderNumber,
     };
   }
