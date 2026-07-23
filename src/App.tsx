@@ -497,63 +497,9 @@ function ParticleField() {
     let raf = 0;
     const tick = () => {
       ctx.clearRect(0, 0, w, h);
-
-      for (const p of pts) {
-        p.x += p.vx;
-        p.y += p.vy;
-        const dx = mouse.x - p.x;
-        const dy = mouse.y - p.y;
-        const d2 = dx * dx + dy * dy;
-
-        if (d2 < 32000 && d2 > 60) {
-          p.x += (dx / Math.sqrt(d2)) * 0.55;
-          p.y += (dy / Math.sqrt(d2)) * 0.55;
-        }
-
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-      }
-
-      for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          const dx = pts[i].x - pts[j].x;
-          const dy = pts[i].y - pts[j].y;
-          const dist = Math.hypot(dx, dy);
-
-          if (dist < LINK) {
-            ctx.strokeStyle = `rgba(123,211,85,${(1 - dist / LINK) * 0.5})`;
-            ctx.lineWidth = 0.7;
-            ctx.beginPath();
-            ctx.moveTo(pts[i].x, pts[i].y);
-            ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.stroke();
-          }
-        }
-
-        const mdx = pts[i].x - mouse.x;
-        const mdy = pts[i].y - mouse.y;
-        const md = Math.hypot(mdx, mdy);
-
-        if (md < LINK * 1.4) {
-          ctx.strokeStyle = `rgba(232,236,238,${(1 - md / (LINK * 1.4)) * 0.5})`;
-          ctx.lineWidth = 0.8;
-          ctx.beginPath();
-          ctx.moveTo(pts[i].x, pts[i].y);
-          ctx.lineTo(mouse.x, mouse.y);
-          ctx.stroke();
-        }
-      }
-
-      for (const p of pts) {
-        ctx.fillStyle = "rgba(123,211,85,.9)";
-        ctx.shadowColor = "#7bd355";
-        ctx.shadowBlur = 8;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
+      for (const p of pts) { p.x += p.vx; p.y += p.vy; const dx = mouse.x - p.x, dy = mouse.y - p.y, d2 = dx * dx + dy * dy; if (d2 < 32000 && d2 > 60) { p.x += (dx / Math.sqrt(d2)) * 0.55; p.y += (dy / Math.sqrt(d2)) * 0.55; } if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1; }
+      for (let i = 0; i < pts.length; i++) { for (let j = i + 1; j < pts.length; j++) { const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, dist = Math.hypot(dx, dy); if (dist < LINK) { ctx.strokeStyle = `rgba(123,211,85,${(1 - dist / LINK) * 0.5})`; ctx.lineWidth = 0.7; ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke(); } } const mdx = pts[i].x - mouse.x, mdy = pts[i].y - mouse.y, md = Math.hypot(mdx, mdy); if (md < LINK * 1.4) { ctx.strokeStyle = `rgba(232,236,238,${(1 - md / (LINK * 1.4)) * 0.5})`; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke(); } } }
+      for (const p of pts) { ctx.fillStyle = "rgba(123,211,85,.9)"; ctx.shadowColor = "#7bd355"; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0; }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -743,7 +689,8 @@ type ShopProduct = {
   name: string;
   image: string;
   features: string[];
-  meta: string;
+  note: string;
+  delivery: string;
   price: string;
   sizes: string[];
 };
@@ -759,9 +706,10 @@ const products: ShopProduct[] = [
       "High-quality front logo print",
       "Soft, breathable, and comfortable",
     ],
-    meta: "Sizes S–XL · Delivery PKR 200 nationwide · Made-on-demand, advance payment required",
-    price: "PKR 1,499",
-    sizes: ["S", "M", "L", "XL"],
+    note: "Made-on-demand · Advance payment required",
+    delivery: "PKR 200",
+    price: "Rs. 1,499",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
   },
   {
     name: "Girls Oversized T-Shirt",
@@ -772,13 +720,14 @@ const products: ShopProduct[] = [
       "Black color",
       "Front logo print",
     ],
-    meta: "Sizes S–XL · Delivery PKR 200 nationwide",
-    price: "PKR 1,499",
-    sizes: ["S", "M", "L", "XL"],
+    note: "Made-on-demand · Advance payment required",
+    delivery: "PKR 200",
+    price: "Rs. 1,499",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
   },
   {
-    name: "Socpai Laptop Back Skin",
-    image: "/Image/laptop back skin.png",
+    name: "SOCIAPI Laptop Back Skin",
+    image: "/Image/Laptop Skin.png",
     features: [
       "Premium vinyl skin",
       "Easy peel and stick application",
@@ -786,17 +735,19 @@ const products: ShopProduct[] = [
       "Fits 13 to 16 inch laptops",
       "Scratch resistant matte finish",
     ],
-    meta: "One size fits most · Delivery PKR 150 nationwide",
-    price: "PKR 1,000",
+    note: "One size fits most",
+    delivery: "PKR 150",
+    price: "Rs. 1,000",
     sizes: [],
   },
 ];
 
-function ProductCard({ name, image, features, meta, price, sizes, onPreview, onAdd }: {
+function ProductCard({ name, image, features, note, delivery, price, sizes, onPreview, onAdd }: {
   name: string;
   image: string;
   features: string[];
-  meta: string;
+  note: string;
+  delivery: string;
   price: string;
   sizes: string[];
   onPreview: (s: string) => void;
@@ -805,9 +756,9 @@ function ProductCard({ name, image, features, meta, price, sizes, onPreview, onA
   const [size, setSize] = useState(sizes[0] || "One Size");
   const [qty, setQty] = useState(1);
   return (
-    <div className="rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
-      <button onClick={() => onPreview(image)} className="w-full">
-        <Avatar src={image} name={name} className="aspect-square w-full rounded-[1.25rem] object-cover" />
+    <div className="flex h-full flex-col rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
+      <button onClick={() => onPreview(image)} className="group w-full overflow-hidden rounded-[1.25rem]">
+        <Avatar src={image} name={name} className="aspect-[4/5] w-full scale-[1.12] object-cover shadow-lg transition-all duration-500 ease-out group-hover:scale-[1.22] group-hover:shadow-2xl group-hover:shadow-[#7bd355]/20" />
       </button>
 
       <h3 className="mt-5 font-heading text-xl text-[#e8ecee] sm:text-2xl">{name}</h3>
@@ -821,25 +772,39 @@ function ProductCard({ name, image, features, meta, price, sizes, onPreview, onA
         ))}
       </ul>
 
-      <p className="mt-3 text-xs leading-relaxed text-[#7d8280]">{meta}</p>
-      <p className="mt-2 font-heading text-lg font-bold text-[#7bd355]">{price}</p>
+      {note && <p className="mt-3 text-xs leading-relaxed text-[#7d8280]">{note}</p>}
 
-      {sizes.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {sizes.map((s) => (
-            <button
-              key={s}
-              onClick={() => setSize(s)}
-              className={`rounded-full px-3 py-2 text-sm font-bold transition sm:px-4 ${size === s ? "bg-[#7bd355] text-[#0c140a]" : "bg-[#e8ecee]/10 text-[#e8ecee] hover:bg-[#e8ecee]/20"}`}
-            >
-              {s}
-            </button>
-          ))}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#7bd355]/20 bg-[#7bd355]/10 px-3 py-1.5 text-xs font-semibold text-[#d9ffd0]">
+          🚚 Nationwide Delivery · {delivery}
+        </span>
+      </div>
+
+      <p className="mt-3 font-heading text-2xl font-black text-[#7bd355]">{price}</p>
+
+      <div className="mt-auto pt-4">
+        {sizes.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {sizes.map((s) => (
+              <button
+                key={s}
+                onClick={() => setSize(s)}
+                className={`rounded-full px-3 py-2 text-sm font-bold transition sm:px-3.5 ${size === s ? "bg-[#7bd355] text-[#0c140a]" : "bg-[#e8ecee]/10 text-[#e8ecee] hover:bg-[#e8ecee]/20"}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-4 flex items-center justify-center gap-4 rounded-full border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-2.5">
+          <button onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Decrease quantity" className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-bold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]">−</button>
+          <span className="w-6 text-center font-heading text-base font-bold text-[#e8ecee]">{qty}</span>
+          <button onClick={() => setQty(qty + 1)} aria-label="Increase quantity" className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-bold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]">+</button>
         </div>
-      )}
 
-      <input className="glass-input mt-4" type="number" min={1} value={qty} onChange={(e) => setQty(Number(e.target.value))} />
-      <button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-[#e8ecee] px-5 py-3 font-bold text-[#0c140a] transition hover:bg-[#7bd355]">Add to Cart</button>
+        <button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-[#7bd355] px-5 py-3 font-bold text-[#0c140a] shadow-lg shadow-[#7bd355]/20 transition hover:bg-[#8fe06a] hover:shadow-[#7bd355]/40">Add to Cart</button>
+      </div>
     </div>
   );
 }
@@ -852,7 +817,7 @@ function ShopPage() {
   return (
     <main className="section pt-28 sm:pt-32">
       <SectionTitle label="Shop" title="Official society wear." />
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
         {products.map((p) => (
           <ProductCard key={p.name} {...p} onPreview={setPreview} onAdd={(item) => setCart([...cart, item])} />
         ))}
