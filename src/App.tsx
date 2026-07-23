@@ -15,6 +15,12 @@ type Member = {
   angle: number;
 };
 
+type PastMember = {
+  name: string;
+  role: string;
+  image: string;
+};
+
 type PageKey =
   | "home" | "about" | "team" | "events" | "services" | "partner"
   | "gallery" | "shop" | "career" | "contact" | "reviews" | "faqs" | "chapters";
@@ -58,9 +64,46 @@ const teamMembers: Member[] = [
   { name: "Riyan Ahmad Khan", role: "Organizer", department: "Organizing", image: "Image/Team Pic/Riyan Ahmad.png?auto=format&fit=crop&w=500&q=80", bio: "Supports event logistics, audience guidance, and operational reliability.", skills: ["Logistics", "Teamwork", "Execution"], orbit: 3, angle: 315 },
 ];
 
+const pastMembers: PastMember[] = [
+  { name: "Muhammad Amjad", role: "Graphic Designer", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Siraat Ali", role: "Technical Lead", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Farhan Ullah", role: "Logistics", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "SIRAJ UDDIN", role: "Technical Lead", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Maavia Rizwan", role: "Finance Lead", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Mustafa Ali Qureshi", role: "HR", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Mazhar Shah", role: "Graphic Designer", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Muhammad Afaq", role: "Finance", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Sabir Shah", role: "Event Manager", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Atifaslamkhan", role: "Logistics", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Kashif Ahmad", role: "Video Editor", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Muhammad Jawad", role: "Finance", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Shah Hussain", role: "Video Editor", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Rauf Akhtar", role: "Outreach Lead", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Latif Ur Rahman", role: "Media", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Shahzeb Khan", role: "Media", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Afaq Saeed", role: "Technical", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Fawad Khan", role: "Media", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Safir Ullah", role: "Web Developer", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Tamkeen Israr", role: "Women Lead", image: "/Image/Team Pic/Female/Tamkeen Israr.jpg?auto=format&fit=crop&w=500&q=80" },
+  { name: "M Anas Rashid", role: "Decor", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Muhammad Awais Khan", role: "Organizer", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Sajeela Tariq", role: "Decor", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Mohammad Arqam Javed", role: "Social Media", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Muhammad Mobeen", role: "Logistics", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Maira Seher", role: "Outreach", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Maemona Rehman", role: "Outreach", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Luqman Khan", role: "Outreach", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Atika Aqleem", role: "Organizer", image: "/Image/Team Pic/Atika Aqlim.jpg?auto=format&fit=crop&w=500&q=80" },
+  { name: "Muhammad Saad", role: "Media", image: "/Image/Team Pic/saad.jpeg?auto=format&fit=crop&w=500&q=80" },
+  { name: "Muhammad Zakria", role: "Project Manager", image: "/Image/Team Pic/Muhammad Zakria.jpg?auto=format&fit=crop&w=500&q=80" },
+  { name: "Hammad Khan", role: "Technical", image: "/Image/Team Pic/Hamad Khan.jpg?auto=format&fit=crop&w=500&q=80" },
+  { name: "AMAL KHAN", role: "Graphic Designer", image: "/Image/Team Pic/past-member-placeholder.svg" },
+  { name: "Maham Iqbal", role: "Women Co-Lead", image: "/Image/Team Pic/Female/Maham Iqbal.png?auto=format&fit=crop&w=500&q=80" },
+];
+
 const panels = ["Artificial Intelligence", "Machine Learning", "Data Science", "Generative AI", "Robotics", "Computer Vision", "Web Development", "Business Intelligence"];
 const stats: [number, string, string][] = [
-  [340+, "Audience", "+"],
+  [340, "Audience", "+"],
   [20, "Current Members", "+"],
   [3, "Major Events", "+"],
   [2025, "Founded", ""],
@@ -195,8 +238,8 @@ function SeoHead() {
     },
     shop: {
       title: `Shop | Official ${SITE_NAME} Wear`,
-      description: "Buy official Sociapi Society oversized t-shirts. Premium quality, limited edition student merchandise.",
-      keywords: "Sociapi Society shop, official merchandise, oversized t-shirt"
+      description: "Buy official Sociapi Society oversized t-shirts and laptop skins. Premium quality, limited edition student merchandise.",
+      keywords: "Sociapi Society shop, official merchandise, oversized t-shirt, laptop skin"
     },
     career: {
       title: `Career | Join ${SITE_NAME} Team`,
@@ -454,9 +497,63 @@ function ParticleField() {
     let raf = 0;
     const tick = () => {
       ctx.clearRect(0, 0, w, h);
-      for (const p of pts) { p.x += p.vx; p.y += p.vy; const dx = mouse.x - p.x, dy = mouse.y - p.y, d2 = dx * dx + dy * dy; if (d2 < 32000 && d2 > 60) { p.x += (dx / Math.sqrt(d2)) * 0.55; p.y += (dy / Math.sqrt(d2)) * 0.55; } if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1; }
-      for (let i = 0; i < pts.length; i++) { for (let j = i + 1; j < pts.length; j++) { const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, dist = Math.hypot(dx, dy); if (dist < LINK) { ctx.strokeStyle = `rgba(123,211,85,${(1 - dist / LINK) * 0.5})`; ctx.lineWidth = 0.7; ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke(); } } const mdx = pts[i].x - mouse.x, mdy = pts[i].y - mouse.y, md = Math.hypot(mdx, mdy); if (md < LINK * 1.4) { ctx.strokeStyle = `rgba(232,236,238,${(1 - md / (LINK * 1.4)) * 0.5})`; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke(); } }
-      for (const p of pts) { ctx.fillStyle = "rgba(123,211,85,.9)"; ctx.shadowColor = "#7bd355"; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0; }
+
+      for (const p of pts) {
+        p.x += p.vx;
+        p.y += p.vy;
+        const dx = mouse.x - p.x;
+        const dy = mouse.y - p.y;
+        const d2 = dx * dx + dy * dy;
+
+        if (d2 < 32000 && d2 > 60) {
+          p.x += (dx / Math.sqrt(d2)) * 0.55;
+          p.y += (dy / Math.sqrt(d2)) * 0.55;
+        }
+
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+      }
+
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const dist = Math.hypot(dx, dy);
+
+          if (dist < LINK) {
+            ctx.strokeStyle = `rgba(123,211,85,${(1 - dist / LINK) * 0.5})`;
+            ctx.lineWidth = 0.7;
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
+          }
+        }
+
+        const mdx = pts[i].x - mouse.x;
+        const mdy = pts[i].y - mouse.y;
+        const md = Math.hypot(mdx, mdy);
+
+        if (md < LINK * 1.4) {
+          ctx.strokeStyle = `rgba(232,236,238,${(1 - md / (LINK * 1.4)) * 0.5})`;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+
+      for (const p of pts) {
+        ctx.fillStyle = "rgba(123,211,85,.9)";
+        ctx.shadowColor = "#7bd355";
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -558,7 +655,27 @@ function TeamGalaxy({ full = false }: { full?: boolean }) {
         <div className="team-galaxy mx-auto" style={{ "--galaxy-deg": `${rot}deg` } as React.CSSProperties}><div className="galaxy-rings" />{visible.map((m) => <button key={m.name} onClick={(e) => { e.stopPropagation(); setSelected(m); }} className={`member-orb ${m.orbit === 0 ? "founder-orb" : ""}`} style={{ "--angle": `${m.angle}deg`, "--radius": `${m.orbit === 0 ? 0 : 50 + m.orbit * 130}px` } as React.CSSProperties} aria-label={`View ${m.name}`}><Avatar src={m.image} name={m.name} className="h-full w-full rounded-full object-cover" /><span>{m.role}</span></button>)}</div>
       )}
       {!full && <div className="mt-10 text-center"><Link to="/team" className="magnetic inline-flex rounded-full border border-[#e8ecee]/15 bg-[#e8ecee]/8 px-7 py-3.5 text-base font-bold text-[#e8ecee]">View Full Team →</Link></div>}
+      {full && <PastMembersSection />}
       {selected && <ProfileModal member={selected} onClose={() => setSelected(null)} />}
+    </section>
+  );
+}
+
+function PastMembersSection() {
+  return (
+    <section className="section section-tight pt-2 sm:pt-4">
+      <SectionTitle label="Past Members" title="Former contributors who helped shape the mission." copy="A dedicated tribute to the alumni and past volunteers who carried the society forward through leadership, design, media, logistics, and events." />
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {pastMembers.map((member, index) => (
+          <Reveal key={`${member.name}-${index}`} delay={index * 0.02} className="group h-full">
+            <div className="rounded-[1.5rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.05] p-4 text-center backdrop-blur-xl transition duration-300 hover:-translate-y-1.5 hover:border-[#7bd355]/40">
+              <Avatar src={member.image} name={member.name} className="mx-auto h-24 w-24 rounded-full object-cover ring-2 ring-[#7bd355]/20 transition group-hover:ring-[#7bd355]/60 sm:h-28 sm:w-28" />
+              <h3 className="mt-4 font-heading text-base font-bold text-[#e8ecee] sm:text-lg">{member.name}</h3>
+              <p className="mt-1 text-sm text-[#7bd355]">{member.role}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
     </section>
   );
 }
@@ -621,9 +738,150 @@ function GalleryPage() { const [index, setIndex] = useState<number | null>(null)
 
 function Lightbox({ index, setIndex, total }: { index: number; setIndex: (v: number | null) => void; total: number }) { return <div className="fixed inset-0 z-[90] grid place-items-center bg-black/90 p-4"><button onClick={() => setIndex(null)} className="absolute right-5 top-5 z-10 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]">✕</button><button onClick={() => setIndex((index + total - 1) % total)} className="absolute left-3 z-10 rounded-full bg-[#e8ecee]/15 px-3 py-2 text-[#e8ecee] sm:left-5">Prev</button><img src={galleryImages[index]} alt="Gallery preview" className="max-h-[85vh] max-w-[85vw] rounded-2xl object-contain" /><button onClick={() => setIndex((index + 1) % total)} className="absolute right-3 z-10 rounded-full bg-[#e8ecee]/15 px-3 py-2 text-[#e8ecee] sm:right-5">Next</button></div>; }
 
-function ShopPage() { const products = [{ name: "Male Oversized T-Shirt", image: "/Image/OVERSIZED Male.png", description: "Premium oversized fit. Sociapi official drop.", price: "PKR 1,499" }, { name: "Girls Oversized T-Shirt", image: "/Image/OVERSIZED Female.png", description: "Relaxed oversized cut for women.", price: "PKR 1,499" }]; const [cart, setCart] = useState<{ name: string; size: string; qty: number }[]>([]); const [preview, setPreview] = useState<string | null>(null); const removeFromCart = (i: number) => setCart(cart.filter((_, idx) => idx !== i)); const orderText = encodeURIComponent(cart.map((c) => `${c.qty}x ${c.name} (${c.size})`).join("\n")); return <main className="section pt-28 sm:pt-32"><SectionTitle label="Shop" title="Official society wear." /><div className="mx-auto grid max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">{products.map((p) => <ProductCard key={p.name} {...p} onPreview={setPreview} onAdd={(item) => setCart([...cart, item])} />)}</div><div className="mx-auto mt-10 max-w-3xl rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-5 text-[#e8ecee] sm:rounded-[2rem] sm:p-6"><h3 className="font-heading text-xl sm:text-2xl">Cart</h3>{cart.length === 0 ? <p className="mt-3 text-base text-[#939596]">Empty.</p> : <div className="mt-3 space-y-2">{cart.map((c, i) => <div key={`${c.name}-${i}`} className="flex items-center justify-between rounded-xl bg-[#e8ecee]/[.05] px-3 py-3"><span className="text-sm text-[#e8ecee]/75">{c.qty}x {c.name} / <span className="text-[#7bd355]">{c.size}</span></span><button onClick={() => removeFromCart(i)} className="ml-3 rounded-full bg-red-500/20 px-3 py-1 text-xs text-red-400">Remove</button></div>)}</div>}<a className="mt-5 inline-flex rounded-full bg-[#7bd355] px-6 py-3 text-base font-bold text-[#0c140a]" href={`https://wa.me/923329984490?text=${orderText}`} target="_blank" rel="noreferrer">Checkout via WhatsApp</a></div>{preview && <div className="fixed inset-0 z-[90] grid place-items-center bg-black/85 p-4"><button className="absolute right-5 top-5 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]" onClick={() => setPreview(null)}>✕</button><img src={preview} alt="Product preview" className="max-h-[85vh] rounded-2xl" /></div>}</main>; }
+/* ---------------- Shop (rebuilt cards) ---------------- */
+type ShopProduct = {
+  name: string;
+  image: string;
+  features: string[];
+  meta: string;
+  price: string;
+  sizes: string[];
+};
 
-function ProductCard({ name, image, description, price, onPreview, onAdd }: { name: string; image: string; description: string; price: string; onPreview: (s: string) => void; onAdd: (item: { name: string; size: string; qty: number }) => void }) { const [size, setSize] = useState("M"); const [qty, setQty] = useState(1); return <div className="rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5"><button onClick={() => onPreview(image)} className="w-full"><Avatar src={image} name={name} className="aspect-square w-full rounded-[1.25rem] object-cover" /></button><h3 className="mt-5 font-heading text-xl text-[#e8ecee] sm:text-2xl">{name}</h3><p className="mt-1 text-base text-[#939596]">{description}</p><p className="mt-2 font-heading text-lg font-bold text-[#7bd355]">{price}</p><div className="mt-4 flex gap-2">{["S", "M", "L", "XL"].map((s) => <button key={s} onClick={() => setSize(s)} className={`rounded-full px-3 py-2 text-sm font-bold transition sm:px-4 ${size === s ? "bg-[#7bd355] text-[#0c140a]" : "bg-[#e8ecee]/10 text-[#e8ecee] hover:bg-[#e8ecee]/20"}`}>{s}</button>)}</div><input className="glass-input mt-4" type="number" min={1} value={qty} onChange={(e) => setQty(Number(e.target.value))} /><button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-[#e8ecee] px-5 py-3 font-bold text-[#0c140a] transition hover:bg-[#7bd355]">Add to Cart</button></div>; }
+const products: ShopProduct[] = [
+  {
+    name: "SOCIAPI Society Premium Baggy T Shirt",
+    image: "/Image/OVERSIZED Male.png",
+    features: [
+      "Premium quality cotton fabric",
+      "Oversized baggy fit",
+      "Black color",
+      "High-quality front logo print",
+      "Soft, breathable, and comfortable",
+    ],
+    meta: "Sizes S–XL · Delivery PKR 200 nationwide · Made-on-demand, advance payment required",
+    price: "PKR 1,499",
+    sizes: ["S", "M", "L", "XL"],
+  },
+  {
+    name: "Girls Oversized T-Shirt",
+    image: "/Image/OVERSIZED Female.png",
+    features: [
+      "Relaxed oversized cut for women",
+      "Soft, breathable cotton blend",
+      "Black color",
+      "Front logo print",
+    ],
+    meta: "Sizes S–XL · Delivery PKR 200 nationwide",
+    price: "PKR 1,499",
+    sizes: ["S", "M", "L", "XL"],
+  },
+  {
+    name: "SOCIAPI Laptop Back Skin",
+    image: "/Image/Laptop Skin.png",
+    features: [
+      "Premium vinyl skin",
+      "Easy peel and stick application",
+      "No sticky residue on removal",
+      "Fits 13 to 16 inch laptops",
+      "Scratch resistant matte finish",
+    ],
+    meta: "One size fits most · Delivery PKR 150 nationwide",
+    price: "PKR 1,000",
+    sizes: [],
+  },
+];
+
+function ProductCard({ name, image, features, meta, price, sizes, onPreview, onAdd }: {
+  name: string;
+  image: string;
+  features: string[];
+  meta: string;
+  price: string;
+  sizes: string[];
+  onPreview: (s: string) => void;
+  onAdd: (item: { name: string; size: string; qty: number }) => void;
+}) {
+  const [size, setSize] = useState(sizes[0] || "One Size");
+  const [qty, setQty] = useState(1);
+  return (
+    <div className="rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
+      <button onClick={() => onPreview(image)} className="w-full">
+        <Avatar src={image} name={name} className="aspect-square w-full rounded-[1.25rem] object-cover" />
+      </button>
+
+      <h3 className="mt-5 font-heading text-xl text-[#e8ecee] sm:text-2xl">{name}</h3>
+
+      <ul className="mt-3 space-y-1.5">
+        {features.map((f) => (
+          <li key={f} className="flex items-start gap-2 text-sm leading-relaxed text-[#c7ccc9]">
+            <span className="mt-0.5 shrink-0 text-[#7bd355]">✓</span>
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <p className="mt-3 text-xs leading-relaxed text-[#7d8280]">{meta}</p>
+      <p className="mt-2 font-heading text-lg font-bold text-[#7bd355]">{price}</p>
+
+      {sizes.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {sizes.map((s) => (
+            <button
+              key={s}
+              onClick={() => setSize(s)}
+              className={`rounded-full px-3 py-2 text-sm font-bold transition sm:px-4 ${size === s ? "bg-[#7bd355] text-[#0c140a]" : "bg-[#e8ecee]/10 text-[#e8ecee] hover:bg-[#e8ecee]/20"}`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <input className="glass-input mt-4" type="number" min={1} value={qty} onChange={(e) => setQty(Number(e.target.value))} />
+      <button onClick={() => onAdd({ name, size, qty })} className="mt-4 w-full rounded-full bg-[#e8ecee] px-5 py-3 font-bold text-[#0c140a] transition hover:bg-[#7bd355]">Add to Cart</button>
+    </div>
+  );
+}
+
+function ShopPage() {
+  const [cart, setCart] = useState<{ name: string; size: string; qty: number }[]>([]);
+  const [preview, setPreview] = useState<string | null>(null);
+  const removeFromCart = (i: number) => setCart(cart.filter((_, idx) => idx !== i));
+  const orderText = encodeURIComponent(cart.map((c) => `${c.qty}x ${c.name} (${c.size})`).join("\n"));
+  return (
+    <main className="section pt-28 sm:pt-32">
+      <SectionTitle label="Shop" title="Official society wear." />
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
+        {products.map((p) => (
+          <ProductCard key={p.name} {...p} onPreview={setPreview} onAdd={(item) => setCart([...cart, item])} />
+        ))}
+      </div>
+      <div className="mx-auto mt-10 max-w-3xl rounded-[1.75rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] p-5 text-[#e8ecee] sm:rounded-[2rem] sm:p-6">
+        <h3 className="font-heading text-xl sm:text-2xl">Cart</h3>
+        {cart.length === 0 ? (
+          <p className="mt-3 text-base text-[#939596]">Empty.</p>
+        ) : (
+          <div className="mt-3 space-y-2">
+            {cart.map((c, i) => (
+              <div key={`${c.name}-${i}`} className="flex items-center justify-between rounded-xl bg-[#e8ecee]/[.05] px-3 py-3">
+                <span className="text-sm text-[#e8ecee]/75">{c.qty}x {c.name} / <span className="text-[#7bd355]">{c.size}</span></span>
+                <button onClick={() => removeFromCart(i)} className="ml-3 rounded-full bg-red-500/20 px-3 py-1 text-xs text-red-400">Remove</button>
+              </div>
+            ))}
+          </div>
+        )}
+        <a className="mt-5 inline-flex rounded-full bg-[#7bd355] px-6 py-3 text-base font-bold text-[#0c140a]" href={`https://wa.me/923329984490?text=${orderText}`} target="_blank" rel="noreferrer">Checkout via WhatsApp</a>
+      </div>
+      {preview && (
+        <div className="fixed inset-0 z-[90] grid place-items-center bg-black/85 p-4">
+          <button className="absolute right-5 top-5 rounded-full bg-[#e8ecee]/15 px-4 py-2 text-[#e8ecee]" onClick={() => setPreview(null)}>✕</button>
+          <img src={preview} alt="Product preview" className="max-h-[85vh] rounded-2xl" />
+        </div>
+      )}
+    </main>
+  );
+}
 
 function CareerPage() { return <main className="section pt-28 sm:pt-32"><SectionTitle label="Career" title="Join the team." /><div className="mx-auto mb-10 grid max-w-5xl grid-cols-1 gap-5 md:grid-cols-3">{["Internship", "Volunteer", "Membership"].map((x, i) => <Reveal key={x} delay={i * 0.1}><a href="https://forms.gle/wCxL9imgHWgWxU2z6" target="_blank" rel="noreferrer" className="block h-full rounded-[1.75rem] border border-[#7bd355]/30 bg-gradient-to-b from-[#7bd355]/[.08] to-transparent p-6 backdrop-blur-xl transition hover:-translate-y-1.5 hover:border-[#7bd355]/50 sm:rounded-[2rem]"><h3 className="font-heading text-xl font-bold text-[#e8ecee] sm:text-2xl">{x} ↗</h3><p className="mt-4 text-base text-[#939596]">Submit your application via Google Form.</p><span className="mt-4 inline-block rounded-full bg-[#7bd355] px-4 py-2 text-sm font-bold text-[#0c140a]">Apply</span></a></Reveal>)}</div><EmailForm kind="Career" /></main>; }
 
