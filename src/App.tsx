@@ -802,8 +802,8 @@ const shopCollections: { title: string; subtitle: string; items: ShopProduct[]; 
         description: "Matte vinyl protection with a bubble-free finish for a clean, elevated look.",
         features: ["Premium Matte Vinyl", "Bubble Free Application", "Easy Peel", "Scratch Resistant", "Fits 13–16 inch laptops"],
         badge: "New",
-        delivery: "PKR 150",
-        price: 1000,
+        delivery: "PKR 200",
+        price: 899,
         sizes: ["One Size"],
       },
     ],
@@ -921,6 +921,7 @@ function ShopPage() {
   const [cart, setCart] = useState<{ id: string; name: string; size: string; qty: number; price: number; image: string; gender: string }[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   const subtotal = useMemo(() => cart.reduce((sum, item) => sum + item.price * item.qty, 0), [cart]);
   const deliveryFee = subtotal > 0 ? 200 : 0;
@@ -936,6 +937,8 @@ function ShopPage() {
       }
       return [...current, item];
     });
+    setToast(`${item.name} (${item.size}) added to cart`);
+    window.setTimeout(() => setToast(null), 2200);
   };
 
   const removeFromCart = (id: string, size: string) => {
@@ -977,7 +980,7 @@ function ShopPage() {
 
                 <div className="mb-5 h-px bg-gradient-to-r from-[#7bd355]/35 via-[#7bd355]/10 to-transparent" />
 
-                <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))" }}>
+                <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(340px, 100%), 1fr))" }}>
                   {section.items.map((product) => (
                     <ProductCard key={product.id} product={product} onPreview={setPreview} onAdd={addToCart} />
                   ))}
@@ -1055,6 +1058,7 @@ function ShopPage() {
         delivery={deliveryFee}
         total={total}
         onClose={() => setCheckoutOpen(false)}
+        onOrderComplete={() => setCart([])}
       />
 
       {preview && (
@@ -1063,6 +1067,12 @@ function ShopPage() {
             ✕
           </button>
           <img src={preview} alt="Product preview" className="max-h-[85vh] max-w-[85vw] rounded-[1.5rem] object-contain" />
+        </div>
+      )}
+
+      {toast && (
+        <div className="fixed bottom-24 left-1/2 z-[110] w-[calc(100vw-2rem)] max-w-sm -translate-x-1/2 rounded-full border border-[#7bd355]/40 bg-[#0f130f] px-5 py-3 text-center text-sm font-bold text-[#d9ffd0] shadow-2xl shadow-[#7bd355]/30 animate-slide-up sm:bottom-8">
+          ✓ {toast}
         </div>
       )}
     </main>
@@ -1076,6 +1086,7 @@ function CheckoutModal({
   delivery,
   total,
   onClose,
+  onOrderComplete,
 }: {
   open: boolean;
   cart: { id: string; name: string; size: string; qty: number; price: number; image: string; gender: string }[];
@@ -1083,6 +1094,7 @@ function CheckoutModal({
   delivery: number;
   total: number;
   onClose: () => void;
+  onOrderComplete: () => void;
 }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -1095,6 +1107,7 @@ function CheckoutModal({
     postalCode: "",
     landmark: "",
     notes: "",
+    paymentMethod: "Cash on Delivery",
   });
   const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -1161,9 +1174,10 @@ function CheckoutModal({
       };
 
       const orderResult = await orderService.createOrder(orderPayload);
-      setSuccessMessage(`Order ${orderResult.order_number} saved successfully. Redirecting to WhatsApp...`);
 
-      await new Promise((resolve) => window.setTimeout(resolve, 600));
+      // Show a clear thank-you confirmation before moving to WhatsApp
+      setSuccessMessage(`Thank you! Order ${orderResult.order_number} placed successfully. Opening WhatsApp...`);
+      await new Promise((resolve) => window.setTimeout(resolve, 1300));
 
       const lines = [
         "Hello SOCIAPI Society,",
@@ -1185,6 +1199,7 @@ function CheckoutModal({
         `Subtotal: Rs. ${subtotal.toLocaleString("en-US")}`,
         `Delivery: Rs. ${delivery.toLocaleString("en-US")}`,
         `Total: Rs. ${total.toLocaleString("en-US")}`,
+        `Payment Method: ${formData.paymentMethod}`,
         "",
         "━━━━━━━━━━━━━━━━━━",
         "",
@@ -1208,6 +1223,11 @@ function CheckoutModal({
 
       const message = lines.join("\n");
       window.open(`https://wa.me/923329984490?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+
+      // Clear the cart now that the order has been placed and sent
+      onOrderComplete();
+
+      await new Promise((resolve) => window.setTimeout(resolve, 500));
       onClose();
     } catch (error) {
       const message = error instanceof Error ? error.message : "Order could not be saved. Please try again.";
@@ -1272,6 +1292,15 @@ function CheckoutModal({
               <div>
                 <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Landmark (Optional)</label>
                 <input value={formData.landmark} onChange={(e) => updateField("landmark", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]" placeholder="Near Islamia College" />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Payment Method</label>
+                <select value={formData.paymentMethod} onChange={(e) => updateField("paymentMethod", e.target.value)} className="w-full rounded-2xl border border-[#e8ecee]/10 bg-[#e8ecee]/[.04] px-4 py-3 text-[#e8ecee] outline-none transition focus:border-[#7bd355]">
+                  <option>Cash on Delivery</option>
+                  <option>Bank Transfer</option>
+                  <option>JazzCash</option>
+                  <option>Easypaisa</option>
+                </select>
               </div>
               <div className="sm:col-span-2">
                 <label className="mb-2 block text-sm font-semibold text-[#e8ecee]">Order Notes (Optional)</label>
