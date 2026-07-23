@@ -802,8 +802,8 @@ const shopCollections: { title: string; subtitle: string; items: ShopProduct[]; 
         description: "Matte vinyl protection with a bubble-free finish for a clean, elevated look.",
         features: ["Premium Matte Vinyl", "Bubble Free Application", "Easy Peel", "Scratch Resistant", "Fits 13–16 inch laptops"],
         badge: "New",
-        delivery: "PKR 200",
-        price: 899,
+        delivery: "PKR 150",
+        price: 1000,
         sizes: ["One Size"],
       },
     ],
@@ -823,8 +823,8 @@ function ProductCard({
   const [qty, setQty] = useState(1);
 
   return (
-    <div className="group flex h-full flex-col rounded-[1.75rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(23,26,24,0.98),rgba(14,16,15,0.94))] p-4 backdrop-blur-xl shadow-[0_20px_80px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#7bd355]/50 hover:shadow-[0_0_0_1px_rgba(123,211,85,0.15),0_24px_90px_rgba(25,90,18,0.35)] sm:rounded-[2rem] sm:p-5">
-      <div className="flex flex-col">
+    <div className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[1.75rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(23,26,24,0.98),rgba(14,16,15,0.94))] p-4 backdrop-blur-xl shadow-[0_20px_80px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#7bd355]/50 hover:shadow-[0_0_0_1px_rgba(123,211,85,0.15),0_24px_90px_rgba(25,90,18,0.35)] sm:rounded-[2rem] sm:p-5">
+      <div className="flex min-w-0 flex-col">
         <button onClick={() => onPreview(product.image)} className="group/image relative w-full overflow-hidden rounded-[1.5rem] border border-[#e8ecee]/8 bg-[#0f130f] p-3">
           <div className="flex h-[360px] aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-[1.2rem] bg-[radial-gradient(circle_at_top,rgba(123,211,85,0.14),transparent_70%)]">
             <img
@@ -836,7 +836,7 @@ function ProductCard({
           </div>
         </button>
 
-        <div className="mt-4 flex items-center justify-between gap-3">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <span className="inline-flex items-center rounded-full border border-[#7bd355]/25 bg-[#7bd355]/12 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.28em] text-[#bfeeb0]">
             {product.badge}
           </span>
@@ -864,13 +864,14 @@ function ProductCard({
           </span>
         </div>
 
-        <div className="mt-5 flex items-center justify-between gap-4">
+        {/* Price + Size + Qty — stacked on mobile so it never overflows the card width */}
+        <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[11px] uppercase tracking-[0.25em] text-[#939596]">Price</p>
             <p className="font-heading text-[1.8rem] font-black text-[#7bd355]">Rs. {product.price.toLocaleString("en-US")}</p>
           </div>
 
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col gap-2 sm:items-end">
             {product.sizes.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((s) => (
@@ -885,11 +886,11 @@ function ProductCard({
               </div>
             )}
 
-            <div className="flex items-center gap-3 rounded-full border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] px-3 py-2">
+            <div className="flex w-fit items-center gap-3 rounded-full border border-[#e8ecee]/10 bg-[#e8ecee]/[.06] px-3 py-2">
               <button
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
                 aria-label="Decrease quantity"
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-semibold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-semibold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]"
               >
                 −
               </button>
@@ -897,7 +898,7 @@ function ProductCard({
               <button
                 onClick={() => setQty((q) => q + 1)}
                 aria-label="Increase quantity"
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-semibold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8ecee]/10 text-lg font-semibold text-[#e8ecee] transition hover:bg-[#7bd355] hover:text-[#0c140a]"
               >
                 +
               </button>
@@ -961,9 +962,9 @@ function ShopPage() {
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="space-y-8">
+          <div className="min-w-0 space-y-8">
             {shopCollections.map((section) => (
-              <section key={section.title} className="rounded-[2rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(19,21,20,0.88),rgba(10,12,11,0.94))] p-5 sm:p-6">
+              <section key={section.title} className="min-w-0 rounded-[2rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(19,21,20,0.88),rgba(10,12,11,0.94))] p-5 sm:p-6">
                 <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                   <div>
                     <h2 className="font-heading text-2xl font-black text-[#e8ecee] sm:text-3xl">{section.title}</h2>
@@ -980,7 +981,7 @@ function ShopPage() {
 
                 <div className="mb-5 h-px bg-gradient-to-r from-[#7bd355]/35 via-[#7bd355]/10 to-transparent" />
 
-                <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(340px, 100%), 1fr))" }}>
+                <div className="grid min-w-0 gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(340px, 100%), 1fr))" }}>
                   {section.items.map((product) => (
                     <ProductCard key={product.id} product={product} onPreview={setPreview} onAdd={addToCart} />
                   ))}
@@ -989,7 +990,7 @@ function ShopPage() {
             ))}
           </div>
 
-          <aside className="xl:sticky xl:top-24 xl:self-start">
+          <aside className="min-w-0 xl:sticky xl:top-24 xl:self-start">
             <div className="rounded-[2rem] border border-[#e8ecee]/10 bg-[linear-gradient(180deg,rgba(22,24,22,0.98),rgba(12,14,13,0.95))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-6">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="font-heading text-2xl font-black text-[#e8ecee]">Cart</h2>
@@ -1005,14 +1006,14 @@ function ShopPage() {
                   </div>
                 ) : (
                   cart.map((item, index) => (
-                    <div key={`${item.id}-${item.size}-${index}`} className="flex items-center gap-3 rounded-[1.25rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.05] p-2.5">
-                      <img src={item.image} alt={item.name} className="h-20 w-16 rounded-xl object-contain" />
+                    <div key={`${item.id}-${item.size}-${index}`} className="flex min-w-0 items-center gap-3 rounded-[1.25rem] border border-[#e8ecee]/10 bg-[#e8ecee]/[.05] p-2.5">
+                      <img src={item.image} alt={item.name} className="h-20 w-16 shrink-0 rounded-xl object-contain" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-bold text-[#e8ecee]">{item.name}</p>
                         <p className="mt-1 text-xs text-[#939596]">Size: {item.size}</p>
                         <p className="mt-1 text-xs text-[#939596]">Qty: {item.qty}</p>
                       </div>
-                      <div className="text-right">
+                      <div className="shrink-0 text-right">
                         <p className="text-sm font-bold text-[#7bd355]">Rs. {(item.price * item.qty).toLocaleString("en-US")}</p>
                         <button onClick={() => removeFromCart(item.id, item.size)} className="mt-2 text-xs font-bold text-red-400 transition hover:text-red-300">
                           Remove
