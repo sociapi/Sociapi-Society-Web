@@ -2,6 +2,7 @@ import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import ChaptersPage from "./Chapters";
+import CertificateVerification from "./components/CertificateVerification";
 import { orderService, type CreateOrderInput } from "./services/orders";
 
 /* ---------------- Types ---------------- */
@@ -1420,6 +1421,8 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/chapters" element={<ChaptersPage />} />
+        <Route path="/verify" element={<CertificateVerification />} />
+        <Route path="/verify/:certificateId" element={<CertificateVerification />} />
         <Route path="/team" element={<TeamGalaxy full />} />
         <Route path="/events" element={<EventsBlogPage />} />
         <Route path="/services" element={<ServicesPage />} />
