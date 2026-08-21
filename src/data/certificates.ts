@@ -1,3 +1,19 @@
+import linkedinTooba from "./Certificates/LinkedIn & Personal Branding/Tooba Mumtaz.pdf";
+import linkedinHaris from "./Certificates/LinkedIn & Personal Branding/Muhammad Haris.pdf";
+import linkedinMudassir from "./Certificates/LinkedIn & Personal Branding/Muhammad Mudasir.pdf";
+import linkedinZuhair from "./Certificates/LinkedIn & Personal Branding/Muhammad Zuhair Zeb.pdf";
+import digitalWajida from "./Certificates/Earn with digital skills/Wajida Haneef.pdf";
+import digitalMoeed from "./Certificates/Earn with digital skills/Mooed Asad.pdf";
+import ieltsHashmat from "./Certificates/Ielts/Hashmat Ali.pdf";
+import ieltsMisbah from "./Certificates/Ielts/Misbah Ullah.pdf";
+import ieltsChandni from "./Certificates/Ielts/Chandni Karim.pdf";
+import ieltsFahad from "./Certificates/Ielts/Muhammad Fahad Ali.pdf";
+import aiWajida from "./Certificates/AI & Tools/Wajida Haneef.pdf";
+import aiAitzaz from "./Certificates/AI & Tools/Aitzaz Ahmad.pdf";
+import aiAnita from "./Certificates/AI & Tools/Anita.pdf";
+import aiAbbas from "./Certificates/AI & Tools/Muhammad Abbas.pdf";
+import aiMujahid from "./Certificates/AI & Tools/Mujahid Nawaz.pdf";
+
 export interface Certificate {
   certificateId: string;
   name: string;
@@ -7,7 +23,26 @@ export interface Certificate {
   certificateType: string;
   issuedBy: string;
   status: "VALID" | "INVALID" | "EXPIRED";
+  certificateFile?: string;
 }
+
+const certificateFiles: Record<string, string> = {
+  "SL-002": linkedinTooba,
+  "SL-027": linkedinHaris,
+  "SL-040": linkedinMudassir,
+  "SL-041": linkedinZuhair,
+  "SD-025": digitalWajida,
+  "SD-031": digitalMoeed,
+  "SP-001": ieltsHashmat,
+  "SI-015": ieltsMisbah,
+  "SI-017": ieltsChandni,
+  "SI-026": ieltsFahad,
+  "SA-010": aiWajida,
+  "SA-011": aiAitzaz,
+  "SA-042": aiAnita,
+  "SA-037": aiAbbas,
+  "SA-038": aiMujahid,
+};
 
 export const certificatesDatabase: Certificate[] = [
   {
@@ -183,5 +218,6 @@ export const certificatesDatabase: Certificate[] = [
 ];
 
 export function findCertificate(certificateId: string): Certificate | undefined {
-  return certificatesDatabase.find((cert) => cert.certificateId.toUpperCase() === certificateId.toUpperCase());
+  const certificate = certificatesDatabase.find((cert) => cert.certificateId.toUpperCase() === certificateId.toUpperCase());
+  return certificate ? { ...certificate, certificateFile: certificateFiles[certificate.certificateId] } : undefined;
 }

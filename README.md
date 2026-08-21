@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Sociapi Society Web
+=======
+
+>>>>>>> 2e7de84a45d573818d0b9c18cf50c762263e525f
 
 A modern, responsive website for Sociapi Society built with React, TypeScript, and Tailwind CSS. This platform serves as a comprehensive hub for community engagement, events, services, and member management.
 
@@ -431,4 +435,8 @@ This project is the property of **Sociapi Society**. All rights reserved.
 
 **Last Updated:** August 2026
 **Maintained by:** zuhairzeb
+<<<<<<< HEAD
 >>>>>>> 20ac15e772e3e16765941b26d4e50ba6093c8366
+=======
+
+>>>>>>> 2e7de84a45d573818d0b9c18cf50c762263e525f

@@ -274,30 +274,49 @@ function CertificateVerification() {
                     <h3 className="font-heading text-lg font-bold text-[#e8ecee]">
                       Certificate Preview
                     </h3>
-                    <div className="mt-6 flex h-64 items-center justify-center rounded-xl border border-[#e8ecee]/10 bg-gradient-to-br from-[#7bd355]/10 to-transparent">
-                      <div className="text-center">
-                        <svg
-                          className="mx-auto h-12 w-12 text-[#7bd355]"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        >
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                          <polyline points="14 2 14 8 20 8" />
-                          <path d="M12 13H8M16 17H8M12 9H8" />
-                        </svg>
-                        <p className="mt-3 text-xs text-[#939596]">Certificate file coming soon</p>
-                      </div>
+                    <div className="mt-6 flex h-64 items-center justify-center overflow-hidden rounded-xl border border-[#e8ecee]/10 bg-gradient-to-br from-[#7bd355]/10 to-transparent">
+                      {verification.certificate.certificateFile ? (
+                        <iframe
+                          src={`${verification.certificate.certificateFile}#toolbar=0&navpanes=0&scrollbar=0`}
+                          title={`${verification.certificate.name} certificate preview`}
+                          className="h-full w-full border-0 bg-white"
+                        />
+                      ) : (
+                        <div className="text-center">
+                          <svg
+                            className="mx-auto h-12 w-12 text-[#7bd355]"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                          >
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <path d="M12 13H8M16 17H8M12 9H8" />
+                          </svg>
+                          <p className="mt-3 text-xs text-[#939596]">Certificate file coming soon</p>
+                        </div>
+                      )}
                     </div>
 
                     {/* Action Buttons */}
                     <div className="mt-6 grid grid-cols-2 gap-3">
-                      <button className="group/btn relative inline-flex items-center justify-center overflow-hidden rounded-xl border border-[#7bd355]/30 bg-[#7bd355]/10 px-4 py-3 text-sm font-bold text-[#7bd355] transition-all duration-300 hover:border-[#7bd355]/60 hover:bg-[#7bd355]/20">
+                      <a
+                        href={verification.certificate.certificateFile || undefined}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-disabled={!verification.certificate.certificateFile}
+                        className={`group/btn relative inline-flex items-center justify-center overflow-hidden rounded-xl border border-[#7bd355]/30 bg-[#7bd355]/10 px-4 py-3 text-sm font-bold text-[#7bd355] transition-all duration-300 hover:border-[#7bd355]/60 hover:bg-[#7bd355]/20 ${!verification.certificate.certificateFile ? "pointer-events-none opacity-50" : ""}`}
+                      >
                         <span className="relative z-10">View Full</span>
                         <span className="absolute inset-0 -translate-x-full bg-[#7bd355]/10 transition-transform duration-300 group-hover/btn:translate-x-0" />
-                      </button>
-                      <button className="group/btn relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-[#7bd355] px-4 py-3 text-sm font-bold text-[#0c140a] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_8px_24px_rgba(123,211,85,0.35)]">
+                      </a>
+                      <a
+                        href={verification.certificate.certificateFile || undefined}
+                        download
+                        aria-disabled={!verification.certificate.certificateFile}
+                        className={`group/btn relative inline-flex items-center justify-center overflow-hidden rounded-xl bg-[#7bd355] px-4 py-3 text-sm font-bold text-[#0c140a] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_8px_24px_rgba(123,211,85,0.35)] ${!verification.certificate.certificateFile ? "pointer-events-none opacity-50" : ""}`}
+                      >
                         <span className="relative z-10 flex items-center gap-2">
                           <svg
                             className="h-4 w-4"
@@ -313,7 +332,7 @@ function CertificateVerification() {
                           Download
                         </span>
                         <span className="absolute inset-0 -translate-x-full bg-white/15 transition-transform duration-300 group-hover/btn:translate-x-0" />
-                      </button>
+                      </a>
                     </div>
                   </div>
 
