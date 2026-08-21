@@ -59,7 +59,7 @@ const CHAPTERS: Chapter[] = [
     name: "UET Mardan",
     uni: "University of Engineering & Technology, Mardan",
     city: "Mardan",
-    status: "pending",
+    status: "active",
     tag: "Coming Soon",
     members: "0",
     events: "0",
