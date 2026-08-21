@@ -987,7 +987,7 @@ export default function ChaptersPage() {
           <h2 className="mt-5 max-w-2xl font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
             <MaskLine>No team yet?</MaskLine>
             <MaskLine delay={0.1}>
-              Become an <span className="text-[#7bd355]">ambassador.</span>
+              Become as <span className="text-[#7bd355]">Campus Lead.</span>
             </MaskLine>
           </h2>
           <p className="mt-5 max-w-xl text-[15px] text-[#939596]">
@@ -996,7 +996,7 @@ export default function ChaptersPage() {
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Primary href={FORMS.ambassador} ext>
-              Apply as an Ambassador
+              Apply as a campus Lead
             </Primary>
           </div>
           <div className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
