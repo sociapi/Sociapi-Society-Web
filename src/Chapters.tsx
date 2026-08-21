@@ -2,40 +2,32 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
 
-const icpImg = "https://images.pexels.com/photos/31139015/pexels-photo-31139015.jpeg?auto=compress&cs=tinysrgb&w=1200";
-const communityImg = "https://images.pexels.com/photos/33920044/pexels-photo-33920044.jpeg?auto=compress&cs=tinysrgb&w=1200";
-const campusNightImg = "https://images.pexels.com/photos/35199522/pexels-photo-35199522.jpeg?auto=compress&cs=tinysrgb&w=1200";
-
 const EASE = [0.22, 1, 0.36, 1] as const;
 const FORMS = {
   chapter: "https://forms.gle/rjCsLLKiz9FK5gFX6",
   ambassador: "https://forms.gle/gLYkmyJj7sp1zRJ2A",
 };
+const ICP = "https://commons.wikimedia.org/wiki/Special:FilePath/Islamia_College_Peshawar.jpg";
+const COMMUNITY = "https://images.pexels.com/photos/33920044/pexels-photo-33920044.jpeg?auto=compress&cs=tinysrgb&w=1200";
+const NIGHT = "https://images.pexels.com/photos/35199522/pexels-photo-35199522.jpeg?auto=compress&cs=tinysrgb&w=1200";
 
 type Chapter = {
-  code: string;
-  name: string;
-  uni: string;
-  city: string;
-  status: "active" | "pending";
-  tag: string;
-  members: string;
-  events: string;
-  third: { label: string; value: string };
+  code: string; name: string; uni: string; city: string;
+  status: "active" | "pending"; tag: string;
+  members: string; events: string; third: { label: string; value: string };
   node: { x: number; y: number };
 };
-
 const CHAPTERS: Chapter[] = [
   { code: "CH-01", name: "Islamia College Peshawar", uni: "Islamia College University", city: "Peshawar", status: "active", tag: "Founding Chapter", members: "20+", events: "3", third: { label: "Reached", value: "340+" }, node: { x: 400, y: 268 } },
-  { code: "CH-02", name: "UET Mardan", uni: "University of Engineering & Technology, Mardan", city: "Mardan", status: "pending", tag: "Coming Soon", members: "—", events: "—", third: { label: "Projects", value: "0" }, node: { x: 138, y: 108 } },
-  { code: "CH-03", name: "NFC IEFR", uni: "NFC Institute of Engineering & Fertilizer Research", city: "Peshawar", status: "pending", tag: "Coming Soon", members: "—", events: "—", third: { label: "Projects", value: "0" }, node: { x: 648, y: 86 } },
-  { code: "CH-04", name: "UAP Peshawar", uni: "The University of Agriculture, Peshawar", city: "Peshawar", status: "pending", tag: "Coming Soon", members: "—", events: "—", third: { label: "Projects", value: "0" }, node: { x: 706, y: 306 } },
-  { code: "CH-05", name: "UET Peshawar", uni: "University of Engineering & Technology — Nowshera Campus", city: "Nowshera", status: "pending", tag: "Coming Soon", members: "—", events: "—", third: { label: "Projects", value: "0" }, node: { x: 566, y: 462 } },
-  { code: "CH-06", name: "University of Peshawar", uni: "University of Peshawar", city: "Peshawar", status: "pending", tag: "Coming Soon", members: "—", events: "—", third: { label: "Projects", value: "0" }, node: { x: 252, y: 472 } },
-  { code: "CH-07", name: "University of Lahore", uni: "The University of Lahore", city: "Lahore", status: "pending", tag: "Coming Soon", members: "—", events: "—", third: { label: "Projects", value: "0" }, node: { x: 84, y: 330 } },
+  { code: "CH-02", name: "UET Mardan", uni: "University of Engineering & Technology, Mardan", city: "Mardan", status: "pending", tag: "Coming Soon", members: "0", events: "0", third: { label: "Reached", value: "0" }, node: { x: 138, y: 108 } },
+  { code: "CH-03", name: "NFC IEFR", uni: "NFC Institute of Engineering & Fertilizer Research", city: "Peshawar", status: "pending", tag: "Coming Soon", members: "0", events: "0", third: { label: "Reached", value: "0" }, node: { x: 648, y: 86 } },
+  { code: "CH-04", name: "UAP Peshawar", uni: "The University of Agriculture, Peshawar", city: "Peshawar", status: "pending", tag: "Coming Soon", members: "0", events: "0", third: { label: "Reached", value: "0" }, node: { x: 706, y: 306 } },
+  { code: "CH-05", name: "UET Peshawar", uni: "University of Engineering & Technology — Nowshera Campus", city: "Nowshera", status: "pending", tag: "Coming Soon", members: "0", events: "0", third: { label: "Reached", value: "0" }, node: { x: 566, y: 462 } },
+  { code: "CH-06", name: "University of Peshawar", uni: "University of Peshawar", city: "Peshawar", status: "pending", tag: "Coming Soon", members: "0", events: "0", third: { label: "Reached", value: "0" }, node: { x: 252, y: 472 } },
+  { code: "CH-07", name: "University of Lahore", uni: "The University of Lahore", city: "Lahore", status: "pending", tag: "Coming Soon", members: "0", events: "0", third: { label: "Reached", value: "0" }, node: { x: 84, y: 330 } },
 ];
 
-const PILLARS = [
+const TRACKS = [
   { n: "01", title: "Artificial Intelligence", desc: "Foundational and applied AI — learning by building, not just theory." },
   { n: "02", title: "Machine Learning", desc: "Hands-on ML projects that ship into real student portfolios." },
   { n: "03", title: "Deep Learning", desc: "Neural networks and transformers, taught through practice." },
@@ -47,20 +39,12 @@ const PILLARS = [
 ];
 
 const BENEFITS = [
-  { title: "Learn by doing, not by watching", desc: "Every chapter runs on projects. Students practice, share ideas, and solve problems as a team." },
-  { title: "Build a portfolio that stands out", desc: "Workshops, study groups and project activities produce real work — not just certificates." },
-  { title: "Open to every student", desc: "Beginner or advanced — everyone gets support, guidance, and a friendly environment." },
-  { title: "Real leadership experience", desc: "Chapter leaders manage teams, events and stakeholders before they graduate." },
-  { title: "Mentors, experts & opportunities", desc: "We connect students with mentors, industry experts, and the growing Sociapi network." },
-  { title: "One connected community", desc: "Every chapter routes back to the founding hub — shared branding, one calendar, one network." },
-];
-
-const MISSION = [
-  "Provide simple and practical workshops",
-  "Help students build real projects and strong portfolios",
-  "Support teamwork, creativity, and problem-solving",
-  "Arrange events that inspire new ideas and learning",
-  "Connect students with mentors, industry experts, and opportunities",
+  { n: "01", title: "Learn by doing, not by watching", desc: "Every chapter runs on projects. Students practice, share ideas, and solve problems as a team." },
+  { n: "02", title: "Build a portfolio that stands out", desc: "Workshops, study groups and project activities produce real work — not just certificates." },
+  { n: "03", title: "Open to every student", desc: "Beginner or advanced — everyone gets support, guidance, and a friendly environment." },
+  { n: "04", title: "Real leadership experience", desc: "Chapter leaders manage teams, events and stakeholders before they graduate." },
+  { n: "05", title: "Mentors, experts & opportunities", desc: "We connect students with mentors, industry experts, and the growing Sociapi network." },
+  { n: "06", title: "One connected community", desc: "Every chapter routes back to the founding hub — shared branding, one calendar, one network." },
 ];
 
 const LEADERSHIP = [
@@ -95,6 +79,13 @@ const FAQS = [
   { q: "What does the central team provide?", a: "Branding, mentorship, event toolkits, speaker connections, design templates, digital infrastructure, and ongoing operational guidance." },
 ];
 
+const AMB = [
+  { title: "Represent Sociapi", desc: "Be the accountable voice of Sociapi on your campus — events, notices, culture." },
+  { title: "Recruit Members", desc: "Find the passionate students who will carry the chapter forward." },
+  { title: "Organize Activities", desc: "Run workshops, meetups, and events with the central team's toolkits." },
+  { title: "Build a Chapter", desc: "Turn the ambassadorship into a chartered, fully branded chapter." },
+];
+
 const TAGS = [
   { label: "Generative AI", side: "left" as const, top: "22%" },
   { label: "Machine Learning", side: "right" as const, top: "20%" },
@@ -106,7 +97,7 @@ const TAGS = [
 
 function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   return (
-    <motion.div className={className} initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-70px" }} transition={{ duration: 0.7, ease: EASE, delay }}>
+    <motion.div className={className} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-70px" }} transition={{ duration: 0.65, ease: EASE, delay }}>
       {children}
     </motion.div>
   );
@@ -114,18 +105,18 @@ function Reveal({ children, className, delay = 0 }: { children: ReactNode; class
 
 function MaskLine({ children, delay = 0, immediate = false }: { children: ReactNode; delay?: number; immediate?: boolean }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "0px" });
+  const inView = useInView(ref, { once: true });
   const show = immediate || inView;
   return (
     <span ref={ref} className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
-      <motion.span className="block" initial={{ y: "110%" }} animate={show ? { y: "0%" } : { y: "110%" }} transition={{ duration: 0.85, ease: EASE, delay }}>
+      <motion.span className="block" initial={{ y: "110%" }} animate={show ? { y: "0%" } : { y: "110%" }} transition={{ duration: 0.8, ease: EASE, delay }}>
         {children}
       </motion.span>
     </span>
   );
 }
 
-function Counter({ to, suffix = "", duration = 1400 }: { to: number; suffix?: string; duration?: number }) {
+function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
   const reduced = useReducedMotion();
@@ -136,19 +127,19 @@ function Counter({ to, suffix = "", duration = 1400 }: { to: number; suffix?: st
     let raf = 0;
     const t0 = performance.now();
     const tick = (now: number) => {
-      const t = Math.min(1, (now - t0) / duration);
+      const t = Math.min(1, (now - t0) / 1300);
       setV(Math.round((1 - Math.pow(1 - t, 3)) * to));
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [inView, reduced, to, duration]);
+  }, [inView, reduced, to]);
   return <span ref={ref}>{v}{suffix}</span>;
 }
 
-function Pill({ children }: { children: ReactNode }) {
+function Pill({ children, center = false }: { children: ReactNode; center?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-[#7bd355]/25 bg-[#7bd355]/10 px-4 py-1.5 font-display text-[11px] font-semibold uppercase tracking-[0.22em] text-[#7bd355]">
+    <span className={`inline-flex items-center gap-2 rounded-full border border-[#7bd355]/25 bg-[#7bd355]/10 px-4 py-1.5 font-display text-[11px] font-semibold uppercase tracking-[0.24em] text-[#7bd355] ${center ? "mx-auto" : ""}`}>
       <span className="text-[8px]">◆</span> {children}
     </span>
   );
@@ -156,7 +147,7 @@ function Pill({ children }: { children: ReactNode }) {
 
 function Primary({ href, children, ext }: { href: string; children: ReactNode; ext?: boolean }) {
   return (
-    <a href={href} {...(ext ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="inline-flex items-center gap-2 rounded-full bg-[#7bd355] px-7 py-3.5 font-display text-sm font-semibold text-[#1b2118] transition hover:brightness-110">
+    <a href={href} {...(ext ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="inline-flex items-center gap-2 rounded-full bg-[#7bd355] px-6 py-3 font-display text-sm font-semibold text-[#1b2118] transition hover:brightness-110 sm:px-7">
       {children}
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M4 12h15M13 5.5 19.5 12 13 18.5" /></svg>
     </a>
@@ -165,7 +156,7 @@ function Primary({ href, children, ext }: { href: string; children: ReactNode; e
 
 function Ghost({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <a href={href} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-7 py-3.5 font-display text-sm font-semibold text-[#e8ecee] transition hover:border-[#7bd355]/40">
+    <a href={href} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-6 py-3 font-display text-sm font-semibold text-[#e8ecee] transition hover:border-[#7bd355]/40 sm:px-7">
       {children}
     </a>
   );
@@ -195,10 +186,10 @@ function NetworkCanvas() {
       w = canvas.clientWidth; h = canvas.clientHeight;
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = w < 768 ? 42 : 64;
+      const count = w < 768 ? 36 : 56;
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * w, y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28,
+        vx: (Math.random() - 0.5) * 0.26, vy: (Math.random() - 0.5) * 0.26,
         r: Math.random() * 1.4 + 0.4,
       }));
     };
@@ -215,9 +206,9 @@ function NetworkCanvas() {
         for (let j = i + 1; j < nodes.length; j++) {
           const a = nodes[i], b = nodes[j];
           const dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
-          if (d2 < 16000) {
-            ctx.strokeStyle = `rgba(123,211,85,${((1 - Math.sqrt(d2) / 126) * 0.2).toFixed(3)})`;
-            ctx.lineWidth = 0.7;
+          if (d2 < 15000) {
+            ctx.strokeStyle = `rgba(123,211,85,${((1 - Math.sqrt(d2) / 122) * 0.2).toFixed(3)})`;
+            ctx.lineWidth = 0.6;
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
           }
         }
@@ -236,9 +227,6 @@ function NetworkCanvas() {
 
 export default function ChaptersPage() {
   const [open, setOpen] = useState<number | null>(0);
-  const [sent, setSent] = useState(false);
-  const [ticket, setTicket] = useState("");
-  const [form, setForm] = useState({ name: "", email: "", university: "", role: "Chapter President (founder)", message: "" });
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
   const ticker = [...CHAPTERS.map((c) => c.name), "Your University"];
@@ -252,11 +240,10 @@ export default function ChaptersPage() {
   }, []);
 
   return (
-    <div className="chapters-root min-h-screen overflow-x-hidden bg-[#070907] text-[#e8ecee] antialiased">
+    <div className="chapters-root bg-[#070907] text-[#e8ecee] antialiased">
       <style>{`
-        .chapters-root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+        .chapters-root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; overflow-x: clip; }
         .chapters-root .font-display { font-family: Tomorrow, "Space Grotesk", ui-sans-serif, sans-serif; }
-        .chapters-root .font-mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
         .chapters-root .grid-lines { background-image: linear-gradient(rgba(232,236,238,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(232,236,238,0.045) 1px, transparent 1px); background-size: 64px 64px; }
         .chapters-root .mask-radial { mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 78%); }
         .chapters-root .text-outline { color: transparent; -webkit-text-stroke: 1.4px rgba(232,236,238,0.32); }
@@ -266,16 +253,13 @@ export default function ChaptersPage() {
         .chapters-root .spin-slow { animation: ch-spin 44s linear infinite; transform-box: fill-box; transform-origin: center; }
         @keyframes ch-dash { to { stroke-dashoffset: -60; } }
         .chapters-root .dash-flow { stroke-dasharray: 3 7; animation: ch-dash 3.2s linear infinite; }
-        .chapters-root .field { width:100%; border:1px solid rgba(232,236,238,0.12); background:rgba(232,236,238,0.03); padding:.85rem 1rem; font-size:.92rem; color:#e8ecee; border-radius:12px; outline:none; }
-        .chapters-root .field:focus { border-color:rgba(123,211,85,.55); box-shadow:0 0 0 3px rgba(123,211,85,.12); }
-        .chapters-root select.field option { background:#101410; }
         @media (prefers-reduced-motion: reduce) {
           .chapters-root .marquee-track, .chapters-root .spin-slow, .chapters-root .dash-flow { animation: none !important; }
         }
       `}</style>
 
       {/* HERO */}
-      <section className="relative flex min-h-[100svh] flex-col overflow-hidden">
+      <section id="top" className="relative flex min-h-[100svh] flex-col overflow-hidden">
         <div className="absolute inset-0">
           <div className="grid-lines mask-radial absolute inset-0 opacity-80" />
           <NetworkCanvas />
@@ -300,20 +284,20 @@ export default function ChaptersPage() {
             University Expansion · Est. 2025
           </motion.p>
 
-          <h1 className="font-display text-[clamp(2.9rem,11vw,7rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.04em] text-[#e8ecee]">
+          <h1 className="font-display text-[clamp(2.9rem,11vw,7rem)] font-extrabold uppercase leading-[0.88] tracking-[-0.04em]">
             <MaskLine delay={0.1} immediate>Start a</MaskLine>
             <MaskLine delay={0.22} immediate><span className="text-[#7bd355]">Sociapi</span></MaskLine>
             <MaskLine delay={0.34} immediate>Chapter</MaskLine>
           </h1>
 
-          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.48 }} className="mt-8 flex w-full max-w-2xl items-end justify-center gap-3 sm:gap-4">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-8 flex w-full max-w-2xl items-end justify-center gap-3 sm:gap-4">
             {[
-              { src: icpImg, alt: "Islamia College Peshawar", caption: "Founding Chapter", sub: "Islamia College", tall: false },
-              { src: communityImg, alt: "Sociapi students", caption: "Our Community", sub: "Workshops & projects", tall: true },
-              { src: campusNightImg, alt: "Universities joining next", caption: "New Campuses", sub: "Coming soon", tall: false },
+              { src: ICP, caption: "Founding Chapter", sub: "Islamia College", tall: false },
+              { src: COMMUNITY, caption: "Our Community", sub: "Workshops & projects", tall: true },
+              { src: NIGHT, caption: "New Campuses", sub: "Coming soon", tall: false },
             ].map((img) => (
               <figure key={img.caption} className={`relative overflow-hidden rounded-2xl border border-white/10 ${img.tall ? "w-[40%] max-w-[240px]" : "w-[28%] max-w-[180px]"}`}>
-                <img src={img.src} alt={img.alt} className={`w-full object-cover ${img.tall ? "h-40 sm:h-48" : "h-32 sm:h-40"}`} />
+                <img src={img.src} alt={img.caption} className={`w-full object-cover ${img.tall ? "h-40 sm:h-48" : "h-32 sm:h-40"}`} />
                 <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-2.5 pb-2.5 pt-8 text-left">
                   <p className="font-display text-[10px] font-bold uppercase tracking-[0.16em] text-white sm:text-[11px]">{img.caption}</p>
                   <p className="mt-0.5 text-[10px] text-white/65">{img.sub}</p>
@@ -322,7 +306,7 @@ export default function ChaptersPage() {
             ))}
           </motion.div>
 
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.62 }} className="mx-auto mt-7 max-w-xl text-balance text-[15px] leading-relaxed text-[#939596] sm:text-lg">
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.62 }} className="mx-auto mt-7 max-w-xl text-[15px] leading-relaxed text-[#939596] sm:text-lg">
             Building the next generation of AI, technology, leadership and innovation communities across universities — starting from Islamia College Peshawar.
           </motion.p>
 
@@ -362,9 +346,9 @@ export default function ChaptersPage() {
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section id="about" className="px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
-        <div className="mx-auto grid max-w-[1200px] gap-12 lg:grid-cols-12">
+      {/* ABOUT — students who turn ideas into skills */}
+      <section className="px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <Pill>About the Society</Pill>
             <h2 className="mt-5 font-display text-4xl font-bold uppercase leading-[1.02] tracking-[-0.03em] sm:text-5xl">
@@ -372,25 +356,18 @@ export default function ChaptersPage() {
               <MaskLine delay={0.1}>turn ideas into <span className="text-[#7bd355]">skills.</span></MaskLine>
             </h2>
             <Reveal delay={0.15}>
-              <p className="mt-6 text-[15px] leading-relaxed text-[#939596]">
-                Sociapi Society is a student-led community based at Islamia College Peshawar, where students turn ideas into skills and skills into real projects. We arrange workshops, training sessions, study groups and project activities — open to every student, beginner or advanced.
+              <p className="mt-6 text-[15px] leading-relaxed text-[#939596] sm:text-base">
+                Sociapi Society is a student-led community based at Islamia College Peshawar, where students turn ideas into skills and skills into real projects. We learn together and help each other grow — supporting every student who wants modern, practical technology in an easy and friendly way.
+              </p>
+              <p className="mt-4 text-[15px] leading-relaxed text-[#939596] sm:text-base">
+                We arrange workshops, training sessions, study groups and project activities. Students learn by doing, build real projects, and add strong work to their portfolios. Beginner or advanced — everyone gets support.
               </p>
             </Reveal>
           </div>
           <div className="lg:col-span-5">
-            <Reveal>
-              <div className="rounded-3xl border border-white/10 bg-[#101410] p-7">
-                <p className="font-display text-[11px] font-semibold uppercase tracking-[0.24em] text-[#7bd355]">◆ Vision</p>
-                <p className="mt-3 text-[15px] leading-relaxed">To build a smart, skilled, and creative student community that grows through learning, coding, and technology.</p>
-                <div className="my-6 h-px bg-white/10" />
-                <p className="font-display text-[11px] font-semibold uppercase tracking-[0.24em] text-[#7bd355]">◆ Mission</p>
-                <ul className="mt-4 space-y-2.5">
-                  {MISSION.map((m, i) => (
-                    <li key={m} className="flex gap-3 text-sm text-[#939596]">
-                      <span className="font-display text-[11px] font-bold text-[#7bd355]">{String(i + 1).padStart(2, "0")}</span>{m}
-                    </li>
-                  ))}
-                </ul>
+            <Reveal delay={0.2}>
+              <div className="overflow-hidden rounded-3xl border border-white/10">
+                <img src={COMMUNITY} alt="Sociapi students" className="h-72 w-full object-cover sm:h-80" />
               </div>
             </Reveal>
           </div>
@@ -400,18 +377,27 @@ export default function ChaptersPage() {
       {/* TRACKS */}
       <section className="border-t border-white/10 px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
         <div className="mx-auto max-w-[1200px]">
-          <Pill>Learning Tracks</Pill>
-          <h2 className="mt-5 font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
-            <MaskLine>Eight tracks.</MaskLine>
-            <MaskLine delay={0.1}>One <span className="text-[#7bd355]">trajectory.</span></MaskLine>
-          </h2>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {PILLARS.map((p, i) => (
+          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <Pill>Learning Tracks</Pill>
+              <h2 className="mt-5 font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
+                <MaskLine>Eight tracks.</MaskLine>
+                <MaskLine delay={0.1}>One <span className="text-[#7bd355]">trajectory.</span></MaskLine>
+              </h2>
+            </div>
+            <Reveal delay={0.15}>
+              <p className="max-w-sm text-sm leading-relaxed text-[#939596] md:text-right">
+                Programming, AI, robotics, Gen AI, machine learning, computer vision, data science and web — simple, practical, connected to real life.
+              </p>
+            </Reveal>
+          </div>
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {TRACKS.map((p, i) => (
               <Reveal key={p.title} delay={0.04 * i}>
-                <div className="h-full rounded-2xl border border-white/10 bg-[#101410] p-6">
-                  <p className="font-display text-[11px] text-[#7bd355]">{p.n}</p>
-                  <h3 className="mt-3 font-display text-lg font-bold">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#939596]">{p.desc}</p>
+                <div className="h-full rounded-2xl border border-white/10 bg-[#101410] p-5">
+                  <p className="font-display text-[11px] font-bold text-[#7bd355]">{p.n}</p>
+                  <h3 className="mt-3 font-display text-base font-bold">{p.title}</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#939596]">{p.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -422,18 +408,20 @@ export default function ChaptersPage() {
       {/* BENEFITS */}
       <section className="border-t border-white/10 px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
         <div className="mx-auto max-w-[1200px]">
-          <Pill>Why Start a Chapter</Pill>
-          <h2 className="mt-5 font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
-            <MaskLine>Why your campus</MaskLine>
-            <MaskLine delay={0.1}>needs <span className="text-[#7bd355]">one.</span></MaskLine>
-          </h2>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="text-center">
+            <div className="flex justify-center"><Pill>Why Start a Chapter</Pill></div>
+            <h2 className="mx-auto mt-5 max-w-2xl font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
+              <MaskLine>From classroom theory</MaskLine>
+              <MaskLine delay={0.1}>to production <span className="text-[#7bd355]">portfolios.</span></MaskLine>
+            </h2>
+          </div>
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {BENEFITS.map((b, i) => (
               <Reveal key={b.title} delay={0.04 * i}>
-                <div className="h-full rounded-2xl border border-white/10 bg-[#101410] p-6">
-                  <span className="font-display text-2xl font-bold text-[#7bd355]">{String(i + 1).padStart(2, "0")}</span>
-                  <h3 className="mt-3 font-display text-lg font-bold">{b.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#939596]">{b.desc}</p>
+                <div className="h-full rounded-2xl border border-white/10 bg-[#101410] p-5">
+                  <p className="font-display text-[11px] font-bold text-[#7bd355]">{b.n}</p>
+                  <h3 className="mt-3 font-display text-base font-bold">{b.title}</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#939596]">{b.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -446,14 +434,14 @@ export default function ChaptersPage() {
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center">
             <div className="flex justify-center"><Pill>University Chapters</Pill></div>
-            <h2 className="mt-5 font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
+            <h2 className="mx-auto mt-5 font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
               <MaskLine>One hub.</MaskLine>
               <MaskLine delay={0.1}>Seven <span className="text-[#7bd355]">campuses.</span></MaskLine>
             </h2>
           </div>
 
           <Reveal>
-            <div className="mt-12 overflow-hidden rounded-3xl border border-white/10 bg-[#101410]">
+            <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-[#101410]">
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 font-display text-[10px] uppercase tracking-[0.18em] text-[#939596]">
                 <span>Expansion Map — Pakistan</span>
                 <span><span className="text-[#7bd355]">● Live</span> &nbsp; <span className="text-[#f2c46b]">● Coming soon</span></span>
@@ -477,23 +465,78 @@ export default function ChaptersPage() {
             </div>
           </Reveal>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {CHAPTERS.map((c) => (
-              <Reveal key={c.code}>
-                <div className="h-full rounded-2xl border border-white/10 bg-[#101410] p-6">
-                  <div className="mb-4 flex items-center justify-between">
-                    <span className={`rounded-full px-2.5 py-1 font-display text-[10px] font-semibold uppercase ${c.status === "active" ? "bg-[#7bd355]/15 text-[#7bd355]" : "bg-[#f2c46b]/10 text-[#f2c46b]"}`}>
-                      {c.status === "active" ? "Active" : "Coming Soon"}
-                    </span>
-                    <span className="font-display text-[10px] text-[#939596]">{c.tag}</span>
+          {/* Founding chapter card */}
+          <Reveal>
+            <div className="relative mt-5 min-h-[380px] overflow-hidden rounded-[28px] sm:min-h-[440px]">
+              <img src={ICP} alt="Islamia College Peshawar" className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/15" />
+              <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-6 sm:min-h-[440px] sm:p-10">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#7bd355]/20 px-3 py-1 font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7bd355]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#7bd355]" /> Active
+                  </span>
+                  <span className="rounded-full bg-black/50 px-3 py-1 font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-white">
+                    Founding Chapter
+                  </span>
+                </div>
+                <h3 className="mt-4 font-display text-3xl font-extrabold uppercase leading-[0.95] tracking-tight text-white sm:text-5xl">
+                  Islamia College Peshawar
+                </h3>
+                <p className="mt-2 text-sm text-white/75 sm:text-base">Islamia College University · Peshawar</p>
+                <div className="mt-6 flex flex-wrap gap-8">
+                  <div>
+                    <p className="font-display text-3xl font-bold text-[#7bd355]">20+</p>
+                    <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-white/60">Members</p>
                   </div>
-                  <h3 className="font-display text-lg font-bold">{c.name}</h3>
-                  <p className="mt-1 text-sm text-[#939596]">{c.uni}</p>
-                  <p className="mt-1 text-xs text-[#6a6f6a]">{c.city}</p>
+                  <div>
+                    <p className="font-display text-3xl font-bold text-[#7bd355]">3</p>
+                    <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-white/60">Events</p>
+                  </div>
+                  <div>
+                    <p className="font-display text-3xl font-bold text-[#7bd355]">340+</p>
+                    <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-white/60">Reached</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Coming-soon grid */}
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {CHAPTERS.filter((c) => c.status !== "active").map((c) => (
+              <Reveal key={c.code}>
+                <div className="relative min-h-[300px] overflow-hidden rounded-[24px] border border-white/10">
+                  <img src={NIGHT} alt="" className="absolute inset-0 h-full w-full object-cover opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20" />
+                  <div className="relative z-10 flex h-full min-h-[300px] flex-col justify-between p-5">
+                    <span className="w-fit rounded-full bg-[#f2c46b]/20 px-3 py-1 font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-[#f2c46b]">
+                      ● Coming Soon
+                    </span>
+                    <div>
+                      <p className="font-display text-[10px] uppercase tracking-[0.2em] text-white/50">{c.code}</p>
+                      <h3 className="mt-1 font-display text-lg font-bold text-white">{c.name}</h3>
+                      <p className="mt-1 text-xs text-white/60">{c.uni}</p>
+                      <p className="mt-0.5 text-xs text-white/50">{c.city}</p>
+                      <div className="mt-4 flex gap-5 border-t border-white/15 pt-3">
+                        <div>
+                          <p className="font-display text-lg font-bold text-[#7bd355]">{c.members}</p>
+                          <p className="text-[9px] uppercase tracking-[0.14em] text-white/50">Members</p>
+                        </div>
+                        <div>
+                          <p className="font-display text-lg font-bold text-[#7bd355]">{c.events}</p>
+                          <p className="text-[9px] uppercase tracking-[0.14em] text-white/50">Events</p>
+                        </div>
+                        <div>
+                          <p className="font-display text-lg font-bold text-[#7bd355]">{c.third.value}</p>
+                          <p className="text-[9px] uppercase tracking-[0.14em] text-white/50">Reached</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </Reveal>
             ))}
-            <a href="#apply" className="flex min-h-[200px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#7bd355]/30 bg-[#7bd355]/[0.04] p-6 text-center">
+            <a href="#lead" className="flex min-h-[300px] flex-col items-center justify-center rounded-[24px] border-2 border-dashed border-[#7bd355]/30 bg-[#7bd355]/[0.04] p-6 text-center">
               <h3 className="font-display text-lg font-bold text-[#7bd355]">Your University</h3>
               <p className="mt-1 text-sm text-[#939596]">Start a chapter at your campus</p>
             </a>
@@ -501,41 +544,61 @@ export default function ChaptersPage() {
         </div>
       </section>
 
-      {/* STRUCTURE */}
+      {/* STRUCTURE — living org map */}
       <section id="structure" className="border-t border-white/10 px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
         <div className="mx-auto max-w-[1100px] text-center">
-          <div className="flex justify-center"><Pill>Chapter Structure</Pill></div>
-          <h2 className="mt-5 font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
+          <div className="flex justify-center"><Pill>Organogram</Pill></div>
+          <h2 className="mx-auto mt-5 max-w-2xl font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
             <MaskLine>A living</MaskLine>
             <MaskLine delay={0.1}>organization <span className="text-[#7bd355]">map.</span></MaskLine>
           </h2>
-          <div className="mt-12 grid gap-4 text-left sm:grid-cols-3">
+
+          {/* radial org diagram */}
+          <Reveal>
+            <div className="relative mx-auto mt-12 hidden aspect-square w-full max-w-[760px] md:block">
+              <svg viewBox="0 0 800 800" className="h-full w-full">
+                <g className="spin-slow">
+                  <circle cx="400" cy="400" r="280" fill="none" stroke="rgba(123,211,85,0.25)" strokeWidth="1" strokeDasharray="3 10" />
+                </g>
+                <circle cx="400" cy="400" r="200" fill="none" stroke="rgba(232,236,238,0.06)" strokeWidth="1" />
+                {[...LEADERSHIP, ...DEPTS.map((d) => ({ title: d.name, role: d.color }))].map((node, i, arr) => {
+                  const a = (i / arr.length) * Math.PI * 2 - Math.PI / 2;
+                  const x = 400 + 280 * Math.cos(a);
+                  const y = 400 + 280 * Math.sin(a);
+                  return (
+                    <g key={String(node.title)}>
+                      <line x1="400" y1="400" x2={x} y2={y} stroke="rgba(123,211,85,0.2)" />
+                      <foreignObject x={x - 78} y={y - 18} width="156" height="36">
+                        <div className="flex h-full w-full items-center justify-center rounded-full border border-white/15 bg-black/70 px-3 text-center font-display text-[10px] font-semibold uppercase tracking-[0.08em] text-white backdrop-blur-sm">
+                          {String(node.title)}
+                        </div>
+                      </foreignObject>
+                    </g>
+                  );
+                })}
+                <circle cx="400" cy="400" r="68" fill="rgba(123,211,85,0.12)" stroke="rgba(123,211,85,0.55)" strokeWidth="1.5" />
+                <circle cx="400" cy="400" r="50" fill="#7bd355" />
+                <text x="400" y="397" textAnchor="middle" fill="#070907" style={{ fontFamily: "Tomorrow", fontSize: 13, fontWeight: 800, letterSpacing: "0.12em" }}>PRESIDENT</text>
+                <text x="400" y="414" textAnchor="middle" fill="#1b2a14" style={{ fontFamily: "Tomorrow", fontSize: 9, letterSpacing: "0.16em" }}>CHAPTER CORE</text>
+              </svg>
+            </div>
+          </Reveal>
+
+          {/* mobile fallback */}
+          <div className="mt-10 grid gap-3 sm:grid-cols-3 md:hidden">
             {LEADERSHIP.map((r) => (
-              <div key={r.title} className="rounded-2xl border border-[#7bd355]/20 bg-[#7bd355]/[0.06] p-6 text-center">
+              <div key={r.title} className="rounded-2xl border border-[#7bd355]/20 bg-[#7bd355]/[0.06] p-5 text-center">
                 <p className="font-display text-[10px] uppercase tracking-[0.2em] text-[#7bd355]">{r.role}</p>
-                <h3 className="mt-3 font-display text-lg font-bold">{r.title}</h3>
-                <p className="mt-2 text-sm text-[#939596]">{r.desc}</p>
+                <h3 className="mt-2 font-display text-base font-bold">{r.title}</h3>
+                <p className="mt-1.5 text-xs text-[#939596]">{r.desc}</p>
               </div>
             ))}
-          </div>
-          <p className="mt-10 font-display text-[11px] uppercase tracking-[0.28em] text-[#7bd355]">◆ Departments</p>
-          <div className="mt-6 grid gap-3 text-left sm:grid-cols-2 lg:grid-cols-4">
-            {DEPTS.map((d) => (
-              <div key={d.name} className="rounded-2xl border border-white/10 bg-[#101410] p-5">
-                <span className="block h-2.5 w-2.5 rounded-full" style={{ background: d.color }} />
-                <h3 className="mt-3 font-display font-bold">{d.name}</h3>
-              </div>
-            ))}
-            <a href="#apply" className="rounded-2xl border border-dashed border-[#7bd355]/30 bg-[#7bd355]/[0.04] p-5">
-              <h3 className="font-display font-bold text-[#7bd355]">Your Team</h3>
-              <p className="mt-1 text-xs text-[#939596]">5–7 founding seats open</p>
-            </a>
           </div>
         </div>
       </section>
 
       {/* PROCESS */}
-      <section id="process" className="border-t border-white/10 px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
+      <section id="process" className="border-t border-white/10 bg-[#0a0d0a] px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
         <div className="mx-auto grid max-w-[1200px] gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <div className="lg:sticky lg:top-24">
@@ -544,8 +607,8 @@ export default function ChaptersPage() {
                 <MaskLine>Application</MaskLine>
                 <MaskLine delay={0.1}>to <span className="text-[#7bd355]">launch.</span></MaskLine>
               </h2>
-              <div className="mt-8 hidden rounded-2xl border border-white/10 bg-[#101410] p-6 lg:block">
-                <p className="font-display text-6xl font-bold text-[#7bd355]">{String(active + 1).padStart(2, "0")}<span className="text-lg text-[#939596]"> / 05</span></p>
+              <div className="mt-8 rounded-2xl border border-white/10 bg-[#101410] p-6">
+                <p className="font-display text-5xl font-bold text-[#7bd355]">{String(active + 1).padStart(2, "0")}<span className="text-base text-[#939596]"> / 05</span></p>
                 <div className="mt-4 h-[3px] rounded-full bg-white/10"><div className="h-full rounded-full bg-[#7bd355] transition-all" style={{ width: `${((active + 1) / 5) * 100}%` }} /></div>
               </div>
             </div>
@@ -556,13 +619,13 @@ export default function ChaptersPage() {
                 key={s.title}
                 ref={(el) => { stepRefs.current[i] = el; }}
                 data-idx={i}
-                className={`relative rounded-3xl border p-6 sm:p-8 ${active === i ? "border-[#7bd355]/40 bg-[#7bd355]/[0.05]" : "border-white/10 bg-[#101410]/80"}`}
+                className={`relative rounded-3xl border p-5 sm:p-7 ${active === i ? "border-[#7bd355]/40 bg-[#7bd355]/[0.05]" : "border-white/10 bg-[#101410]"}`}
               >
-                <p className={`font-display text-xs uppercase tracking-[0.2em] ${active === i ? "text-[#7bd355]" : "text-[#6a6f6a]"}`}>Step {String(i + 1).padStart(2, "0")} · {s.meta}</p>
-                <div className="mt-4 flex gap-5">
-                  <span className={`font-display text-5xl font-bold ${active === i ? "text-[#7bd355]" : "text-outline"}`}>{String(i + 1).padStart(2, "0")}</span>
+                <p className={`font-display text-[10px] uppercase tracking-[0.2em] ${active === i ? "text-[#7bd355]" : "text-[#6a6f6a]"}`}>Step {String(i + 1).padStart(2, "0")} · {s.meta}</p>
+                <div className="mt-3 flex gap-4">
+                  <span className={`font-display text-4xl font-bold sm:text-5xl ${active === i ? "text-[#7bd355]" : "text-outline"}`}>{String(i + 1).padStart(2, "0")}</span>
                   <div>
-                    <h3 className="font-display text-xl font-bold">{s.title}</h3>
+                    <h3 className="font-display text-lg font-bold sm:text-xl">{s.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-[#939596]">{s.desc}</p>
                   </div>
                 </div>
@@ -580,20 +643,39 @@ export default function ChaptersPage() {
             <MaskLine>No team yet?</MaskLine>
             <MaskLine delay={0.1}>Become an <span className="text-[#7bd355]">ambassador.</span></MaskLine>
           </h2>
-          <p className="mt-5 max-w-xl text-[15px] text-[#939596]">Represent Sociapi on your campus, recruit members, run activities, and turn that foothold into a full chapter.</p>
-          <div className="mt-8"><Primary href={FORMS.ambassador} ext>Apply as an Ambassador</Primary></div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              ["Represent", "Be the voice of Sociapi on your campus."],
-              ["Recruit", "Find the students who will carry the chapter."],
-              ["Organize", "Run workshops and meetups with our toolkits."],
-              ["Establish", "Turn the role into a full chartered chapter."],
-            ].map(([t, d]) => (
-              <div key={t} className="rounded-2xl border border-white/10 bg-[#101410] p-6">
-                <h3 className="font-display text-lg font-bold">{t}</h3>
-                <p className="mt-2 text-sm text-[#939596]">{d}</p>
-              </div>
+          <p className="mt-5 max-w-xl text-[15px] text-[#939596]">Represent Sociapi on your campus, recruit members, organize activities, and turn that foothold into a full chapter.</p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Primary href={FORMS.ambassador} ext>Apply as an Ambassador</Primary>
+          </div>
+          <div className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {AMB.map((r) => (
+              <Reveal key={r.title} delay={0.05}>
+                <div className="h-full rounded-2xl border border-white/10 bg-[#101410] p-5">
+                  <h3 className="font-display text-base font-bold">{r.title}</h3>
+                  <p className="mt-2 text-sm text-[#939596]">{r.desc}</p>
+                </div>
+              </Reveal>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* JOIN BAND */}
+      <section className="relative border-t border-white/10">
+        <div className="relative mx-4 my-12 overflow-hidden rounded-[28px] sm:mx-6 lg:mx-10">
+          <img src={NIGHT} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#070907] via-[#070907]/85 to-[#070907]/40" />
+          <div className="relative flex flex-col items-start justify-between gap-6 px-8 py-12 sm:flex-row sm:items-center sm:px-12 sm:py-14">
+            <div>
+              <p className="font-display text-[11px] font-semibold uppercase tracking-[0.24em] text-[#7bd355]">◆ Ready</p>
+              <h3 className="mt-2 max-w-xl font-display text-3xl font-bold uppercase leading-tight text-white sm:text-4xl">
+                Join Sociapi Society Today.
+              </h3>
+              <p className="mt-3 max-w-md text-sm text-white/70">
+                Enter the community building future AI engineers — starting with a chapter on your campus.
+              </p>
+            </div>
+            <Primary href={FORMS.chapter} ext>Start Membership</Primary>
           </div>
         </div>
       </section>
@@ -628,67 +710,76 @@ export default function ChaptersPage() {
         </div>
       </section>
 
-      {/* APPLY */}
-      <section id="apply" className="border-t border-white/10 px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
-        <div className="mx-auto grid max-w-[1200px] gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <Pill>Get Started</Pill>
-            <h2 className="mt-5 font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
-              <MaskLine>Put your campus</MaskLine>
-              <MaskLine delay={0.1}>on the <span className="text-[#7bd355]">map.</span></MaskLine>
-            </h2>
-            <p className="mt-5 text-[15px] text-[#939596]">Ten minutes now, a chapter in six weeks. The core team replies within 48 hours.</p>
-          </div>
-          <div className="lg:col-span-7">
-            <div className="rounded-3xl border border-white/10 bg-[#101410]">
-              {sent ? (
-                <div className="p-10 text-center">
-                  <p className="font-display text-[11px] uppercase tracking-[0.25em] text-[#7bd355]">Application received</p>
-                  <h3 className="mt-3 font-display text-2xl font-bold">Ticket {ticket}</h3>
-                  <p className="mt-2 text-sm text-[#939596]">We’ll reach {form.email} within 48 hours.</p>
-                  <button type="button" onClick={() => setSent(false)} className="mt-6 rounded-full border border-white/15 px-5 py-2 font-display text-xs uppercase text-[#939596]">Submit another</button>
+      {/* DISTRICT LEAD — replaces form */}
+      <section id="lead" className="border-t border-white/10 px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="relative overflow-hidden rounded-[32px] border border-white/10">
+            <img src={NIGHT} alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#070907] via-[#070907]/90 to-[#070907]/50" />
+            <div className="relative z-10 grid gap-10 px-6 py-12 sm:px-10 sm:py-16 lg:grid-cols-12">
+              <div className="lg:col-span-7">
+                <Pill>Join the Movement</Pill>
+                <h2 className="mt-5 font-display text-4xl font-bold uppercase leading-[1.02] tracking-[-0.03em] sm:text-5xl">
+                  Put your campus <span className="text-[#7bd355]">on the map.</span>
+                </h2>
+                <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-[#939596]">
+                  Become a District Lead, run your campus, and convert the role into an official
+                  chapter. No prior experience required.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Primary href={FORMS.ambassador} ext>Apply as District Lead</Primary>
+                  <Ghost href={FORMS.chapter}>Start a Chapter</Ghost>
                 </div>
-              ) : (
-                <form
-                  className="space-y-4 p-6 sm:p-8"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setTicket(`SAP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`);
-                    setSent(true);
-                  }}
-                >
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <input required className="field" placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                    <input required type="email" className="field" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-                    <select required className="field" value={form.university} onChange={(e) => setForm({ ...form, university: e.target.value })}>
-                      <option value="">University…</option>
-                      {CHAPTERS.map((c) => <option key={c.code} value={c.name}>{c.name}</option>)}
-                      <option value="other">Other</option>
-                    </select>
-                    <select className="field" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
-                      <option>Chapter President (founder)</option>
-                      <option>Campus Ambassador</option>
-                      <option>Founding Member</option>
-                    </select>
+                <p className="mt-5 font-display text-[11px] uppercase tracking-[0.18em] text-[#6a6f6a]">
+                  Response within 48h · KPK priority · Intake open
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:col-span-5">
+                {[
+                  ["Represent", "Be the face of Sociapi on your campus."],
+                  ["Recruit", "Build the founding team of 5–7 students."],
+                  ["Organize", "Host workshops, meetups and campus drives."],
+                  ["Establish", "Turn the role into an official chapter."],
+                ].map(([t, d]) => (
+                  <div key={t} className="rounded-2xl border border-white/10 bg-black/40 p-5 backdrop-blur-sm">
+                    <h3 className="font-display text-base font-bold">{t}</h3>
+                    <p className="mt-1.5 text-sm text-[#939596]">{d}</p>
                   </div>
-                  <textarea required className="field min-h-28" placeholder="Your pitch…" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
-                  <button type="submit" className="w-full rounded-full bg-[#7bd355] py-3.5 font-display text-sm font-semibold text-[#1b2118]">Submit Application</button>
-                </form>
-              )}
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* FOOTER */}
       <footer className="border-t border-white/10 px-4 pt-16 sm:px-6 lg:px-10">
-        <div className="mx-auto flex max-w-[1200px] flex-col justify-between gap-8 pb-10 sm:flex-row">
+        <div className="mx-auto grid max-w-[1200px] gap-10 pb-12 md:grid-cols-3">
           <div>
             <p className="font-display text-lg font-bold tracking-[0.08em]">SOCIAPI SOCIETY</p>
             <p className="mt-3 max-w-sm text-sm text-[#939596]">Student-led AI & technology community — Islamia College Peshawar, expanding across Pakistan.</p>
           </div>
-          <p className="font-display text-[11px] uppercase tracking-[0.18em] text-[#6a6f6a]">© {new Date().getFullYear()} Sociapi Society</p>
+          <div>
+            <p className="font-display text-[11px] uppercase tracking-[0.24em] text-[#7bd355]">Apply</p>
+            <ul className="mt-4 space-y-2.5 text-sm text-[#939596]">
+              <li><a href={FORMS.chapter} target="_blank" rel="noopener noreferrer" className="hover:text-[#7bd355]">Start a chapter</a></li>
+              <li><a href={FORMS.ambassador} target="_blank" rel="noopener noreferrer" className="hover:text-[#7bd355]">Campus ambassador</a></li>
+              <li><a href="#lead" className="hover:text-[#7bd355]">District lead</a></li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-display text-[11px] uppercase tracking-[0.24em] text-[#7bd355]">Contact</p>
+            <ul className="mt-4 space-y-2.5 text-sm text-[#939596]">
+              <li>Islamia College University, Peshawar</li>
+              <li>34.0151°N 71.5843°E</li>
+              <li>hello@sociapi.org</li>
+            </ul>
+          </div>
         </div>
-        <p className="text-outline pointer-events-none text-center font-display text-[16vw] font-bold uppercase leading-[0.8] opacity-40">Sociapi</p>
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 sm:flex-row">
+          <p className="font-display text-[10px] uppercase tracking-[0.18em] text-[#6a6f6a]">© {new Date().getFullYear()} Sociapi Society. All rights reserved.</p>
+        </div>
+        <p aria-hidden="true" className="text-outline pointer-events-none text-center font-display text-[16vw] font-bold uppercase leading-[0.8] opacity-30">Sociapi</p>
       </footer>
     </div>
   );
