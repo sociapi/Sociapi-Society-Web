@@ -71,7 +71,7 @@ const CHAPTERS: Chapter[] = [
     code: "CH-03",
     name: "NFC IEFR",
     uni: "NFC Institute of Engineering & Fertilizer Research",
-    city: "Peshawar",
+    city: "Faisalabad",
     status: "pending",
     tag: "Coming Soon",
     members: "0",
