@@ -103,7 +103,7 @@ const pastMembers: PastMember[] = [
   { name: "Maham Iqbal", role: "Women Co-Lead", image: "/Image/Team Pic/Female/Maham Iqbal.png?auto=format&fit=crop&w=500&q=80" },
 ];
 
-const panels = ["Artificial Intelligence", "Machine Learning", "Data Science", "Generative AI", "Robotics", "Computer Vision", "Web Development", "Business Intelligence"];
+const panels = ["Artificial Intelligent", "Machine Learning", "Data Science", "Generative AI", "Robotics", "Computer Vision", "Web Development", "Business Intelligence"];
 const stats: [number, string, string][] = [
   [340, "Audience", "+"],
   [20, "Current Members", "+"],
@@ -599,7 +599,7 @@ function Hero() {
         <div className="relative z-20 mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center px-5 pb-10 pt-32 text-center sm:pt-36">
           <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }} className="hero-eyebrow mb-8 text-[11px] font-bold uppercase tracking-[0.32em] text-[#e8ecee] sm:text-xs"><span className="pulse-dot" />Official Digital Headquarters<span className="text-[#7bd355]">· EST 2025</span></motion.div>
           <h1 className="font-heading text-[clamp(2.8rem,10.5vw,7.8rem)] font-black leading-[0.88] tracking-[-0.05em] sm:tracking-[-0.07em]" style={{ perspective: "800px" }}>
-            <KineticWord word="FROM IDEAS" outline baseDelay={0.35} className="mr-[0.22em]" /><KineticWord word="TO" baseDelay={0.55} /><KineticWord word="INTELLIGENCE" baseDelay={0.55} /><br /><span className="shine-text"><KineticWord word="TO INTELLIGENCE" baseDelay={0.85} /></span>
+            <KineticWord word="FROM IDEAS" outline baseDelay={0.35} className="mr-[0.22em]" /><br /><span className="shine-text"><KineticWord word="TO INTELLIGENCE" baseDelay={0.85} /></span>
           </h1>
           <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 1.7, ease: [0.22, 1, 0.36, 1] }} className="mt-7 h-px w-44 origin-center bg-gradient-to-r from-transparent via-[#7bd355] to-transparent sm:w-72" />
           <motion.p initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.85 }} className="mx-auto mt-7 max-w-2xl text-balance text-lg leading-relaxed text-[#e8ecee]/85 sm:text-xl">Pakistan's most ambitious student-led AI society — turning <span className="font-semibold text-[#7bd355]">textbook theory</span> into <span className="font-semibold text-[#e8ecee]">production-grade portfolios</span>.</motion.p>
