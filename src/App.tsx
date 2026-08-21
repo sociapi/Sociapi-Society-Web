@@ -1,6 +1,7 @@
 import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import ChaptersPage from "./Chapters";
 import CertificateVerification from "./components/CertificateVerification";
 import { orderService, type CreateOrderInput } from "./services/orders";
@@ -1439,6 +1440,7 @@ export default function App() {
 
       <Footer />
       <StickyJoin route={route} />
+      <SpeedInsights />
     </div>
   );
 }
