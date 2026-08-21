@@ -22,8 +22,8 @@ const IMG = {
   uetPeshawar: "uot.jfif",
   uop: "uop.jfif",
   uol: "UET LAHORE.jpg",
-  community: "/images/community.jpg",
-  night: "Image/ss team.jpg",
+  community: "Image/ss team.jpg",
+  night: "community.jfif",
 };
 
 type Chapter = {
