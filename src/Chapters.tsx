@@ -22,6 +22,7 @@ const IMG = {
   uetPeshawar: "uot.jfif",
   uop: "uop.jfif",
   uol: "UET LAHORE.jpg",
+  CUSIT: "CUSIT.jpeg",
   community: "Image/ss team.jpg",
   night: "community.jfif",
 };
@@ -131,6 +132,20 @@ const CHAPTERS: Chapter[] = [
     third: { label: "Reached", value: "0" },
     node: { x: 84, y: 330 },
     img: IMG.uol,
+  },
+
+  {
+    code: "CH-08",
+    name: "City University of Science & Information Technology",
+    uni: "City University of Science & Information Technology",
+    city: "Peshawar",
+    status: "pending",
+    tag: "Coming Soon",
+    members: "0",
+    events: "0",
+    third: { label: "Reached", value: "0" },
+    node: { x: 84, y: 330 },
+    img: IMG.CUSIT,
   },
 ];
 
