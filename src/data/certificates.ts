@@ -29,10 +29,10 @@ export interface Certificate {
 const certificateFiles: Record<string, string> = {
   "SL-002": linkedinTooba,
   "SL-027": linkedinHaris,
-  "SL-040": linkedinMudassir,
-  "SL-041": linkedinZuhair,
+  "SL-040": "/assets/Mudasssir.pdf",
+  "SL-041": "/assets/ShahZeb.pdf",
   "SD-025": digitalWajida,
-  "SD-031": digitalMoeed,
+  "SD-031": "/assets/Moeed.pdf",
   "SP-001": ieltsHashmat,
   "SI-015": ieltsMisbah,
   "SI-017": ieltsChandni,
@@ -40,12 +40,14 @@ const certificateFiles: Record<string, string> = {
   "SA-010": aiWajida,
   "SA-011": aiAitzaz,
   "SA-042": aiAnita,
+  "SA-034": "/assets/Shahid%20Nawaz.pdf",
   "SA-037": aiAbbas,
   "SA-038": aiMujahid,
   "SOCIAPI-INS-2026-001": "/assets/Engr.%20Iraj%20Shahzad.pdf",
   "SOCIAPI-INS-2026-002": "/assets/Abdul%20Wahab.pdf",
   "SOCIAPI-INS-2026-003": "/assets/Danial%20Yousufzai.pdf",
   "SOCIAPI-INS-2026-004": "/assets/Nelum%20Javed.pdf",
+  "SOCIAPI-INS-2026-005": "/assets/Umer.pdf",
 };
 
 export const certificatesDatabase: Certificate[] = [
@@ -70,6 +72,7 @@ export const certificatesDatabase: Certificate[] = [
   { certificateId: "SOCIAPI-INS-2026-002", name: "Abdul Wahab", course: "Instructor", program: "Instructor Cohort 2026", issueDate: "23 August 2026", certificateType: "Instructor Certificate", issuedBy: "Sociapi Society", status: "VALID" },
   { certificateId: "SOCIAPI-INS-2026-003", name: "Danial Yousufzai", course: "Instructor", program: "Instructor Cohort 2026", issueDate: "23 August 2026", certificateType: "Instructor Certificate", issuedBy: "Sociapi Society", status: "VALID" },
   { certificateId: "SOCIAPI-INS-2026-004", name: "Nelum Javed", course: "Instructor", program: "Instructor Cohort 2026", issueDate: "23 August 2026", certificateType: "Instructor Certificate", issuedBy: "Sociapi Society", status: "VALID" },
+  { certificateId: "SOCIAPI-INS-2026-005", name: "Umer", course: "Instructor", program: "Instructor Cohort 2026", issueDate: "23 August 2026", certificateType: "Instructor Certificate", issuedBy: "Sociapi Society", status: "VALID" },
 ];
 
 export function findCertificate(certificateId: string): Certificate | undefined {
