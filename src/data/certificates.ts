@@ -32,6 +32,7 @@ const certificateFiles: Record<string, string> = {
   "SL-040": linkedinMudassir,
   "SL-041": linkedinZuhair,
   "SD-025": digitalWajida,
+  "SD-030": "/assets/Shamila.pdf",
   "SD-031": digitalMoeed,
   "SP-001": ieltsHashmat,
   "SI-015": ieltsMisbah,
@@ -42,6 +43,10 @@ const certificateFiles: Record<string, string> = {
   "SA-042": aiAnita,
   "SA-037": aiAbbas,
   "SA-038": aiMujahid,
+  "SOCIAPI-INS-2026-001": "/assets/Mam%20Iraj.png",
+  "SOCIAPI-INS-2026-002": "/assets/Mr.%20Abdul%20Wahab.png",
+  "SOCIAPI-INS-2026-003": "/assets/Mr.%20Danyal.png",
+  "SOCIAPI-INS-2026-004": "/assets/Mam%20Nelum.png",
 };
 
 export const certificatesDatabase: Certificate[] = [
