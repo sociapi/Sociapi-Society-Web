@@ -68,6 +68,9 @@ function CertificateVerification() {
     navigate("/verify", { replace: true });
   };
 
+  const previewUrl = verification.certificate?.certificateFile || "";
+  const isImagePreview = /\.(png|jpe?g|webp|gif|svg)$/i.test(previewUrl);
+
   return (
     <main className="min-h-screen bg-[#070907]">
       {/* ============ HERO SECTION ============ */}
@@ -275,12 +278,20 @@ function CertificateVerification() {
                       Certificate Preview
                     </h3>
                     <div className="mt-6 flex h-64 items-center justify-center overflow-hidden rounded-xl border border-[#e8ecee]/10 bg-gradient-to-br from-[#7bd355]/10 to-transparent">
-                      {verification.certificate.certificateFile ? (
-                        <iframe
-                          src={`${verification.certificate.certificateFile}#toolbar=0&navpanes=0&scrollbar=0`}
-                          title={`${verification.certificate.name} certificate preview`}
-                          className="h-full w-full border-0 bg-white"
-                        />
+                      {previewUrl ? (
+                        isImagePreview ? (
+                          <img
+                            src={previewUrl}
+                            alt={`${verification.certificate.name} certificate preview`}
+                            className="h-full w-full rounded-lg object-contain bg-white p-2"
+                          />
+                        ) : (
+                          <iframe
+                            src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                            title={`${verification.certificate.name} certificate preview`}
+                            className="h-full w-full border-0 bg-white"
+                          />
+                        )
                       ) : (
                         <div className="text-center">
                           <svg
