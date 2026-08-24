@@ -34,7 +34,7 @@ const certificateFiles: Record<string, string> = {
   "SA-012": "/assets/Certificates/AI%20&%20Tools/Umer.pdf",
   "SA-039": "/assets/Certificates/AI%20&%20Tools/ShahZeb.pdf",
   "SA-046": "/assets/Certificates/AI%20&%20Tools/Mudasssir%20046.pdf",
-  "SA-045": "/assets/Certificates/AI%20&%20Tools/Umer.pdf",
+  "SA-045": "/assets/Certificates/AI%20&%20Tools/Shamila-045.png",
 
   "SOCIAPI-INS-2026-001": "/assets/Engr.%20Iraj%20Shahzad.pdf",
   "SOCIAPI-INS-2026-002": "/assets/Abdul%20Wahab.pdf",
@@ -66,7 +66,7 @@ export const certificatesDatabase: Certificate[] = [
   { certificateId: "SA-038", name: "Mujahid Nawaz", course: "AI & Tools", program: "06 Week Summer Boot Camp", issueDate: "23 August 2026", certificateType: "Course Completion", issuedBy: "Sociapi Society", status: "VALID" },
   { certificateId: "SA-012", name: "Umer Farooq", course: "AI & Tools", program: "06 Week Summer Boot Camp", issueDate: "23 August 2026", certificateType: "Course Completion", issuedBy: "Sociapi Society", status: "VALID" },
   { certificateId: "SA-039", name: "Muhammad ShahZeb", course: "AI & Tools", program: "06 Week Summer Boot Camp", issueDate: "23 August 2026", certificateType: "Course Completion", issuedBy: "Sociapi Society", status: "VALID" },
-  { certificateId: "SA-045", name: "Umer", course: "AI & Tools", program: "06 Week Summer Boot Camp", issueDate: "23 August 2026", certificateType: "Course Completion", issuedBy: "Sociapi Society", status: "VALID" },
+  { certificateId: "SA-045", name: "Shamila", course: "AI & Tools", program: "06 Week Summer Boot Camp", issueDate: "23 August 2026", certificateType: "Course Completion", issuedBy: "Sociapi Society", status: "VALID" },
   { certificateId: "SA-046", name: "Muhammad Mudassir", course: "AI & Tools", program: "06 Week Summer Boot Camp", issueDate: "23 August 2026", certificateType: "Course Completion", issuedBy: "Sociapi Society", status: "VALID" },
 
   { certificateId: "SOCIAPI-INS-2026-001", name: "Engr. Iraj Shahzad", course: "Instructor", program: "Instructor Cohort 2026", issueDate: "23 August 2026", certificateType: "Instructor Certificate", issuedBy: "Sociapi Society", status: "VALID" },
