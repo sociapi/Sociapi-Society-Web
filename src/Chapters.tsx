@@ -137,7 +137,7 @@ const CHAPTERS: Chapter[] = [
 
   {
     code: "CH-08",
-    name: "City University of Science & Information Technology",
+    name: "City University of Science & Information Technology Peshawar",
     uni: "City University of Science & Information Technology",
     city: "Peshawar",
     status: "pending",
