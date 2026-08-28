@@ -33,7 +33,7 @@ type Chapter = {
   name: string;
   uni: string;
   city: string;
-  status: "active" | "pending";
+  status: "active";
   tag: string;
   members: string;
   events: string;
@@ -61,9 +61,9 @@ const CHAPTERS: Chapter[] = [
     name: "UET Mardan",
     uni: "University of Engineering & Technology, Mardan",
     city: "Mardan",
-    status: "pending",
-    tag: "Coming Soon",
-    members: "0",
+    status: "active",
+    tag: "Campus Chapter",
+    members: "2",
     events: "0",
     third: { label: "Reached", value: "0" },
     node: { x: 138, y: 108 },
@@ -74,9 +74,9 @@ const CHAPTERS: Chapter[] = [
     name: "NFC IEFR",
     uni: "NFC Institute of Engineering & Fertilizer Research",
     city: "Faisalabad",
-    status: "pending",
-    tag: "Coming Soon",
-    members: "0",
+    status: "active",
+    tag: "Campus Chapter",
+    members: "1",
     events: "0",
     third: { label: "Reached", value: "0" },
     node: { x: 648, y: 86 },
@@ -87,9 +87,9 @@ const CHAPTERS: Chapter[] = [
     name: "UAP Peshawar",
     uni: "The University of Agriculture, Peshawar",
     city: "Peshawar",
-    status: "pending",
-    tag: "Coming Soon",
-    members: "0",
+    status: "active",
+    tag: "Campus Chapter",
+    members: "1",
     events: "0",
     third: { label: "Reached", value: "0" },
     node: { x: 706, y: 306 },
@@ -100,9 +100,9 @@ const CHAPTERS: Chapter[] = [
     name: "UET Peshawar",
     uni: "University of Engineering & Technology — Nowshera Campus",
     city: "Nowshera",
-    status: "pending",
-    tag: "Coming Soon",
-    members: "0",
+    status: "active",
+    tag: "Campus Chapter",
+    members: "1",
     events: "0",
     third: { label: "Reached", value: "0" },
     node: { x: 566, y: 462 },
@@ -114,12 +114,12 @@ const CHAPTERS: Chapter[] = [
     name: "University of Lahore",
     uni: "The University of Lahore",
     city: "Lahore",
-    status: "pending",
-    tag: "Coming Soon",
-    members: "0",
+    status: "active",
+    tag: "Campus Chapter",
+    members: "1",
     events: "0",
     third: { label: "Reached", value: "0" },
-    node: { x: 84, y: 330 },
+    node: { x: 220, y: 472 },
     img: IMG.uol,
   },
 
@@ -128,12 +128,12 @@ const CHAPTERS: Chapter[] = [
     name: "City University of Science & Information Technology Peshawar",
     uni: "City University of Science & Information Technology",
     city: "Peshawar",
-    status: "pending",
-    tag: "Coming Soon",
-    members: "0",
+    status: "active",
+    tag: "Campus Chapter",
+    members: "1",
     events: "0",
     third: { label: "Reached", value: "0" },
-    node: { x: 84, y: 330 },
+    node: { x: 92, y: 302 },
     img: IMG.CUSIT,
   },
 
@@ -142,12 +142,12 @@ const CHAPTERS: Chapter[] = [
     name: "Bahaudin Zakriya University Multan ",
     uni: "Bahaudin Zakriya University Multan ",
     city: "Multan",
-    status: "pending",
-    tag: "Coming Soon",
-    members: "0",
+    status: "active",
+    tag: "Campus Chapter",
+    members: "1",
     events: "0",
     third: { label: "Reached", value: "0" },
-    node: { x: 84, y: 330 },
+    node: { x: 390, y: 514 },
     img: IMG.BZUM,
   },
 
@@ -519,7 +519,7 @@ export default function ChaptersPage() {
             {[
               { src: IMG.icp, caption: "Founding Chapter", sub: "Islamia College", tall: false },
               { src: IMG.community, caption: "Our Community", sub: "Workshops & projects", tall: true },
-              { src: IMG.night, caption: "New Campuses", sub: "Coming soon", tall: false },
+              { src: IMG.night, caption: "Growing Network", sub: "Across Pakistan", tall: false },
             ].map((img) => (
               <figure
                 key={img.caption}
@@ -706,7 +706,7 @@ export default function ChaptersPage() {
             <h2 className="mx-auto mt-5 font-display text-4xl font-bold uppercase tracking-[-0.03em] sm:text-5xl">
               <MaskLine>One hub.</MaskLine>
               <MaskLine delay={0.1}>
-                Seven <span className="text-[#7bd355]">campuses.</span>
+                Eight <span className="text-[#7bd355]">campuses.</span>
               </MaskLine>
             </h2>
           </div>
@@ -715,10 +715,7 @@ export default function ChaptersPage() {
             <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-[#101410]">
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 font-display text-[10px] uppercase tracking-[0.18em] text-[#939596]">
                 <span>Expansion Map — Pakistan</span>
-                <span>
-                  <span className="text-[#7bd355]">● Live</span> &nbsp;{" "}
-                  <span className="text-[#f2c46b]">● Coming soon</span>
-                </span>
+                <span className="text-[#7bd355]">● All Chapters Live</span>
               </div>
 
               <div className="relative">
@@ -742,10 +739,10 @@ export default function ChaptersPage() {
                         cx={n.node.x}
                         cy={n.node.y}
                         r={hovered === n.code ? 12 : 9}
-                        fill="rgba(242,196,107,0.1)"
-                        stroke={hovered === n.code ? "#7bd355" : "#f2c46b"}
+                        fill="rgba(123,211,85,0.1)"
+                        stroke="#7bd355"
                       />
-                      <circle cx={n.node.x} cy={n.node.y} r="3" fill="#101410" stroke={hovered === n.code ? "#7bd355" : "#f2c46b"} />
+                      <circle cx={n.node.x} cy={n.node.y} r="3" fill="#7bd355" stroke="#7bd355" />
                       <text x={n.node.x} y={n.node.y + 26} textAnchor="middle" fill="#939596" style={{ fontSize: 11 }}>
                         {n.city}
                       </text>
@@ -779,7 +776,7 @@ export default function ChaptersPage() {
                       <ChapterImage src={hoveredChapter.img} alt={hoveredChapter.name} className="h-28 w-full object-cover" />
                       <div className="p-3 text-left">
                         <p className="font-display text-[9px] uppercase tracking-[0.2em] text-[#7bd355]">
-                          {hoveredChapter.code} · {hoveredChapter.status === "active" ? "Active" : "Coming soon"}
+                          {hoveredChapter.code} · Active
                         </p>
                         <p className="mt-1 font-display text-sm font-bold leading-tight">{hoveredChapter.name}</p>
                         <p className="mt-0.5 text-[11px] text-[#939596]">{hoveredChapter.city}</p>
@@ -827,9 +824,9 @@ export default function ChaptersPage() {
             </div>
           </Reveal>
 
-          {/* Coming-soon grid — each university shows its own campus photo */}
+          {/* Live campus grid — each university shows its own campus photo */}
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {CHAPTERS.filter((c) => c.status !== "active").map((c, i) => (
+            {CHAPTERS.slice(1).map((c, i) => (
               <Reveal key={c.code} delay={0.035 * i}>
                 <div
                   onMouseEnter={() => setHovered(c.code)}
@@ -846,8 +843,8 @@ export default function ChaptersPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20" />
                   <div className="relative z-10 flex h-full min-h-[300px] flex-col justify-between p-5">
                     <div className="flex items-start justify-between">
-                      <span className="w-fit rounded-full bg-[#f2c46b]/20 px-3 py-1 font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-[#f2c46b]">
-                        ● Coming Soon
+                      <span className="w-fit rounded-full bg-[#7bd355]/20 px-3 py-1 font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7bd355]">
+                        ● Active
                       </span>
                       <span className="rounded-full bg-black/60 px-2.5 py-1 font-display text-[9px] uppercase tracking-[0.18em] text-white/60">
                         {c.code}
