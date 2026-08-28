@@ -23,7 +23,7 @@ const IMG = {
   uop: "uop.jfif",
   uol: "UET LAHORE.jpg",
   CUSIT: "CUSIT.jpeg",
-  BZUM: "BZU.jpg",
+  BZU: "BZU.jpg",
   community: "Image/ss team.jpg",
   night: "community.jfif",
 };
@@ -148,7 +148,7 @@ const CHAPTERS: Chapter[] = [
     events: "0",
     third: { label: "Reached", value: "0" },
     node: { x: 390, y: 514 },
-    img: IMG.BZUM,
+    img: IMG.BZU,
   },
 
 ];
