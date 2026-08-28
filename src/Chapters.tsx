@@ -23,6 +23,7 @@ const IMG = {
   uop: "uop.jfif",
   uol: "UET LAHORE.jpg",
   CUSIT: "CUSIT.jpeg",
+  BZUM: "BZU.jpg",
   community: "Image/ss team.jpg",
   night: "community.jfif",
 };
@@ -146,6 +147,20 @@ const CHAPTERS: Chapter[] = [
     third: { label: "Reached", value: "0" },
     node: { x: 84, y: 330 },
     img: IMG.CUSIT,
+  },
+
+   {
+    code: "CH-09",
+    name: "Bahaudin Zakriya University Multan ",
+    uni: "Bahaudin Zakriya University Multan ",
+    city: "Multan",
+    status: "pending",
+    tag: "Coming Soon",
+    members: "0",
+    events: "0",
+    third: { label: "Reached", value: "0" },
+    node: { x: 84, y: 330 },
+    img: IMG.BZUM,
   },
 ];
 
