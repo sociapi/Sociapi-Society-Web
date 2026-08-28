@@ -580,7 +580,7 @@ export default function ChaptersPage() {
             className="mt-12 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4"
           >
             {[
-              { v: <Counter to={7} />, l: "Total Chapters" },
+              { v: <Counter to={8} />, l: "Total Chapters" },
               { v: <Counter to={7} />, l: "Campus Ambassadors" },
               { v: <Counter to={340} suffix="+" />, l: "Students Reached" },
               { v: <Counter to={3} />, l: "Events Organized" },
