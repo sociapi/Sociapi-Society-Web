@@ -108,21 +108,9 @@ const CHAPTERS: Chapter[] = [
     node: { x: 566, y: 462 },
     img: IMG.uetPeshawar,
   },
+  
   {
     code: "CH-06",
-    name: "University of Peshawar",
-    uni: "University of Peshawar",
-    city: "Peshawar",
-    status: "pending",
-    tag: "Coming Soon",
-    members: "0",
-    events: "0",
-    third: { label: "Reached", value: "0" },
-    node: { x: 252, y: 472 },
-    img: IMG.uop,
-  },
-  {
-    code: "CH-07",
     name: "University of Lahore",
     uni: "The University of Lahore",
     city: "Lahore",
@@ -136,7 +124,7 @@ const CHAPTERS: Chapter[] = [
   },
 
   {
-    code: "CH-08",
+    code: "CH-07",
     name: "City University of Science & Information Technology Peshawar",
     uni: "City University of Science & Information Technology",
     city: "Peshawar",
@@ -149,8 +137,8 @@ const CHAPTERS: Chapter[] = [
     img: IMG.CUSIT,
   },
 
-   {
-    code: "CH-09",
+  {
+    code: "CH-08",
     name: "Bahaudin Zakriya University Multan ",
     uni: "Bahaudin Zakriya University Multan ",
     city: "Multan",
@@ -162,6 +150,7 @@ const CHAPTERS: Chapter[] = [
     node: { x: 84, y: 330 },
     img: IMG.BZUM,
   },
+
 ];
 
 const MAP_W = 800;
