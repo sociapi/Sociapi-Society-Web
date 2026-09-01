@@ -54,7 +54,7 @@ function Footer() {
       <Column title="Community" items={[["Our Team", "/team"], ["Opportunities", "/opportunities"], ["Reviews", "/reviews"], ["FAQs", "/faqs"]]} />
       <Column title="Take part" items={[["Join Sociapi", links.join], ["Partnerships", "/partner-with-us"], ["Contact Us", "/contact"], ["Shop", "/shop"]]} />
       <Column title="Resources" items={[["Sociapi Labs", "/services"], ["Verify Certificate", "/verify"]]} />
-      <div><h3>Connect</h3><a href={links.instagram}>Instagram</a><a href={links.linkedin}>LinkedIn</a><a href={links.facebook}>Facebook</a><a href={links.email}>Email</a></div>
+      <div><h3>Connect</h3><a href={links.linkedin} target="_blank" rel="noreferrer">LinkedIn</a><a href={links.instagram} target="_blank" rel="noreferrer">Instagram</a><a href={links.facebook} target="_blank" rel="noreferrer">Facebook</a><a href={links.tiktok} target="_blank" rel="noreferrer">TikTok</a><a href={links.x} target="_blank" rel="noreferrer">X</a><a href={links.email}>Email</a></div>
     </div>
     <div className="footer-bottom"><span>© {new Date().getFullYear()} Sociapi Society</span><span>From Ideas to Intelligence.</span><a href="https://xuhair.netlify.app/" target="_blank" rel="noreferrer">Designed by Zuhair Zeb ↗</a></div>
   </Container></footer>;
