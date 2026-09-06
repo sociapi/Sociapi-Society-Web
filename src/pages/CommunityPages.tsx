@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { PageHero, Container, Button } from "../components/ui";
 import { faqs, facebookReviews, galleryGroups, pastMembers, reviews, services, teamMembers } from "../data/secondary";
@@ -140,16 +140,53 @@ export function ContactPage() {
     <section className="contact-page"><Container>
       <div className="contact-routes">{routes.map((route, index) => <a key={route[0]} href={route[2]}><span>0{index + 1}</span><h3>{route[0]}</h3><p>{route[1]}</p><b>↗</b></a>)}</div>
       <div className="contact-split">
-        <form action="https://formsubmit.co/sociapisociety@gmail.com" method="POST">
-          <input type="hidden" name="_subject" value="Contact inquiry from Sociapi website" />
-          <label>Name<input required name="name" autoComplete="name" /></label><label>Email<input required type="email" name="email" autoComplete="email" /></label>
-          <label>Phone<input name="phone" autoComplete="tel" /></label><label>Topic<select name="type"><option>General inquiry</option><option>Campus chapter</option><option>Events</option><option>Technical support</option><option>Services</option></select></label>
-          <label className="full">Message<textarea required name="message" /></label><button className="button">Send message</button><p>Submissions are handled by FormSubmit and delivered to the Sociapi email address.</p>
-        </form>
+        <ContactForm />
         <div className="contact-place"><iframe title="Islamia College University Peshawar map" loading="lazy" src="https://www.google.com/maps?q=Islamia%20College%20University%20Peshawar%20Pakistan&output=embed" /><h3>Islamia College University</h3><p>Peshawar, Pakistan</p><div><a href={links.instagram}>Instagram</a><a href={links.linkedin}>LinkedIn</a><a href={links.facebook}>Facebook</a></div></div>
       </div>
     </Container></section>
   </>;
+}
+
+type ContactErrors = Partial<Record<"name" | "email" | "phone" | "message" | "form", string>>;
+const fakeWords = /(test|testing|student|example|demo|fake|unknown|anonymous|asdf|qwerty)/i;
+function validPakistanPhone(raw: string) {
+  const digits = raw.replace(/\D/g, "").replace(/^92(?=3)/, "0");
+  if (!/^03\d{9}$/.test(digits)) return false;
+  const subscriber = digits.slice(4);
+  if (/(\d)\1{5,}/.test(subscriber)) return false;
+  return !["012345", "123456", "234567", "345678", "456789", "987654", "876543", "765432", "654321", "543210"].some(sequence => subscriber.includes(sequence));
+}
+function validateContact(data: FormData): ContactErrors {
+  const name = String(data.get("name") || "").trim().replace(/\s+/g, " ");
+  const email = String(data.get("email") || "").trim().toLowerCase();
+  const phone = String(data.get("phone") || "").trim();
+  const message = String(data.get("message") || "").trim();
+  const errors: ContactErrors = {};
+  if (name.length < 4 || name.split(" ").length < 2 || fakeWords.test(name) || /^(.)\1+$/i.test(name.replace(/\s/g, ""))) errors.name = "Enter your real first and last name.";
+  if (!/^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail\.com$/i.test(email) || fakeWords.test(email.split("@")[0])) errors.email = "Use your real Gmail address. Test, example, and university addresses are not accepted.";
+  if (!validPakistanPhone(phone)) errors.phone = "Enter a valid Pakistani mobile number, such as 03XX XXXXXXX. Repeated or counting numbers are not accepted.";
+  if (message.length < 15 || fakeWords.test(message)) errors.message = "Please write a genuine message of at least 15 characters.";
+  return errors;
+}
+function ContactForm() {
+  const [errors, setErrors] = useState<ContactErrors>({});
+  const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); const form = event.currentTarget; const data = new FormData(form);
+    if (String(data.get("_honey") || "")) return;
+    const nextErrors = validateContact(data); if (Object.keys(nextErrors).length) { setErrors(nextErrors); return; }
+    const signature = [data.get("email"), data.get("phone"), data.get("message")].join("|").toLowerCase();
+    const elapsed = Date.now() - Number(localStorage.getItem("sociapi-contact-time") || 0);
+    if (elapsed < 60000 || (signature === localStorage.getItem("sociapi-contact-signature") && elapsed < 600000)) { setErrors({ form: "A message was recently submitted from this browser. Please wait before sending another." }); return; }
+    setErrors({}); setStatus("sending");
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/sociapisociety@gmail.com", { method: "POST", body: data, headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error("Submission failed");
+      localStorage.setItem("sociapi-contact-signature", signature); localStorage.setItem("sociapi-contact-time", String(Date.now())); form.reset(); setStatus("success");
+    } catch { setStatus("idle"); setErrors({ form: "We could not send your message right now. Please try again or email sociapisociety@gmail.com." }); }
+  }
+  if (status === "success") return <div className="contact-thanks" role="status"><span>✓</span><h2>Thank you.</h2><p>Your form has been submitted. The Sociapi team will review your message and contact you if a response is needed.</p><button className="button" type="button" onClick={() => setStatus("idle")}>Send another message</button></div>;
+  return <form onSubmit={submit} noValidate><input type="hidden" name="_subject" value="Contact inquiry from Sociapi website" /><label className="form-honey" aria-hidden="true">Leave this field empty<input name="_honey" tabIndex={-1} autoComplete="off" /></label><label>Name<input required name="name" autoComplete="name" aria-invalid={!!errors.name} />{errors.name && <small className="field-error">{errors.name}</small>}</label><label>Email<input required type="email" name="email" inputMode="email" autoComplete="email" placeholder="name@gmail.com" aria-invalid={!!errors.email} />{errors.email && <small className="field-error">{errors.email}</small>}</label><label>Phone<input required name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="03XX XXXXXXX" aria-invalid={!!errors.phone} />{errors.phone && <small className="field-error">{errors.phone}</small>}</label><label>Topic<select name="type"><option>General inquiry</option><option>Campus chapter</option><option>Events</option><option>Technical support</option><option>Services</option></select></label><label className="full">Message<textarea required name="message" minLength={15} aria-invalid={!!errors.message} />{errors.message && <small className="field-error">{errors.message}</small>}</label><button className="button" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send message"}</button>{errors.form ? <p className="form-error" role="alert">{errors.form}</p> : <p>Use a real name, Gmail address, and active Pakistani mobile number.</p>}</form>;
 }
 
 export function HomeTeasers() {
