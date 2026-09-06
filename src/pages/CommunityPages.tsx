@@ -165,12 +165,15 @@ function validateContact(data: FormData): ContactErrors {
   if (name.length < 4 || name.split(" ").length < 2 || fakeWords.test(name) || /^(.)\1+$/i.test(name.replace(/\s/g, ""))) errors.name = "Enter your real first and last name.";
   if (!/^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail\.com$/i.test(email) || fakeWords.test(email.split("@")[0])) errors.email = "Use your real Gmail address. Test, example, and university addresses are not accepted.";
   if (!validPakistanPhone(phone)) errors.phone = "Enter a valid Pakistani mobile number, such as 03XX XXXXXXX. Repeated or counting numbers are not accepted.";
-  if (message.length < 15 || fakeWords.test(message)) errors.message = "Please write a genuine message of at least 15 characters.";
+  const messageWords = message ? message.split(/\s+/).length : 0;
+  if (message.length < 15) errors.message = "Please write a genuine message of at least 15 characters.";
+  else if (messageWords > 300) errors.message = "Keep your message within 300 words.";
   return errors;
 }
 function ContactForm() {
   const [errors, setErrors] = useState<ContactErrors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
+  const [messageWords, setMessageWords] = useState(0);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); const form = event.currentTarget; const data = new FormData(form);
     if (String(data.get("_honey") || "")) return;
@@ -182,11 +185,11 @@ function ContactForm() {
     try {
       const response = await fetch("https://formsubmit.co/ajax/sociapisociety@gmail.com", { method: "POST", body: data, headers: { Accept: "application/json" } });
       if (!response.ok) throw new Error("Submission failed");
-      localStorage.setItem("sociapi-contact-signature", signature); localStorage.setItem("sociapi-contact-time", String(Date.now())); form.reset(); setStatus("success");
+      localStorage.setItem("sociapi-contact-signature", signature); localStorage.setItem("sociapi-contact-time", String(Date.now())); form.reset(); setMessageWords(0); setStatus("success");
     } catch { setStatus("idle"); setErrors({ form: "We could not send your message right now. Please try again or email sociapisociety@gmail.com." }); }
   }
   if (status === "success") return <div className="contact-thanks" role="status"><span>✓</span><h2>Thank you.</h2><p>Your form has been submitted. The Sociapi team will review your message and contact you if a response is needed.</p><button className="button" type="button" onClick={() => setStatus("idle")}>Send another message</button></div>;
-  return <form onSubmit={submit} noValidate><input type="hidden" name="_subject" value="Contact inquiry from Sociapi website" /><label className="form-honey" aria-hidden="true">Leave this field empty<input name="_honey" tabIndex={-1} autoComplete="off" /></label><label>Name<input required name="name" autoComplete="name" aria-invalid={!!errors.name} />{errors.name && <small className="field-error">{errors.name}</small>}</label><label>Email<input required type="email" name="email" inputMode="email" autoComplete="email" placeholder="name@gmail.com" aria-invalid={!!errors.email} />{errors.email && <small className="field-error">{errors.email}</small>}</label><label>Phone<input required name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="03XX XXXXXXX" aria-invalid={!!errors.phone} />{errors.phone && <small className="field-error">{errors.phone}</small>}</label><label>Topic<select name="type"><option>General inquiry</option><option>Campus chapter</option><option>Events</option><option>Technical support</option><option>Services</option></select></label><label className="full">Message<textarea required name="message" minLength={15} aria-invalid={!!errors.message} />{errors.message && <small className="field-error">{errors.message}</small>}</label><button className="button" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send message"}</button>{errors.form ? <p className="form-error" role="alert">{errors.form}</p> : <p>Use a real name, Gmail address, and active Pakistani mobile number.</p>}</form>;
+  return <form onSubmit={submit} noValidate><input type="hidden" name="_subject" value="Contact inquiry from Sociapi website" /><label className="form-honey" aria-hidden="true">Leave this field empty<input name="_honey" tabIndex={-1} autoComplete="off" /></label><label>Name<input required name="name" autoComplete="name" aria-invalid={!!errors.name} />{errors.name && <small className="field-error">{errors.name}</small>}</label><label>Email<input required type="email" name="email" inputMode="email" autoComplete="email" placeholder="name@gmail.com" aria-invalid={!!errors.email} />{errors.email && <small className="field-error">{errors.email}</small>}</label><label>Phone<input required name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="03XX XXXXXXX" aria-invalid={!!errors.phone} />{errors.phone && <small className="field-error">{errors.phone}</small>}</label><label>Topic<select name="type"><option>General inquiry</option><option>Campus chapter</option><option>Events</option><option>Technical support</option><option>Services</option></select></label><label className="full">Message<textarea required name="message" minLength={15} aria-invalid={!!errors.message || messageWords > 300} onChange={event => setMessageWords(event.target.value.trim() ? event.target.value.trim().split(/\s+/).length : 0)} /><span className={`word-counter${messageWords > 300 ? " over-limit" : ""}`} aria-live="polite">{messageWords} / 300 words</span>{errors.message && <small className="field-error">{errors.message}</small>}</label><button className="button" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send message"}</button>{errors.form ? <p className="form-error" role="alert">{errors.form}</p> : <p>Use a real name, Gmail address, and active Pakistani mobile number.</p>}</form>;
 }
 
 export function HomeTeasers() {
